@@ -213,6 +213,30 @@ export function CustomerImportDialog() {
     return true;
   };
 
+  const convertExcelDate = (value: any): string | null => {
+    // If it's already a valid date string, return it
+    if (typeof value === 'string' && value.includes('-')) {
+      return value;
+    }
+    
+    // Check if it's an Excel serial date (number)
+    const numValue = Number(value);
+    if (!isNaN(numValue) && numValue > 0) {
+      // Excel dates start from 1900-01-01 (serial 1)
+      // JavaScript dates start from 1970-01-01
+      const excelEpoch = new Date(1899, 11, 30); // December 30, 1899
+      const date = new Date(excelEpoch.getTime() + numValue * 86400000); // 86400000 ms in a day
+      
+      // Format as YYYY-MM-DD for PostgreSQL
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+    
+    return null;
+  };
+
   const handleImport = async () => {
     if (!validateMapping()) {
       return;
@@ -224,7 +248,15 @@ export function CustomerImportDialog() {
         const obj: any = {};
         Object.entries(columnMapping).forEach(([csvCol, dbCol]) => {
           if (dbCol !== "skip" && row[csvCol]) {
-            obj[dbCol] = row[csvCol];
+            // Convert Excel date serial numbers to proper date format
+            if (dbCol === "contract_date" || dbCol === "date_cancel") {
+              const convertedDate = convertExcelDate(row[csvCol]);
+              if (convertedDate) {
+                obj[dbCol] = convertedDate;
+              }
+            } else {
+              obj[dbCol] = row[csvCol];
+            }
           }
         });
         return obj;
