@@ -49,6 +49,8 @@ export function CustomerImportDialog() {
   const [csvData, setCsvData] = useState<any[]>([]);
   const [columnMapping, setColumnMapping] = useState<Record<string, string>>({});
   const [error, setError] = useState<string>("");
+  const [unmappedColumns, setUnmappedColumns] = useState<string[]>([]);
+  const [missingRequired, setMissingRequired] = useState<string[]>([]);
 
   const parseCSV = (text: string) => {
     const lines = text.split("\n").filter(line => line.trim());
@@ -110,13 +112,29 @@ export function CustomerImportDialog() {
         
         setCsvHeaders(headers);
         const initialMapping: Record<string, string> = {};
+        const unmapped: string[] = [];
+        
         headers.forEach(header => {
           const normalized = header.toLowerCase().replace(/\s+/g, '_');
           const match = DATABASE_COLUMNS.find(col => col.value === normalized);
-          initialMapping[header] = match ? match.value : "skip";
+          if (match) {
+            initialMapping[header] = match.value;
+          } else {
+            initialMapping[header] = "skip";
+            unmapped.push(header);
+          }
         });
+        
         setColumnMapping(initialMapping);
         setCsvData(data);
+        setUnmappedColumns(unmapped);
+        
+        // Validate required fields
+        const mappedValues = Object.values(initialMapping);
+        const missing: string[] = [];
+        if (!mappedValues.includes("service_id")) missing.push("Service ID");
+        if (!mappedValues.includes("site_name")) missing.push("Site Name");
+        setMissingRequired(missing);
       } catch (err) {
         setError("Failed to parse file. Please check the file format.");
       }
@@ -132,12 +150,16 @@ export function CustomerImportDialog() {
   };
 
   const validateMapping = () => {
-    const mappedColumns = Object.values(columnMapping).filter(v => v !== "skip");
-    const hasServiceId = mappedColumns.includes("service_id");
-    const hasSiteName = mappedColumns.includes("site_name");
+    const mappedValues = Object.values(columnMapping);
+    const missing: string[] = [];
     
-    if (!hasServiceId || !hasSiteName) {
-      setError("Service ID and Site Name are required fields. Please map them from your CSV columns.");
+    if (!mappedValues.includes("service_id")) missing.push("Service ID");
+    if (!mappedValues.includes("site_name")) missing.push("Site Name");
+    
+    setMissingRequired(missing);
+    
+    if (missing.length > 0) {
+      setError(`Required fields not mapped: ${missing.join(", ")}. Please map them to proceed.`);
       return false;
     }
     
@@ -190,6 +212,8 @@ export function CustomerImportDialog() {
     setCsvData([]);
     setColumnMapping({});
     setError("");
+    setUnmappedColumns([]);
+    setMissingRequired([]);
   };
 
   return (
@@ -216,8 +240,27 @@ export function CustomerImportDialog() {
         {error && (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Error</AlertTitle>
+            <AlertTitle>Mapping Error</AlertTitle>
             <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+        
+        {step === "mapping" && (missingRequired.length > 0 || unmappedColumns.length > 0) && !error && (
+          <Alert>
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Mapping Status</AlertTitle>
+            <AlertDescription>
+              {missingRequired.length > 0 && (
+                <div className="mb-2">
+                  <strong>Required fields not mapped:</strong> {missingRequired.join(", ")}
+                </div>
+              )}
+              {unmappedColumns.length > 0 && (
+                <div>
+                  <strong>Columns not auto-mapped (set to skip):</strong> {unmappedColumns.join(", ")}
+                </div>
+              )}
+            </AlertDescription>
           </Alert>
         )}
 
@@ -247,7 +290,15 @@ export function CustomerImportDialog() {
                   <Select
                     value={columnMapping[header] || "skip"}
                     onValueChange={(value) => {
-                      setColumnMapping(prev => ({ ...prev, [header]: value }));
+                      const newMapping = { ...columnMapping, [header]: value };
+                      setColumnMapping(newMapping);
+                      
+                      // Re-validate
+                      const mappedValues = Object.values(newMapping);
+                      const missing: string[] = [];
+                      if (!mappedValues.includes("service_id")) missing.push("Service ID");
+                      if (!mappedValues.includes("site_name")) missing.push("Site Name");
+                      setMissingRequired(missing);
                       setError("");
                     }}
                   >
