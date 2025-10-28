@@ -48,10 +48,17 @@ Database Columns (with descriptions):
 - notes: General notes
 - delete_tag: Delete flag (boolean)
 
+EXCLUDED COLUMNS (always map to "skip"):
+- ysnPrint
+- Save_tag
+- SiteState
+- RunTag
+
 Return ONLY a JSON object mapping each CSV header to the best database column, or "skip" if no good match exists.
 Format: {"CSV Header": "database_column_or_skip"}
 
-CRITICAL: The fields "service_id" and "site_name" are REQUIRED. You MUST map at least these two fields to appropriate CSV columns.`;
+CRITICAL: The fields "service_id" and "site_name" are REQUIRED. You MUST map at least these two fields to appropriate CSV columns.
+CRITICAL: Any columns matching the excluded list (ysnPrint, Save_tag, SiteState, RunTag) must ALWAYS be mapped to "skip".`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
