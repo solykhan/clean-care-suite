@@ -158,7 +158,7 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
                 <FormItem>
                   <FormLabel>Service ID *</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter service ID" {...field} />
+                    <Input placeholder="Enter service ID" {...field} disabled />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
