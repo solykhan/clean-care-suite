@@ -15,6 +15,7 @@ import { Upload, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import * as XLSX from "xlsx";
 
 const DATABASE_COLUMNS = [
   { value: "service_id", label: "Service ID (Required)" },
@@ -49,6 +50,40 @@ export function CustomerImportDialog() {
   const [columnMapping, setColumnMapping] = useState<Record<string, string>>({});
   const [error, setError] = useState<string>("");
 
+  const parseCSV = (text: string) => {
+    const lines = text.split("\n").filter(line => line.trim());
+    const headers = lines[0].split(",").map(h => h.trim());
+    
+    const data = lines.slice(1).map(line => {
+      const values = line.split(",").map(v => v.trim());
+      const obj: any = {};
+      headers.forEach((header, index) => {
+        obj[header] = values[index] || "";
+      });
+      return obj;
+    });
+    
+    return { headers, data };
+  };
+
+  const parseXLSX = async (file: File) => {
+    const buffer = await file.arrayBuffer();
+    const workbook = XLSX.read(buffer, { type: "array" });
+    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+    const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 }) as any[][];
+    
+    const headers = jsonData[0].map((h: any) => String(h).trim());
+    const data = jsonData.slice(1).map(row => {
+      const obj: any = {};
+      headers.forEach((header, index) => {
+        obj[header] = row[index] ? String(row[index]).trim() : "";
+      });
+      return obj;
+    });
+    
+    return { headers, data };
+  };
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0];
@@ -56,9 +91,22 @@ export function CustomerImportDialog() {
       setError("");
       
       try {
-        const text = await selectedFile.text();
-        const lines = text.split("\n").filter(line => line.trim());
-        const headers = lines[0].split(",").map(h => h.trim());
+        let headers: string[];
+        let data: any[];
+        
+        if (selectedFile.name.endsWith('.csv')) {
+          const text = await selectedFile.text();
+          const parsed = parseCSV(text);
+          headers = parsed.headers;
+          data = parsed.data;
+        } else if (selectedFile.name.endsWith('.xlsx') || selectedFile.name.endsWith('.xls')) {
+          const parsed = await parseXLSX(selectedFile);
+          headers = parsed.headers;
+          data = parsed.data;
+        } else {
+          setError("Unsupported file format. Please upload a CSV or XLSX file.");
+          return;
+        }
         
         setCsvHeaders(headers);
         const initialMapping: Record<string, string> = {};
@@ -68,18 +116,9 @@ export function CustomerImportDialog() {
           initialMapping[header] = match ? match.value : "skip";
         });
         setColumnMapping(initialMapping);
-        
-        const data = lines.slice(1).map(line => {
-          const values = line.split(",").map(v => v.trim());
-          const obj: any = {};
-          headers.forEach((header, index) => {
-            obj[header] = values[index] || "";
-          });
-          return obj;
-        });
         setCsvData(data);
       } catch (err) {
-        setError("Failed to parse CSV file. Please check the file format.");
+        setError("Failed to parse file. Please check the file format.");
       }
     }
   };
@@ -169,8 +208,8 @@ export function CustomerImportDialog() {
           <DialogTitle>Import Customer Data - {step === "upload" ? "Step 1: Upload File" : "Step 2: Map Fields"}</DialogTitle>
           <DialogDescription>
             {step === "upload" 
-              ? "Upload a CSV file with customer data. The first row should contain column headers."
-              : "Map your CSV columns to the database fields. Service ID and Site Name are required."}
+              ? "Upload a CSV or XLSX file with customer data. The first row should contain column headers."
+              : "Map your file columns to the database fields. Service ID and Site Name are required."}
           </DialogDescription>
         </DialogHeader>
 
@@ -189,7 +228,7 @@ export function CustomerImportDialog() {
               <Input
                 id="csv-file"
                 type="file"
-                accept=".csv"
+                accept=".csv,.xlsx,.xls"
                 onChange={handleFileChange}
               />
             </div>
