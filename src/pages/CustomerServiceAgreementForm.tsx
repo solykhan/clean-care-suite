@@ -8,6 +8,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ServiceAgreementForm } from "@/components/ServiceAgreementForm";
 import { Building2, Phone, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const CustomerServiceAgreementForm = () => {
   const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(null);
@@ -154,95 +162,72 @@ const CustomerServiceAgreementForm = () => {
                 {isLoadingAgreements ? (
                   <Skeleton className="h-64 w-full" />
                 ) : serviceAgreements && serviceAgreements.length > 0 ? (
-                  <div className="space-y-4">
-                    {serviceAgreements.map((agreement) => (
-                      <Card key={agreement.id}>
-                        <CardHeader>
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <CardTitle>Service Agreement</CardTitle>
-                              <CardDescription className="mt-1">
-                                Created: {new Date(agreement.created_at!).toLocaleDateString()}
-                              </CardDescription>
-                            </div>
-                            <Badge
-                              variant={
-                                agreement.service_active_inactive === "Active"
-                                  ? "default"
-                                  : "secondary"
-                              }
-                            >
-                              {agreement.service_active_inactive || "Unknown"}
-                            </Badge>
-                          </div>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {agreement.products && (
-                              <div>
-                                <p className="text-sm font-medium text-muted-foreground">Products</p>
-                                <p className="text-sm">{agreement.products}</p>
-                              </div>
-                            )}
-                            {agreement.areas_covered && (
-                              <div>
-                                <p className="text-sm font-medium text-muted-foreground">Areas Covered</p>
-                                <p className="text-sm">{agreement.areas_covered}</p>
-                              </div>
-                            )}
-                            {agreement.service_frequency && (
-                              <div>
-                                <p className="text-sm font-medium text-muted-foreground">Frequency</p>
-                                <p className="text-sm">{agreement.service_frequency}</p>
-                              </div>
-                            )}
-                            {agreement.invoice_type && (
-                              <div>
-                                <p className="text-sm font-medium text-muted-foreground">Invoice Type</p>
-                                <p className="text-sm">{agreement.invoice_type}</p>
-                              </div>
-                            )}
-                            {agreement.unit_price && (
-                              <div>
-                                <p className="text-sm font-medium text-muted-foreground">Unit Price</p>
-                                <p className="text-sm">${agreement.unit_price}</p>
-                              </div>
-                            )}
-                            {agreement.cpm_pricing && (
-                              <div>
-                                <p className="text-sm font-medium text-muted-foreground">CPM Pricing</p>
-                                <p className="text-sm">${agreement.cpm_pricing}</p>
-                              </div>
-                            )}
-                            {agreement.cpi && (
-                              <div>
-                                <p className="text-sm font-medium text-muted-foreground">CPI</p>
-                                <p className="text-sm">${agreement.cpi}</p>
-                              </div>
-                            )}
-                            {agreement.total && (
-                              <div>
-                                <p className="text-sm font-medium text-muted-foreground">Total</p>
-                                <p className="text-sm font-semibold">${agreement.total}</p>
-                              </div>
-                            )}
-                            {agreement.cpm_device_onsite && (
-                              <div>
-                                <p className="text-sm font-medium text-muted-foreground">CPM Device Onsite</p>
-                                <p className="text-sm">{agreement.cpm_device_onsite}</p>
-                              </div>
-                            )}
-                            {agreement.comments && (
-                              <div className="md:col-span-2 lg:col-span-3">
-                                <p className="text-sm font-medium text-muted-foreground">Comments</p>
-                                <p className="text-sm">{agreement.comments}</p>
-                              </div>
-                            )}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
+                  <Card>
+                    <CardContent className="p-0">
+                      <div className="overflow-x-auto">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Status</TableHead>
+                              <TableHead>Products</TableHead>
+                              <TableHead>Areas Covered</TableHead>
+                              <TableHead>Service Frequency</TableHead>
+                              <TableHead>Invoice Type</TableHead>
+                              <TableHead>Unit Price</TableHead>
+                              <TableHead>CPM Pricing</TableHead>
+                              <TableHead>CPI</TableHead>
+                              <TableHead>Total</TableHead>
+                              <TableHead>CPM Device Onsite</TableHead>
+                              <TableHead>Comments</TableHead>
+                              <TableHead>Created At</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {serviceAgreements.map((agreement) => (
+                              <TableRow key={agreement.id}>
+                                <TableCell>
+                                  <Badge
+                                    variant={
+                                      agreement.service_active_inactive === "Active"
+                                        ? "default"
+                                        : "secondary"
+                                    }
+                                  >
+                                    {agreement.service_active_inactive || "N/A"}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell>{agreement.products || "-"}</TableCell>
+                                <TableCell>{agreement.areas_covered || "-"}</TableCell>
+                                <TableCell>{agreement.service_frequency || "-"}</TableCell>
+                                <TableCell>{agreement.invoice_type || "-"}</TableCell>
+                                <TableCell>
+                                  {agreement.unit_price ? `$${agreement.unit_price}` : "-"}
+                                </TableCell>
+                                <TableCell>
+                                  {agreement.cpm_pricing ? `$${agreement.cpm_pricing}` : "-"}
+                                </TableCell>
+                                <TableCell>
+                                  {agreement.cpi ? `$${agreement.cpi}` : "-"}
+                                </TableCell>
+                                <TableCell className="font-semibold">
+                                  {agreement.total ? `$${agreement.total}` : "-"}
+                                </TableCell>
+                                <TableCell>{agreement.cpm_device_onsite || "-"}</TableCell>
+                                <TableCell className="max-w-xs truncate">
+                                  {agreement.comments || "-"}
+                                </TableCell>
+                                <TableCell className="text-xs text-muted-foreground">
+                                  {agreement.created_at
+                                    ? new Date(agreement.created_at).toLocaleDateString()
+                                    : "-"}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    </CardContent>
+                  </Card>
                 ) : (
                   <Card>
                     <CardContent className="flex items-center justify-center h-32">
