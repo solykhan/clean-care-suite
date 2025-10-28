@@ -78,7 +78,7 @@ const CustomerDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background">
       <div className="container mx-auto py-8 px-4 max-w-6xl">
         <div className="mb-6">
           <Link to="/customers">

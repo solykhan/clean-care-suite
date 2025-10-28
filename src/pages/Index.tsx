@@ -5,7 +5,7 @@ import { Building2, FileText, TrendingUp, Users } from "lucide-react";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background">
       <div className="container mx-auto py-12 px-4">
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold text-foreground mb-4">
