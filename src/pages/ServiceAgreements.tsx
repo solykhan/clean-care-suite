@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ServiceAgreementForm } from "@/components/ServiceAgreementForm";
+import { ServiceAgreementImportDialog } from "@/components/ServiceAgreementImportDialog";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -50,7 +51,10 @@ const ServiceAgreements = () => {
             Manage all service agreements across customers
           </p>
         </div>
-        <ServiceAgreementForm onSuccess={handleSuccess} />
+        <div className="flex gap-2">
+          <ServiceAgreementImportDialog onSuccess={handleSuccess} />
+          <ServiceAgreementForm onSuccess={handleSuccess} />
+        </div>
       </div>
 
       <div className="grid gap-4">
