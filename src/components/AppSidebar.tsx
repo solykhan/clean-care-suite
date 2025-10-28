@@ -57,7 +57,7 @@ export function AppSidebar() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <NavLink to="/customers">
+                  <NavLink to="/service-agreements">
                     <FileText className="h-4 w-4" />
                     <span>Service Agreements</span>
                   </NavLink>
