@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Building2, Search, Plus, Phone, Mail } from "lucide-react";
+import { Building2, Search, Plus, Phone, Mail, Upload } from "lucide-react";
 import { toast } from "sonner";
+import { CustomerImportDialog } from "@/components/CustomerImportDialog";
 
 const Customers = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -56,12 +57,15 @@ const Customers = () => {
               <h1 className="text-4xl font-bold text-foreground mb-2">Customers</h1>
               <p className="text-muted-foreground">Manage your hygiene facility customers</p>
             </div>
-            <Link to="/customers/new">
-              <Button className="gap-2">
-                <Plus className="h-4 w-4" />
-                Add Customer
-              </Button>
-            </Link>
+            <div className="flex gap-2">
+              <CustomerImportDialog />
+              <Link to="/customers/new">
+                <Button className="gap-2">
+                  <Plus className="h-4 w-4" />
+                  Add Customer
+                </Button>
+              </Link>
+            </div>
           </div>
 
           <div className="relative">
