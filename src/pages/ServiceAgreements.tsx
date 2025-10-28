@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { ServiceAgreementForm } from "@/components/ServiceAgreementForm";
 import { ServiceAgreementImportDialog } from "@/components/ServiceAgreementImportDialog";
 import { EditServiceAgreementDialog } from "@/components/EditServiceAgreementDialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ListPlus } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -55,6 +58,12 @@ const ServiceAgreements = () => {
           </p>
         </div>
         <div className="flex gap-2">
+          <Link to="/customer-service-form">
+            <Button variant="outline" className="gap-2">
+              <ListPlus className="h-4 w-4" />
+              Customer Service Form
+            </Button>
+          </Link>
           <ServiceAgreementImportDialog onSuccess={handleSuccess} />
           <ServiceAgreementForm onSuccess={handleSuccess} />
         </div>
