@@ -1,0 +1,291 @@
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
+
+export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "13.0.5"
+  }
+  public: {
+    Tables: {
+      customers: {
+        Row: {
+          contract_date: string | null
+          contract_notes: string | null
+          created_at: string | null
+          date_cancel: string | null
+          delete_tag: boolean | null
+          id: string
+          notes: string | null
+          postal_address: string | null
+          service_id: string
+          site_accounts_contact: string | null
+          site_contact_first_name: string | null
+          site_contact_lastname: string | null
+          site_email_address: string | null
+          site_fax_no: string | null
+          site_name: string
+          site_pobox: string | null
+          site_post_code: string | null
+          site_street_name: string | null
+          site_suburb: string | null
+          site_telephone_no1: string | null
+          site_telephone_no2: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          contract_date?: string | null
+          contract_notes?: string | null
+          created_at?: string | null
+          date_cancel?: string | null
+          delete_tag?: boolean | null
+          id?: string
+          notes?: string | null
+          postal_address?: string | null
+          service_id: string
+          site_accounts_contact?: string | null
+          site_contact_first_name?: string | null
+          site_contact_lastname?: string | null
+          site_email_address?: string | null
+          site_fax_no?: string | null
+          site_name: string
+          site_pobox?: string | null
+          site_post_code?: string | null
+          site_street_name?: string | null
+          site_suburb?: string | null
+          site_telephone_no1?: string | null
+          site_telephone_no2?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          contract_date?: string | null
+          contract_notes?: string | null
+          created_at?: string | null
+          date_cancel?: string | null
+          delete_tag?: boolean | null
+          id?: string
+          notes?: string | null
+          postal_address?: string | null
+          service_id?: string
+          site_accounts_contact?: string | null
+          site_contact_first_name?: string | null
+          site_contact_lastname?: string | null
+          site_email_address?: string | null
+          site_fax_no?: string | null
+          site_name?: string
+          site_pobox?: string | null
+          site_post_code?: string | null
+          site_street_name?: string | null
+          site_suburb?: string | null
+          site_telephone_no1?: string | null
+          site_telephone_no2?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      service_agreements: {
+        Row: {
+          areas_covered: string | null
+          comments: string | null
+          cpi: number | null
+          cpm_device_onsite: string | null
+          cpm_pricing: number | null
+          created_at: string | null
+          id: string
+          invoice_type: string | null
+          products: string | null
+          service_active_inactive: string | null
+          service_frequency: string | null
+          service_id: string
+          total: number | null
+          unit_price: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          areas_covered?: string | null
+          comments?: string | null
+          cpi?: number | null
+          cpm_device_onsite?: string | null
+          cpm_pricing?: number | null
+          created_at?: string | null
+          id?: string
+          invoice_type?: string | null
+          products?: string | null
+          service_active_inactive?: string | null
+          service_frequency?: string | null
+          service_id: string
+          total?: number | null
+          unit_price?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          areas_covered?: string | null
+          comments?: string | null
+          cpi?: number | null
+          cpm_device_onsite?: string | null
+          cpm_pricing?: number | null
+          created_at?: string | null
+          id?: string
+          invoice_type?: string | null
+          products?: string | null
+          service_active_inactive?: string | null
+          service_frequency?: string | null
+          service_id?: string
+          total?: number | null
+          unit_price?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_agreements_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["service_id"]
+          },
+        ]
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      [_ in never]: never
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
+}
+
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {},
+  },
+} as const
