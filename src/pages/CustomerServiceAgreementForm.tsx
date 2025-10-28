@@ -148,61 +148,6 @@ const CustomerServiceAgreementForm = () => {
                 </div>
               </div>
 
-              {/* Customer Details Card */}
-              <Card className="mb-6">
-                <CardHeader>
-                  <CardTitle>Customer Information</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {selectedCustomer?.site_street_name && (
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground">Address</p>
-                        <p className="text-sm">
-                          {selectedCustomer.site_street_name}
-                          {selectedCustomer.site_suburb && `, ${selectedCustomer.site_suburb}`}
-                          {selectedCustomer.site_post_code && ` ${selectedCustomer.site_post_code}`}
-                        </p>
-                      </div>
-                    )}
-                    {selectedCustomer?.site_contact_first_name && (
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground">Contact Person</p>
-                        <p className="text-sm">
-                          {selectedCustomer.site_contact_first_name} {selectedCustomer.site_contact_lastname}
-                        </p>
-                      </div>
-                    )}
-                    {selectedCustomer?.site_telephone_no1 && (
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground">Phone</p>
-                        <p className="text-sm">{selectedCustomer.site_telephone_no1}</p>
-                      </div>
-                    )}
-                    {selectedCustomer?.site_email_address && (
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground">Email</p>
-                        <p className="text-sm">{selectedCustomer.site_email_address}</p>
-                      </div>
-                    )}
-                    {selectedCustomer?.contract_date && (
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground">Contract Date</p>
-                        <p className="text-sm">
-                          {new Date(selectedCustomer.contract_date).toLocaleDateString()}
-                        </p>
-                      </div>
-                    )}
-                    {selectedCustomer?.notes && (
-                      <div className="md:col-span-2">
-                        <p className="text-sm font-medium text-muted-foreground">Notes</p>
-                        <p className="text-sm">{selectedCustomer.notes}</p>
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-
               {/* Service Agreements List */}
               <div>
                 <h2 className="text-2xl font-bold mb-4">Service Agreements</h2>
