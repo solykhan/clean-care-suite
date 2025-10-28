@@ -8,6 +8,7 @@ import { AppSidebar } from "@/components/AppSidebar";
 import Index from "./pages/Index";
 import Customers from "./pages/Customers";
 import CustomerDetail from "./pages/CustomerDetail";
+import AddCustomer from "./pages/AddCustomer";
 import ServiceAgreements from "./pages/ServiceAgreements";
 import CustomerServiceAgreementForm from "./pages/CustomerServiceAgreementForm";
 import NotFound from "./pages/NotFound";
@@ -32,6 +33,7 @@ const App = () => (
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/customers" element={<Customers />} />
+                  <Route path="/customers/new" element={<AddCustomer />} />
                   <Route path="/customers/:id" element={<CustomerDetail />} />
                   <Route path="/service-agreements" element={<ServiceAgreements />} />
                   <Route path="/customer-service-form" element={<CustomerServiceAgreementForm />} />
