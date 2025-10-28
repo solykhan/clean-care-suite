@@ -5,9 +5,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Input } from "@/components/ui/input";
 import { ServiceAgreementForm } from "@/components/ServiceAgreementForm";
 import { EditServiceAgreementDialog } from "@/components/EditServiceAgreementDialog";
-import { Building2, Phone, Mail } from "lucide-react";
+import { Building2, Phone, Mail, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Table,
@@ -21,6 +22,7 @@ import {
 const CustomerServiceAgreementForm = () => {
   const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const { data: customers, isLoading: isLoadingCustomers } = useQuery({
     queryKey: ["customers"],
@@ -57,6 +59,12 @@ const CustomerServiceAgreementForm = () => {
 
   const selectedCustomer = customers?.find(c => c.id === selectedCustomerId);
 
+  const filteredCustomers = customers?.filter((customer) =>
+    customer.site_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    customer.service_id?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    customer.site_suburb?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const handleSuccess = () => {
     setRefreshKey((prev) => prev + 1);
   };
@@ -65,21 +73,32 @@ const CustomerServiceAgreementForm = () => {
     <div className="h-screen flex">
       {/* Left Sidebar - Customer List */}
       <div className="w-80 border-r bg-muted/30">
-        <div className="p-4 border-b bg-background">
-          <h2 className="text-lg font-semibold">Customer List View</h2>
-          <p className="text-sm text-muted-foreground">Select a customer</p>
+        <div className="p-4 border-b bg-background space-y-3">
+          <div>
+            <h2 className="text-lg font-semibold">Customer List View</h2>
+            <p className="text-sm text-muted-foreground">Select a customer</p>
+          </div>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search customers..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+          </div>
         </div>
         
-        <ScrollArea className="h-[calc(100vh-80px)]">
+        <ScrollArea className="h-[calc(100vh-140px)]">
           {isLoadingCustomers ? (
             <div className="p-4 space-y-2">
               {[1, 2, 3, 4, 5].map((i) => (
                 <Skeleton key={i} className="h-20 w-full" />
               ))}
             </div>
-          ) : (
+          ) : filteredCustomers && filteredCustomers.length > 0 ? (
             <div className="p-2 space-y-2">
-              {customers?.map((customer) => (
+              {filteredCustomers.map((customer) => (
                 <Card
                   key={customer.id}
                   className={cn(
@@ -121,6 +140,12 @@ const CustomerServiceAgreementForm = () => {
                   </CardContent>
                 </Card>
               ))}
+            </div>
+          ) : (
+            <div className="p-4">
+              <p className="text-sm text-muted-foreground text-center">
+                No customers found matching "{searchTerm}"
+              </p>
             </div>
           )}
         </ScrollArea>
