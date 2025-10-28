@@ -23,42 +23,67 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY not configured');
     }
 
-    const prompt = `You are a data mapping expert. Given CSV column headers and database column options, suggest the best mapping.
+    // Build field descriptions
+    const fieldDescriptions: Record<string, string> = {
+      // Customer fields
+      service_id: "Unique service identifier or service number",
+      site_name: "Customer name, business name, or site name",
+      site_street_name: "Street address",
+      site_suburb: "City or suburb",
+      site_post_code: "Postal/ZIP code",
+      site_pobox: "PO Box number",
+      site_email_address: "Email address",
+      site_telephone_no1: "Primary phone number",
+      site_telephone_no2: "Secondary phone number",
+      site_fax_no: "Fax number",
+      site_contact_first_name: "Contact first name",
+      site_contact_lastname: "Contact last name",
+      site_accounts_contact: "Accounts contact person",
+      postal_address: "Full postal address",
+      contract_date: "Contract start date",
+      date_cancel: "Cancellation date",
+      contract_notes: "Contract notes",
+      notes: "General notes",
+      delete_tag: "Delete flag (boolean)",
+      // Service agreement fields
+      products: "Products or services provided",
+      areas_covered: "Areas or locations covered by the service",
+      service_frequency: "How often the service is performed (daily, weekly, monthly, etc.)",
+      service_active_inactive: "Current status of the service (Active or Inactive)",
+      invoice_type: "Type of invoice or billing method",
+      cpm_device_onsite: "CPM (Cost Per Month) device information or onsite equipment",
+      unit_price: "Price per unit of service",
+      cpm_pricing: "Cost per month pricing",
+      cpi: "Consumer Price Index adjustment or pricing index",
+      total: "Total cost or price",
+      comments: "Additional comments or notes"
+    };
 
-CSV Headers: ${csvHeaders.join(', ')}
+    const excludedColumns = ["ysnPrint", "Save_tag", "SiteState", "RunTag"];
+    
+    const dbColumnsList = databaseColumns
+      .filter((col: string) => col !== "skip")
+      .map((col: string) => `- ${col}: ${fieldDescriptions[col] || "No description"}`)
+      .join('\n');
 
-Database Columns (with descriptions):
-- service_id: Unique service identifier or service number
-- site_name: Customer name, business name, or site name
-- site_street_name: Street address
-- site_suburb: City or suburb
-- site_post_code: Postal/ZIP code
-- site_pobox: PO Box number
-- site_email_address: Email address
-- site_telephone_no1: Primary phone number
-- site_telephone_no2: Secondary phone number
-- site_fax_no: Fax number
-- site_contact_first_name: Contact first name
-- site_contact_lastname: Contact last name
-- site_accounts_contact: Accounts contact person
-- postal_address: Full postal address
-- contract_date: Contract start date
-- date_cancel: Cancellation date
-- contract_notes: Contract notes
-- notes: General notes
-- delete_tag: Delete flag (boolean)
+    const prompt = `You are a data mapping expert. Map CSV column headers to database columns based on semantic similarity.
 
-EXCLUDED COLUMNS (always map to "skip"):
-- ysnPrint
-- Save_tag
-- SiteState
-- RunTag
+CSV Headers to map: ${csvHeaders.join(', ')}
 
-Return ONLY a JSON object mapping each CSV header to the best database column, or "skip" if no good match exists.
-Format: {"CSV Header": "database_column_or_skip"}
+Available Database Columns:
+${dbColumnsList}
 
-CRITICAL: The fields "service_id" and "site_name" are REQUIRED. You MUST map at least these two fields to appropriate CSV columns.
-CRITICAL: Any columns matching the excluded list (ysnPrint, Save_tag, SiteState, RunTag) must ALWAYS be mapped to "skip".`;
+RULES:
+1. Match columns based on meaning, not just exact text match
+2. Handle variations like "ServiceID" → "service_id", "PRODUCTS" → "products"
+3. Handle spaces and underscores: "AREAS COVERED" → "areas_covered"
+4. If a CSV header matches these excluded terms, ALWAYS map to "skip": ${excludedColumns.join(', ')}
+5. If no good semantic match exists, map to "skip"
+
+Return ONLY a JSON object mapping each CSV header to its best database column match.
+Format: {"CSV_Header": "database_column_or_skip"}
+
+Example: {"ServiceID": "service_id", "PRODUCTS": "products", "AREAS COVERED": "areas_covered"}`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
