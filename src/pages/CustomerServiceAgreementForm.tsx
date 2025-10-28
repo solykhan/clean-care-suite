@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ServiceAgreementForm } from "@/components/ServiceAgreementForm";
+import { EditServiceAgreementDialog } from "@/components/EditServiceAgreementDialog";
 import { Building2, Phone, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -180,6 +181,7 @@ const CustomerServiceAgreementForm = () => {
                               <TableHead>CPM Device Onsite</TableHead>
                               <TableHead>Comments</TableHead>
                               <TableHead>Created At</TableHead>
+                              <TableHead>Actions</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
@@ -220,6 +222,12 @@ const CustomerServiceAgreementForm = () => {
                                   {agreement.created_at
                                     ? new Date(agreement.created_at).toLocaleDateString()
                                     : "-"}
+                                </TableCell>
+                                <TableCell>
+                                  <EditServiceAgreementDialog 
+                                    agreement={agreement}
+                                    onSuccess={handleSuccess}
+                                  />
                                 </TableCell>
                               </TableRow>
                             ))}

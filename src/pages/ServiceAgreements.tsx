@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ServiceAgreementForm } from "@/components/ServiceAgreementForm";
 import { ServiceAgreementImportDialog } from "@/components/ServiceAgreementImportDialog";
+import { EditServiceAgreementDialog } from "@/components/EditServiceAgreementDialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -79,6 +80,7 @@ const ServiceAgreements = () => {
                     <TableHead>CPM Device Onsite</TableHead>
                     <TableHead>Comments</TableHead>
                     <TableHead>Created At</TableHead>
+                    <TableHead>Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -122,6 +124,12 @@ const ServiceAgreements = () => {
                         {agreement.created_at
                           ? new Date(agreement.created_at).toLocaleDateString()
                           : "-"}
+                      </TableCell>
+                      <TableCell>
+                        <EditServiceAgreementDialog 
+                          agreement={agreement}
+                          onSuccess={handleSuccess}
+                        />
                       </TableCell>
                     </TableRow>
                   ))}
