@@ -1,15 +1,17 @@
 import { useParams, Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, Building2, Mail, Phone, MapPin, FileText, Plus, DollarSign } from "lucide-react";
+import { ArrowLeft, Building2, Phone, MapPin, FileText, DollarSign } from "lucide-react";
 import { toast } from "sonner";
+import { ServiceAgreementForm } from "@/components/ServiceAgreementForm";
 
 const CustomerDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const queryClient = useQueryClient();
 
   const { data: customer, isLoading: customerLoading } = useQuery({
     queryKey: ["customer", id],
@@ -247,12 +249,12 @@ const CustomerDetail = () => {
                 </CardTitle>
                 <CardDescription>Active service contracts for this customer</CardDescription>
               </div>
-              <Link to={`/customers/${id}/agreements/new`}>
-                <Button className="gap-2">
-                  <Plus className="h-4 w-4" />
-                  Add Agreement
-                </Button>
-              </Link>
+              <ServiceAgreementForm 
+                serviceId={customer.service_id}
+                onSuccess={() => {
+                  queryClient.invalidateQueries({ queryKey: ["service-agreements", customer.service_id] });
+                }}
+              />
             </div>
           </CardHeader>
           <CardContent>
