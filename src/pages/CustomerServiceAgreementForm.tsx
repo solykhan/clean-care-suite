@@ -169,19 +169,19 @@ const CustomerServiceAgreementForm = () => {
                         <Table>
                           <TableHeader>
                             <TableRow>
-                              <TableHead>Status</TableHead>
-                              <TableHead>Products</TableHead>
-                              <TableHead>Areas Covered</TableHead>
-                              <TableHead>Service Frequency</TableHead>
-                              <TableHead>Invoice Type</TableHead>
-                              <TableHead>Unit Price</TableHead>
-                              <TableHead>CPM Pricing</TableHead>
-                              <TableHead>CPI</TableHead>
-                              <TableHead>Total</TableHead>
-                              <TableHead>CPM Device Onsite</TableHead>
-                              <TableHead>Comments</TableHead>
-                              <TableHead>Created At</TableHead>
-                              <TableHead>Actions</TableHead>
+                              <TableHead className="font-bold">Status</TableHead>
+                              <TableHead className="font-bold">Products</TableHead>
+                              <TableHead className="font-bold">Areas Covered</TableHead>
+                              <TableHead className="font-bold">Service Frequency</TableHead>
+                              <TableHead className="font-bold">Invoice Type</TableHead>
+                              <TableHead className="font-bold">Unit Price</TableHead>
+                              <TableHead className="font-bold">CPM Pricing</TableHead>
+                              <TableHead className="font-bold">CPI</TableHead>
+                              <TableHead className="font-bold">Total</TableHead>
+                              <TableHead className="font-bold">CPM Device Onsite</TableHead>
+                              <TableHead className="font-bold">Comments</TableHead>
+                              <TableHead className="font-bold">Created At</TableHead>
+                              <TableHead className="font-bold">Actions</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
