@@ -15,13 +15,7 @@ const ServiceAgreements = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("service_agreements")
-        .select(`
-          *,
-          customers!service_agreements_service_id_fkey(
-            site_name,
-            service_id
-          )
-        `)
+        .select("*")
         .order("created_at", { ascending: false });
 
       if (error) throw error;
@@ -65,7 +59,7 @@ const ServiceAgreements = () => {
                 <div className="flex justify-between items-start">
                   <div>
                     <CardTitle className="text-xl">
-                      {agreement.customers?.site_name || "Unknown Customer"}
+                      Service Agreement
                     </CardTitle>
                     <CardDescription className="mt-1">
                       Service ID: {agreement.service_id}

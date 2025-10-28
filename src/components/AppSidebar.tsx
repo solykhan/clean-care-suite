@@ -56,7 +56,15 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild>
+                <SidebarMenuButton asChild isActive={currentPath === "/customer-service-form"}>
+                  <NavLink to="/customer-service-form">
+                    <FileText className="h-4 w-4" />
+                    <span>Customer Service Form</span>
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={currentPath === "/service-agreements"}>
                   <NavLink to="/service-agreements">
                     <FileText className="h-4 w-4" />
                     <span>Service Agreements</span>
