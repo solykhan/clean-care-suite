@@ -244,8 +244,8 @@ export function CustomerImportDialog() {
 
     setImporting(true);
     try {
-      const mappedData = csvData.map(row => {
-        const obj: any = {};
+      const allMappedData = csvData.map((row, index) => {
+        const obj: any = { _rowIndex: index + 2 }; // +2 because header is row 1 and data starts at row 2
         Object.entries(columnMapping).forEach(([csvCol, dbCol]) => {
           if (dbCol !== "skip" && row[csvCol]) {
             // Convert Excel date serial numbers to proper date format
@@ -262,12 +262,40 @@ export function CustomerImportDialog() {
         return obj;
       });
 
-      const { error } = await supabase.from("customers").insert(mappedData);
+      // Filter out rows missing required fields
+      const validData = allMappedData.filter(row => {
+        const hasServiceId = row.service_id && String(row.service_id).trim() !== '';
+        const hasSiteName = row.site_name && String(row.site_name).trim() !== '';
+        return hasServiceId && hasSiteName;
+      });
+
+      const skippedRows = allMappedData.filter(row => {
+        const hasServiceId = row.service_id && String(row.service_id).trim() !== '';
+        const hasSiteName = row.site_name && String(row.site_name).trim() !== '';
+        return !hasServiceId || !hasSiteName;
+      });
+
+      // Remove the _rowIndex field before inserting
+      const dataToInsert = validData.map(({ _rowIndex, ...row }) => row);
+
+      if (dataToInsert.length === 0) {
+        setError("No valid rows to import. All rows are missing required fields (Service ID or Site Name).");
+        return;
+      }
+
+      const { error } = await supabase.from("customers").insert(dataToInsert);
 
       if (error) throw error;
 
+      let successMessage = `${dataToInsert.length} customers imported successfully`;
+      if (skippedRows.length > 0) {
+        const skippedRowNumbers = skippedRows.map(row => row._rowIndex).join(', ');
+        successMessage += `. ${skippedRows.length} rows skipped (missing required fields) at rows: ${skippedRowNumbers}`;
+      }
+
       toast.success("Import successful", {
-        description: `${mappedData.length} customers imported successfully`,
+        description: successMessage,
+        duration: 5000,
       });
 
       setOpen(false);
