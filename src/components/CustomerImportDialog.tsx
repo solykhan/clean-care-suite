@@ -51,6 +51,7 @@ export function CustomerImportDialog() {
   const [error, setError] = useState<string>("");
   const [unmappedColumns, setUnmappedColumns] = useState<string[]>([]);
   const [missingRequired, setMissingRequired] = useState<string[]>([]);
+  const [isAIMapping, setIsAIMapping] = useState(false);
 
   const parseCSV = (text: string) => {
     const lines = text.split("\n").filter(line => line.trim());
@@ -111,30 +112,75 @@ export function CustomerImportDialog() {
         }
         
         setCsvHeaders(headers);
-        const initialMapping: Record<string, string> = {};
-        const unmapped: string[] = [];
-        
-        headers.forEach(header => {
-          const normalized = header.toLowerCase().replace(/\s+/g, '_');
-          const match = DATABASE_COLUMNS.find(col => col.value === normalized);
-          if (match) {
-            initialMapping[header] = match.value;
-          } else {
-            initialMapping[header] = "skip";
-            unmapped.push(header);
-          }
-        });
-        
-        setColumnMapping(initialMapping);
         setCsvData(data);
-        setUnmappedColumns(unmapped);
         
-        // Validate required fields
-        const mappedValues = Object.values(initialMapping);
-        const missing: string[] = [];
-        if (!mappedValues.includes("service_id")) missing.push("Service ID");
-        if (!mappedValues.includes("site_name")) missing.push("Site Name");
-        setMissingRequired(missing);
+        // Try AI-powered mapping first
+        setIsAIMapping(true);
+        try {
+          const { data: aiData, error: aiError } = await supabase.functions.invoke('ai-map-columns', {
+            body: {
+              csvHeaders: headers,
+              databaseColumns: DATABASE_COLUMNS.map(col => col.value)
+            }
+          });
+
+          if (aiError) throw aiError;
+
+          const aiMapping = aiData.mapping;
+          const finalMapping: Record<string, string> = {};
+          const unmapped: string[] = [];
+          
+          headers.forEach(header => {
+            const aiSuggestion = aiMapping[header];
+            if (aiSuggestion && aiSuggestion !== 'skip' && DATABASE_COLUMNS.find(col => col.value === aiSuggestion)) {
+              finalMapping[header] = aiSuggestion;
+            } else {
+              finalMapping[header] = "skip";
+              unmapped.push(header);
+            }
+          });
+          
+          setColumnMapping(finalMapping);
+          setUnmappedColumns(unmapped);
+          
+          // Validate required fields
+          const mappedValues = Object.values(finalMapping);
+          const missing: string[] = [];
+          if (!mappedValues.includes("service_id")) missing.push("Service ID");
+          if (!mappedValues.includes("site_name")) missing.push("Site Name");
+          setMissingRequired(missing);
+          
+          if (missing.length === 0) {
+            toast.success("Auto-mapping successful - all required fields mapped");
+          }
+        } catch (error) {
+          console.error('AI mapping failed, using basic mapping:', error);
+          // Fallback to basic mapping
+          const initialMapping: Record<string, string> = {};
+          const unmapped: string[] = [];
+          
+          headers.forEach(header => {
+            const normalized = header.toLowerCase().replace(/\s+/g, '_');
+            const match = DATABASE_COLUMNS.find(col => col.value === normalized);
+            if (match) {
+              initialMapping[header] = match.value;
+            } else {
+              initialMapping[header] = "skip";
+              unmapped.push(header);
+            }
+          });
+          
+          setColumnMapping(initialMapping);
+          setUnmappedColumns(unmapped);
+          
+          const mappedValues = Object.values(initialMapping);
+          const missing: string[] = [];
+          if (!mappedValues.includes("service_id")) missing.push("Service ID");
+          if (!mappedValues.includes("site_name")) missing.push("Site Name");
+          setMissingRequired(missing);
+        } finally {
+          setIsAIMapping(false);
+        }
       } catch (err) {
         setError("Failed to parse file. Please check the file format.");
       }

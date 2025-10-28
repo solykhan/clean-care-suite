@@ -1,1 +1,4 @@
 project_id = "pkkcaknnktqevvlydjna"
+
+[functions.ai-map-columns]
+verify_jwt = false
