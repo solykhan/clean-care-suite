@@ -141,15 +141,7 @@ export type Database = {
           unit_price?: number | null
           updated_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "service_agreements_service_id_fkey"
-            columns: ["service_id"]
-            isOneToOne: false
-            referencedRelation: "customers"
-            referencedColumns: ["service_id"]
-          },
-        ]
+        Relationships: []
       }
     }
     Views: {
