@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -47,6 +47,7 @@ type FormValues = z.infer<typeof formSchema>;
 const AddCustomer = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [generatingId, setGeneratingId] = useState(true);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -72,6 +73,44 @@ const AddCustomer = () => {
       delete_tag: false,
     },
   });
+
+  useEffect(() => {
+    const generateServiceId = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("customers")
+          .select("service_id")
+          .order("service_id", { ascending: false })
+          .limit(100);
+
+        if (error) throw error;
+
+        let newServiceId = "1000";
+        
+        if (data && data.length > 0) {
+          // Find the highest numeric service_id
+          const numericIds = data
+            .map(item => parseInt(item.service_id))
+            .filter(id => !isNaN(id))
+            .sort((a, b) => b - a);
+          
+          if (numericIds.length > 0) {
+            newServiceId = String(numericIds[0] + 1);
+          }
+        }
+
+        form.setValue("service_id", newServiceId);
+      } catch (error: any) {
+        toast.error("Failed to generate service ID", {
+          description: error.message,
+        });
+      } finally {
+        setGeneratingId(false);
+      }
+    };
+
+    generateServiceId();
+  }, [form]);
 
   const onSubmit = async (values: FormValues) => {
     setLoading(true);
@@ -151,9 +190,14 @@ const AddCustomer = () => {
                       name="service_id"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Service ID *</FormLabel>
+                          <FormLabel>Service ID * (Auto-generated)</FormLabel>
                           <FormControl>
-                            <Input placeholder="Enter service ID" {...field} />
+                            <Input 
+                              placeholder="Generating..." 
+                              {...field} 
+                              disabled 
+                              className="bg-muted"
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -455,12 +499,12 @@ const AddCustomer = () => {
                     type="button"
                     variant="outline"
                     onClick={() => navigate("/customers")}
-                    disabled={loading}
+                    disabled={loading || generatingId}
                   >
                     Cancel
                   </Button>
-                  <Button type="submit" disabled={loading}>
-                    {loading ? "Creating..." : "Create Customer"}
+                  <Button type="submit" disabled={loading || generatingId}>
+                    {generatingId ? "Generating ID..." : loading ? "Creating..." : "Create Customer"}
                   </Button>
                 </div>
               </form>
