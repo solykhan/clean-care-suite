@@ -1,4 +1,4 @@
-import { Home, Building2, FileText } from "lucide-react";
+import { Home, Building2, FileText, PlayCircle } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 
 import {
@@ -68,6 +68,14 @@ export function AppSidebar() {
                   <NavLink to="/service-agreements">
                     <FileText className="h-4 w-4" />
                     <span>Service Agreements</span>
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={currentPath === "/runs"}>
+                  <NavLink to="/runs">
+                    <PlayCircle className="h-4 w-4" />
+                    <span>Runs</span>
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
