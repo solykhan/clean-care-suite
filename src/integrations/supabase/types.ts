@@ -89,6 +89,48 @@ export type Database = {
         }
         Relationships: []
       }
+      runs: {
+        Row: {
+          clients: string | null
+          completed: boolean | null
+          created_at: string
+          frequency: string | null
+          id: string
+          products: string | null
+          suburb: string | null
+          technicians: string | null
+          updated_at: string
+          week_day: string | null
+          weeks: string | null
+        }
+        Insert: {
+          clients?: string | null
+          completed?: boolean | null
+          created_at?: string
+          frequency?: string | null
+          id?: string
+          products?: string | null
+          suburb?: string | null
+          technicians?: string | null
+          updated_at?: string
+          week_day?: string | null
+          weeks?: string | null
+        }
+        Update: {
+          clients?: string | null
+          completed?: boolean | null
+          created_at?: string
+          frequency?: string | null
+          id?: string
+          products?: string | null
+          suburb?: string | null
+          technicians?: string | null
+          updated_at?: string
+          week_day?: string | null
+          weeks?: string | null
+        }
+        Relationships: []
+      }
       service_agreements: {
         Row: {
           areas_covered: string | null
