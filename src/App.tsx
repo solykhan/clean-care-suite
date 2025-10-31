@@ -11,7 +11,6 @@ import CustomerDetail from "./pages/CustomerDetail";
 import AddCustomer from "./pages/AddCustomer";
 import ServiceAgreements from "./pages/ServiceAgreements";
 import CustomerServiceAgreementForm from "./pages/CustomerServiceAgreementForm";
-import Runs from "./pages/Runs";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,7 +37,6 @@ const App = () => (
                   <Route path="/customers/:id" element={<CustomerDetail />} />
                   <Route path="/service-agreements" element={<ServiceAgreements />} />
                   <Route path="/customer-service-form" element={<CustomerServiceAgreementForm />} />
-                  <Route path="/runs" element={<Runs />} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
