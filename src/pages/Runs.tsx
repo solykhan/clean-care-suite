@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Checkbox } from "@/components/ui/checkbox";
 import { PlayCircle } from "lucide-react";
 import { toast } from "sonner";
+import { RunsImportDialog } from "@/components/RunsImportDialog";
 
 const Runs = () => {
   const { data: runs, isLoading, error } = useQuery({
@@ -40,11 +41,16 @@ const Runs = () => {
     <div className="bg-background">
       <div className="container mx-auto py-8 px-4">
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <PlayCircle className="h-8 w-8 text-primary" />
-            <h1 className="text-4xl font-bold text-foreground">Runs</h1>
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <PlayCircle className="h-8 w-8 text-primary" />
+                <h1 className="text-4xl font-bold text-foreground">Runs</h1>
+              </div>
+              <p className="text-muted-foreground">View all service runs</p>
+            </div>
+            <RunsImportDialog />
           </div>
-          <p className="text-muted-foreground">View all service runs</p>
         </div>
 
         <Card>
