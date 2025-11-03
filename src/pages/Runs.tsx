@@ -6,8 +6,14 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { PlayCircle } from "lucide-react";
 import { toast } from "sonner";
 import { RunsImportDialog } from "@/components/RunsImportDialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useState, useMemo } from "react";
 
 const Runs = () => {
+  const [technicianFilter, setTechnicianFilter] = useState<string>("all");
+  const [weeksFilter, setWeeksFilter] = useState<string>("all");
+  const [weekDayFilter, setWeekDayFilter] = useState<string>("all");
+
   const { data: runs, isLoading, error } = useQuery({
     queryKey: ["runs"],
     queryFn: async () => {
@@ -23,6 +29,33 @@ const Runs = () => {
       return data;
     },
   });
+
+  const filteredRuns = useMemo(() => {
+    if (!runs) return [];
+    
+    return runs.filter((run) => {
+      const matchesTechnician = technicianFilter === "all" || run.technicians === technicianFilter;
+      const matchesWeeks = weeksFilter === "all" || run.weeks === weeksFilter;
+      const matchesWeekDay = weekDayFilter === "all" || run.week_day === weekDayFilter;
+      
+      return matchesTechnician && matchesWeeks && matchesWeekDay;
+    });
+  }, [runs, technicianFilter, weeksFilter, weekDayFilter]);
+
+  const uniqueTechnicians = useMemo(() => {
+    if (!runs) return [];
+    return Array.from(new Set(runs.map(r => r.technicians).filter(Boolean)));
+  }, [runs]);
+
+  const uniqueWeeks = useMemo(() => {
+    if (!runs) return [];
+    return Array.from(new Set(runs.map(r => r.weeks).filter(Boolean)));
+  }, [runs]);
+
+  const uniqueWeekDays = useMemo(() => {
+    if (!runs) return [];
+    return Array.from(new Set(runs.map(r => r.week_day).filter(Boolean)));
+  }, [runs]);
 
   if (error) {
     return (
@@ -50,6 +83,50 @@ const Runs = () => {
               <p className="text-muted-foreground">View all service runs</p>
             </div>
             <RunsImportDialog />
+          </div>
+          
+          <div className="flex gap-4 flex-wrap">
+            <div className="flex-1 min-w-[200px]">
+              <Select value={technicianFilter} onValueChange={setTechnicianFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Filter by Technician" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Technicians</SelectItem>
+                  {uniqueTechnicians.map((tech) => (
+                    <SelectItem key={tech} value={tech}>{tech}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="flex-1 min-w-[200px]">
+              <Select value={weeksFilter} onValueChange={setWeeksFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Filter by Weeks" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Weeks</SelectItem>
+                  {uniqueWeeks.map((week) => (
+                    <SelectItem key={week} value={week}>{week}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="flex-1 min-w-[200px]">
+              <Select value={weekDayFilter} onValueChange={setWeekDayFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Filter by Week Day" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Week Days</SelectItem>
+                  {uniqueWeekDays.map((day) => (
+                    <SelectItem key={day} value={day}>{day}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
 
@@ -81,14 +158,14 @@ const Runs = () => {
                         ))}
                       </TableRow>
                     ))
-                  ) : runs?.length === 0 ? (
+                  ) : filteredRuns.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
                         No runs found
                       </TableCell>
                     </TableRow>
                   ) : (
-                    runs?.map((run) => (
+                    filteredRuns.map((run) => (
                       <TableRow key={run.id} className="hover:bg-muted/30">
                         <TableCell className="font-medium">{run.service_id}</TableCell>
                         <TableCell>{run.clients || "-"}</TableCell>
