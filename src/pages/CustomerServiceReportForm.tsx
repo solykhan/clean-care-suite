@@ -47,7 +47,8 @@ type FormData = z.infer<typeof formSchema>;
 const CustomerServiceReportForm = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const signaturePadRef = useRef<SignaturePadRef>(null);
+  const officerSignaturePadRef = useRef<SignaturePadRef>(null);
+  const techSignaturePadRef = useRef<SignaturePadRef>(null);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -79,15 +80,17 @@ const CustomerServiceReportForm = () => {
     mutationFn: async (data: FormData) => {
       const { run_id, ...reportData } = data;
       
-      // Get the signature as base64
-      const signatureData = signaturePadRef.current?.toDataURL() || null;
+      // Get the signatures as base64
+      const officerSignatureData = officerSignaturePadRef.current?.toDataURL() || null;
+      const techSignatureData = techSignaturePadRef.current?.toDataURL() || null;
       
       const { error } = await supabase
         .from("customer_service_reports")
         .insert({
           run_id,
           ...reportData,
-          s_officer_sig: signatureData,
+          s_officer_sig: officerSignatureData,
+          tech_sig: techSignatureData,
         });
       
       if (error) throw error;
@@ -96,7 +99,8 @@ const CustomerServiceReportForm = () => {
       toast.success("Customer service report created successfully");
       queryClient.invalidateQueries({ queryKey: ["customer_service_reports"] });
       form.reset();
-      signaturePadRef.current?.clear();
+      officerSignaturePadRef.current?.clear();
+      techSignaturePadRef.current?.clear();
       navigate("/runs");
     },
     onError: (error) => {
@@ -105,9 +109,13 @@ const CustomerServiceReportForm = () => {
   });
 
   const onSubmit = (data: FormData) => {
-    // Validate signature is not empty
-    if (signaturePadRef.current?.isEmpty()) {
+    // Validate signatures are not empty
+    if (officerSignaturePadRef.current?.isEmpty()) {
       toast.error("Please provide a service officer signature");
+      return;
+    }
+    if (techSignaturePadRef.current?.isEmpty()) {
+      toast.error("Please provide a technician signature");
       return;
     }
     createReport.mutate(data);
@@ -479,22 +487,13 @@ const CustomerServiceReportForm = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <FormLabel>Service Officer Signature *</FormLabel>
-                    <SignaturePad ref={signaturePadRef} />
+                    <SignaturePad ref={officerSignaturePadRef} />
                   </div>
 
-                  <FormField
-                    control={form.control}
-                    name="tech_sig"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Technician Signature</FormLabel>
-                        <FormControl>
-                          <Input {...field} value={field.value || ""} placeholder="Enter name" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <div>
+                    <FormLabel>Technician Signature *</FormLabel>
+                    <SignaturePad ref={techSignaturePadRef} />
+                  </div>
                 </div>
               </div>
 
