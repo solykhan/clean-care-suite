@@ -3,13 +3,16 @@ import { supabase } from "@/integrations/supabase/client";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { PlayCircle } from "lucide-react";
+import { PlayCircle, Edit } from "lucide-react";
 import { toast } from "sonner";
 import { RunsImportDialog } from "@/components/RunsImportDialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState, useMemo } from "react";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const Runs = () => {
+  const navigate = useNavigate();
   const [technicianFilter, setTechnicianFilter] = useState<string>("all");
   const [weeksFilter, setWeeksFilter] = useState<string>("all");
   const [weekDayFilter, setWeekDayFilter] = useState<string>("all");
@@ -145,13 +148,14 @@ const Runs = () => {
                     <TableHead className="font-bold">Frequency</TableHead>
                     <TableHead className="font-bold">Technicians</TableHead>
                     <TableHead className="font-bold text-center">Completed</TableHead>
+                    <TableHead className="font-bold text-center">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {isLoading ? (
                     Array.from({ length: 5 }).map((_, i) => (
                       <TableRow key={i}>
-                        {Array.from({ length: 9 }).map((_, j) => (
+                        {Array.from({ length: 10 }).map((_, j) => (
                           <TableCell key={j}>
                             <div className="h-4 bg-muted rounded animate-pulse"></div>
                           </TableCell>
@@ -160,7 +164,7 @@ const Runs = () => {
                     ))
                   ) : filteredRuns.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
+                      <TableCell colSpan={10} className="text-center py-8 text-muted-foreground">
                         No runs found
                       </TableCell>
                     </TableRow>
@@ -177,6 +181,15 @@ const Runs = () => {
                         <TableCell>{run.technicians || "-"}</TableCell>
                         <TableCell className="text-center">
                           <Checkbox checked={run.completed || false} disabled />
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => navigate(`/customer-service-report?service_id=${run.service_id}`)}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))

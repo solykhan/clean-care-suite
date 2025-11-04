@@ -11,7 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { ClipboardList } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useRef } from "react";
 import { SignaturePad, SignaturePadRef } from "@/components/SignaturePad";
 
@@ -47,6 +47,8 @@ type FormData = z.infer<typeof formSchema>;
 const CustomerServiceReportForm = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [searchParams] = useSearchParams();
+  const serviceIdFromUrl = searchParams.get("service_id");
   const officerSignaturePadRef = useRef<SignaturePadRef>(null);
   const techSignaturePadRef = useRef<SignaturePadRef>(null);
 
@@ -64,12 +66,18 @@ const CustomerServiceReportForm = () => {
   });
 
   const { data: runs, isLoading: isLoadingRuns } = useQuery({
-    queryKey: ["runs"],
+    queryKey: ["runs", serviceIdFromUrl],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("runs")
         .select("*")
         .order("service_id", { ascending: true });
+      
+      if (serviceIdFromUrl) {
+        query = query.eq("service_id", serviceIdFromUrl);
+      }
+      
+      const { data, error } = await query;
       
       if (error) throw error;
       return data;
