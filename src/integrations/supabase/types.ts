@@ -14,6 +14,98 @@ export type Database = {
   }
   public: {
     Tables: {
+      customer_service_reports: {
+        Row: {
+          air_fresheners: number | null
+          comments: string | null
+          created_at: string
+          grit_soap: number | null
+          hand_sanitisers: number | null
+          hand_soap: number | null
+          id: string
+          medical_bins: number | null
+          nappy_bins: number | null
+          others: number | null
+          pedal_bins: number | null
+          run_id: string
+          s_officer_sig: string | null
+          sanitary_bins: number | null
+          sanitising_wipes: number | null
+          sensor_bins: number | null
+          service_id: string | null
+          sharps_1_4lt_8lt: number | null
+          tech_sig: string | null
+          toilet_seat_sprays: number | null
+          updated_at: string
+          urinal_mats: number | null
+          urinal_sanitisers: number | null
+          urinal_treatment: number | null
+          wc_sanitisers: number | null
+        }
+        Insert: {
+          air_fresheners?: number | null
+          comments?: string | null
+          created_at?: string
+          grit_soap?: number | null
+          hand_sanitisers?: number | null
+          hand_soap?: number | null
+          id?: string
+          medical_bins?: number | null
+          nappy_bins?: number | null
+          others?: number | null
+          pedal_bins?: number | null
+          run_id: string
+          s_officer_sig?: string | null
+          sanitary_bins?: number | null
+          sanitising_wipes?: number | null
+          sensor_bins?: number | null
+          service_id?: string | null
+          sharps_1_4lt_8lt?: number | null
+          tech_sig?: string | null
+          toilet_seat_sprays?: number | null
+          updated_at?: string
+          urinal_mats?: number | null
+          urinal_sanitisers?: number | null
+          urinal_treatment?: number | null
+          wc_sanitisers?: number | null
+        }
+        Update: {
+          air_fresheners?: number | null
+          comments?: string | null
+          created_at?: string
+          grit_soap?: number | null
+          hand_sanitisers?: number | null
+          hand_soap?: number | null
+          id?: string
+          medical_bins?: number | null
+          nappy_bins?: number | null
+          others?: number | null
+          pedal_bins?: number | null
+          run_id?: string
+          s_officer_sig?: string | null
+          sanitary_bins?: number | null
+          sanitising_wipes?: number | null
+          sensor_bins?: number | null
+          service_id?: string | null
+          sharps_1_4lt_8lt?: number | null
+          tech_sig?: string | null
+          toilet_seat_sprays?: number | null
+          updated_at?: string
+          urinal_mats?: number | null
+          urinal_sanitisers?: number | null
+          urinal_treatment?: number | null
+          wc_sanitisers?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_run_id"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       customers: {
         Row: {
           contract_date: string | null
