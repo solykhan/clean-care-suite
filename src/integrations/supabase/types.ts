@@ -34,7 +34,9 @@ export type Database = {
           sensor_bins: number | null
           service_id: string | null
           sharps_1_4lt_8lt: number | null
+          site_officer_name: string | null
           tech_sig: string | null
+          technician_name: string | null
           toilet_seat_sprays: number | null
           updated_at: string
           urinal_mats: number | null
@@ -61,7 +63,9 @@ export type Database = {
           sensor_bins?: number | null
           service_id?: string | null
           sharps_1_4lt_8lt?: number | null
+          site_officer_name?: string | null
           tech_sig?: string | null
+          technician_name?: string | null
           toilet_seat_sprays?: number | null
           updated_at?: string
           urinal_mats?: number | null
@@ -88,7 +92,9 @@ export type Database = {
           sensor_bins?: number | null
           service_id?: string | null
           sharps_1_4lt_8lt?: number | null
+          site_officer_name?: string | null
           tech_sig?: string | null
+          technician_name?: string | null
           toilet_seat_sprays?: number | null
           updated_at?: string
           urinal_mats?: number | null

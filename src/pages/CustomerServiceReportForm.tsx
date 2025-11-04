@@ -16,6 +16,8 @@ import { useNavigate } from "react-router-dom";
 const formSchema = z.object({
   run_id: z.string().min(1, "Please select a run"),
   service_id: z.string().optional(),
+  technician_name: z.string().max(255).optional(),
+  site_officer_name: z.string().max(255).optional(),
   sanitary_bins: z.coerce.number().min(0).optional().nullable(),
   pedal_bins: z.coerce.number().min(0).optional().nullable(),
   sensor_bins: z.coerce.number().min(0).optional().nullable(),
@@ -49,6 +51,8 @@ const CustomerServiceReportForm = () => {
     defaultValues: {
       run_id: "",
       service_id: "",
+      technician_name: "",
+      site_officer_name: "",
       comments: "",
       s_officer_sig: "",
       tech_sig: "",
@@ -414,6 +418,36 @@ const CustomerServiceReportForm = () => {
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Additional Information</h3>
                 
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="technician_name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Technician Name</FormLabel>
+                        <FormControl>
+                          <Input {...field} value={field.value || ""} placeholder="Enter technician name" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="site_officer_name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Site Officer Name</FormLabel>
+                        <FormControl>
+                          <Input {...field} value={field.value || ""} placeholder="Enter site officer name" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
                 <FormField
                   control={form.control}
                   name="comments"
