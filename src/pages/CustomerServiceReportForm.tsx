@@ -12,6 +12,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { ClipboardList } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useRef } from "react";
+import { SignaturePad, SignaturePadRef } from "@/components/SignaturePad";
 
 const formSchema = z.object({
   run_id: z.string().min(1, "Please select a run"),
@@ -45,6 +47,7 @@ type FormData = z.infer<typeof formSchema>;
 const CustomerServiceReportForm = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const signaturePadRef = useRef<SignaturePadRef>(null);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -75,11 +78,16 @@ const CustomerServiceReportForm = () => {
   const createReport = useMutation({
     mutationFn: async (data: FormData) => {
       const { run_id, ...reportData } = data;
+      
+      // Get the signature as base64
+      const signatureData = signaturePadRef.current?.toDataURL() || null;
+      
       const { error } = await supabase
         .from("customer_service_reports")
         .insert({
           run_id,
           ...reportData,
+          s_officer_sig: signatureData,
         });
       
       if (error) throw error;
@@ -88,6 +96,7 @@ const CustomerServiceReportForm = () => {
       toast.success("Customer service report created successfully");
       queryClient.invalidateQueries({ queryKey: ["customer_service_reports"] });
       form.reset();
+      signaturePadRef.current?.clear();
       navigate("/runs");
     },
     onError: (error) => {
@@ -96,6 +105,11 @@ const CustomerServiceReportForm = () => {
   });
 
   const onSubmit = (data: FormData) => {
+    // Validate signature is not empty
+    if (signaturePadRef.current?.isEmpty()) {
+      toast.error("Please provide a service officer signature");
+      return;
+    }
     createReport.mutate(data);
   };
 
@@ -463,19 +477,10 @@ const CustomerServiceReportForm = () => {
                 />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="s_officer_sig"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Service Officer Signature</FormLabel>
-                        <FormControl>
-                          <Input {...field} value={field.value || ""} placeholder="Enter name" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <div>
+                    <FormLabel>Service Officer Signature *</FormLabel>
+                    <SignaturePad ref={signaturePadRef} />
+                  </div>
 
                   <FormField
                     control={form.control}
