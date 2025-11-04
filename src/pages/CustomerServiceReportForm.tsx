@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { ClipboardList } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { SignaturePad, SignaturePadRef } from "@/components/SignaturePad";
 
 const formSchema = z.object({
@@ -84,6 +84,16 @@ const CustomerServiceReportForm = () => {
     },
   });
 
+  // Auto-populate fields when service_id is provided in URL
+  useEffect(() => {
+    if (serviceIdFromUrl && runs && runs.length > 0) {
+      const matchingRun = runs[0]; // Get the first matching run
+      form.setValue("run_id", matchingRun.id);
+      form.setValue("service_id", matchingRun.service_id);
+      form.setValue("technician_name", matchingRun.technicians || "");
+    }
+  }, [serviceIdFromUrl, runs, form]);
+
   const createReport = useMutation({
     mutationFn: async (data: FormData) => {
       const { run_id, ...reportData } = data;
@@ -133,6 +143,7 @@ const CustomerServiceReportForm = () => {
     const selectedRun = runs?.find((run) => run.id === runId);
     if (selectedRun) {
       form.setValue("service_id", selectedRun.service_id);
+      form.setValue("technician_name", selectedRun.technicians || "");
     }
   };
 
