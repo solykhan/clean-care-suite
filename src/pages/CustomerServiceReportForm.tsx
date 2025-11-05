@@ -297,7 +297,7 @@ const CustomerServiceReportForm = () => {
                   )}
                 />
 
-                <div className="space-y-4">
+                <div className="flex flex-wrap md:grid md:grid-cols-2 gap-4">
                   <div className="w-fit min-w-[250px] md:w-auto">
                     <FormLabel>Service Officer Signature *</FormLabel>
                     <SignaturePad ref={officerSignaturePadRef} />
