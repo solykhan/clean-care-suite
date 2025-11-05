@@ -226,20 +226,6 @@ const CustomerServiceReportForm = () => {
                     </FormItem>
                   )}
                 />
-
-                <FormField
-                  control={form.control}
-                  name="service_id"
-                  render={({ field }) => (
-                    <FormItem className="w-fit min-w-[200px] md:w-auto">
-                      <FormLabel>Service ID</FormLabel>
-                      <FormControl>
-                        <Input {...field} value={field.value || ""} disabled />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
               </div>
 
 
