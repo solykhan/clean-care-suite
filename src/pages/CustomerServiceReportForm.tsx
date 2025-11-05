@@ -184,6 +184,10 @@ const CustomerServiceReportForm = () => {
                     <p className="text-sm font-medium">Status</p>
                     <p className="text-sm text-black/80">{agreement.service_active_inactive || "N/A"}</p>
                   </div>
+                  <div>
+                    <p className="text-sm font-medium">CPM Device On Site</p>
+                    <p className="text-sm text-black/80">{agreement.cpm_device_onsite || "N/A"}</p>
+                  </div>
                 </CardContent>
               </Card>
             ))}
