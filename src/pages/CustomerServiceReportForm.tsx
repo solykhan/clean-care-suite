@@ -19,7 +19,7 @@ import { format } from "date-fns";
 const formSchema = z.object({
   run_id: z.string().min(1, "Please select a run"),
   service_id: z.string().optional(),
-  report_date: z.string(),
+  report_date: z.date(),
   technician_name: z.string().max(255).optional(),
   client_email: z.string().email("Invalid email address").max(255).optional().or(z.literal("")),
   site_officer_name: z.string().max(255).optional(),
@@ -43,7 +43,7 @@ const CustomerServiceReportForm = () => {
     defaultValues: {
       run_id: "",
       service_id: "",
-      report_date: format(new Date(), "PPpp"),
+      report_date: new Date(),
       technician_name: "",
       client_email: "",
       site_officer_name: "",
@@ -102,7 +102,7 @@ const CustomerServiceReportForm = () => {
 
   const createReport = useMutation({
     mutationFn: async (data: FormData) => {
-      const { run_id, ...reportData } = data;
+      const { run_id, report_date, ...reportData } = data;
       
       // Get the signatures as base64
       const officerSignatureData = officerSignaturePadRef.current?.toDataURL() || null;
@@ -112,6 +112,7 @@ const CustomerServiceReportForm = () => {
         .from("customer_service_reports")
         .insert({
           run_id,
+          report_date: report_date.toISOString(),
           ...reportData,
           s_officer_sig: officerSignatureData,
           tech_sig: techSignatureData,
@@ -239,7 +240,11 @@ const CustomerServiceReportForm = () => {
                     <FormItem className="w-fit min-w-[200px] md:w-auto">
                       <FormLabel>Report Date</FormLabel>
                       <FormControl>
-                        <Input {...field} disabled className="bg-muted" />
+                        <Input 
+                          value={format(field.value, "PPpp")} 
+                          disabled 
+                          className="bg-muted" 
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
