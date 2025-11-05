@@ -12,7 +12,6 @@ import { z } from "zod";
 
 const authSchema = z.object({
   email: z.string().email("Please enter a valid email address").max(255),
-  password: z.string().min(6, "Password must be at least 6 characters").max(72),
   role: z.enum(["technician", "admin"]).optional(),
 });
 
@@ -20,10 +19,10 @@ const Auth = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const [role, setRole] = useState<"technician" | "admin">("technician");
+  const [otpSent, setOtpSent] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -36,7 +35,6 @@ const Auth = () => {
     
     const validation = authSchema.safeParse({ 
       email, 
-      password,
       role: isSignUp ? role : undefined 
     });
     if (!validation.success) {
@@ -48,50 +46,67 @@ const Auth = () => {
 
     try {
       if (isSignUp) {
-        const { data, error } = await supabase.auth.signUp({
+        // For signup, send OTP and store role
+        const { error } = await supabase.auth.signInWithOtp({
           email: email.trim().toLowerCase(),
-          password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/`,
+            data: {
+              role: role,
+            },
+          },
+        });
+
+        if (error) throw error;
+        
+        setOtpSent(true);
+        toast.success("Check your email for the login link!");
+      } else {
+        // For login, just send OTP
+        const { error } = await supabase.auth.signInWithOtp({
+          email: email.trim().toLowerCase(),
           options: {
             emailRedirectTo: `${window.location.origin}/`,
           },
         });
 
         if (error) throw error;
-        
-        // Insert user role
-        if (data.user) {
-          const { error: roleError } = await supabase
-            .from("user_roles")
-            .insert({
-              user_id: data.user.id,
-              role: role,
-            });
-
-          if (roleError) {
-            console.error("Error creating user role:", roleError);
-            toast.error("Account created but role assignment failed");
-          } else {
-            toast.success("Account created successfully!");
-          }
-        }
-        
-        navigate("/");
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({
-          email: email.trim().toLowerCase(),
-          password,
-        });
-
-        if (error) throw error;
-        toast.success("Successfully signed in!");
-        navigate("/");
+        setOtpSent(true);
+        toast.success("Check your email for the login link!");
       }
     } catch (error: any) {
-      toast.error(error.message || `Failed to ${isSignUp ? "sign up" : "sign in"}`);
+      toast.error(error.message || `Failed to ${isSignUp ? "sign up" : "send login link"}`);
     } finally {
       setLoading(false);
     }
   };
+
+  if (otpSent) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle>Check Your Email</CardTitle>
+            <CardDescription>
+              We've sent you a login link. Click the link in your email to continue.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button 
+              onClick={() => {
+                setOtpSent(false);
+                setEmail("");
+              }} 
+              variant="outline" 
+              className="w-full"
+            >
+              Use Different Email
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted p-4">
@@ -118,20 +133,6 @@ const Auth = () => {
                 maxLength={255}
               />
             </div>
-            <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-medium">
-                Password
-              </label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={loading}
-                maxLength={72}
-              />
-            </div>
             
             {isSignUp && (
               <div className="space-y-3">
@@ -150,7 +151,7 @@ const Auth = () => {
             )}
             
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? (isSignUp ? "Creating account..." : "Signing in...") : (isSignUp ? "Sign Up" : "Sign In")}
+              {loading ? "Sending..." : (isSignUp ? "Send Sign Up Link" : "Send Login Link")}
             </Button>
             <Button
               type="button"
