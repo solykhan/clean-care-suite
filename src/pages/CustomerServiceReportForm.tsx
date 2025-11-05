@@ -203,12 +203,12 @@ const CustomerServiceReportForm = () => {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="flex flex-wrap md:grid md:grid-cols-2 gap-6">
                 <FormField
                   control={form.control}
                   name="run_id"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="w-fit min-w-[200px] md:w-auto">
                       <FormLabel>Select Run *</FormLabel>
                       <Select 
                         onValueChange={(value) => {
@@ -240,7 +240,7 @@ const CustomerServiceReportForm = () => {
                   control={form.control}
                   name="service_id"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="w-fit min-w-[200px] md:w-auto">
                       <FormLabel>Service ID</FormLabel>
                       <FormControl>
                         <Input {...field} value={field.value || ""} disabled />
@@ -253,12 +253,12 @@ const CustomerServiceReportForm = () => {
 
 
               <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex flex-wrap md:grid md:grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
                     name="technician_name"
                     render={({ field }) => (
-                      <FormItem>
+                      <FormItem className="w-fit min-w-[200px] md:w-auto">
                         <FormLabel>Technician Name</FormLabel>
                         <FormControl>
                           <Input {...field} value={field.value || ""} placeholder="Enter technician name" />
@@ -272,7 +272,7 @@ const CustomerServiceReportForm = () => {
                     control={form.control}
                     name="site_officer_name"
                     render={({ field }) => (
-                      <FormItem>
+                      <FormItem className="w-fit min-w-[200px] md:w-auto">
                         <FormLabel>Site Officer Name</FormLabel>
                         <FormControl>
                           <Input {...field} value={field.value || ""} placeholder="Enter site officer name" />
@@ -287,7 +287,7 @@ const CustomerServiceReportForm = () => {
                   control={form.control}
                   name="comments"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="w-fit min-w-[250px] md:w-auto">
                       <FormLabel>Comments</FormLabel>
                       <FormControl>
                         <Textarea {...field} value={field.value || ""} rows={4} />
@@ -297,13 +297,13 @@ const CustomerServiceReportForm = () => {
                   )}
                 />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
+                <div className="flex flex-wrap md:grid md:grid-cols-2 gap-4">
+                  <div className="w-fit min-w-[250px] md:w-auto">
                     <FormLabel>Service Officer Signature *</FormLabel>
                     <SignaturePad ref={officerSignaturePadRef} />
                   </div>
 
-                  <div>
+                  <div className="w-fit min-w-[250px] md:w-auto">
                     <FormLabel>Technician Signature *</FormLabel>
                     <SignaturePad ref={techSignaturePadRef} />
                   </div>
