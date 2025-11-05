@@ -8,16 +8,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { toast } from "sonner";
 import { z } from "zod";
 
-const emailSchema = z.string().email("Please enter a valid email address");
+const authSchema = z.object({
+  email: z.string().email("Please enter a valid email address").max(255),
+  password: z.string().min(6, "Password must be at least 6 characters").max(72),
+});
 
 const Auth = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [email, setEmail] = useState("");
-  const [otp, setOtp] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [otpSent, setOtpSent] = useState(false);
-  const [resendCountdown, setResendCountdown] = useState(0);
+  const [isSignUp, setIsSignUp] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -25,17 +27,10 @@ const Auth = () => {
     }
   }, [user, navigate]);
 
-  useEffect(() => {
-    if (resendCountdown > 0) {
-      const timer = setTimeout(() => setResendCountdown(resendCountdown - 1), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [resendCountdown]);
-
-  const handleSendOtp = async (e: React.FormEvent) => {
+  const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    const validation = emailSchema.safeParse(email);
+    const validation = authSchema.safeParse({ email, password });
     if (!validation.success) {
       toast.error(validation.error.errors[0].message);
       return;
@@ -44,69 +39,30 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.signInWithOtp({
-        email: email.trim().toLowerCase(),
-        options: {
-          emailRedirectTo: `${window.location.origin}/`,
-        },
-      });
+      if (isSignUp) {
+        const { error } = await supabase.auth.signUp({
+          email: email.trim().toLowerCase(),
+          password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/`,
+          },
+        });
 
-      if (error) throw error;
+        if (error) throw error;
+        toast.success("Account created successfully!");
+        navigate("/");
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({
+          email: email.trim().toLowerCase(),
+          password,
+        });
 
-      setOtpSent(true);
-      setResendCountdown(60);
-      toast.success("Check your email for a magic link or enter the code below");
+        if (error) throw error;
+        toast.success("Successfully signed in!");
+        navigate("/");
+      }
     } catch (error: any) {
-      toast.error(error.message || "Failed to send verification code");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleVerifyOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (otp.length !== 6) {
-      toast.error("Please enter a 6-digit code");
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const { error } = await supabase.auth.verifyOtp({
-        email: email.trim().toLowerCase(),
-        token: otp,
-        type: "email",
-      });
-
-      if (error) throw error;
-
-      toast.success("Successfully authenticated!");
-      navigate("/");
-    } catch (error: any) {
-      toast.error(error.message || "Invalid verification code");
-      setOtp("");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleResendOtp = async () => {
-    setLoading(true);
-    try {
-      const { error } = await supabase.auth.signInWithOtp({
-        email: email.trim().toLowerCase(),
-        options: {
-          emailRedirectTo: `${window.location.origin}/`,
-        },
-      });
-
-      if (error) throw error;
-      setResendCountdown(60);
-      toast.success("New verification code sent!");
-    } catch (error: any) {
-      toast.error(error.message || "Failed to resend code");
+      toast.error(error.message || `Failed to ${isSignUp ? "sign up" : "sign in"}`);
     } finally {
       setLoading(false);
     }
@@ -118,76 +74,52 @@ const Auth = () => {
         <CardHeader>
           <CardTitle>Welcome</CardTitle>
           <CardDescription>
-            {otpSent 
-              ? "Check your email for a magic link to sign in, or enter the 6-digit code below"
-              : "Sign in to your account"
-            }
+            {isSignUp ? "Create a new account" : "Sign in to your account"}
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          {!otpSent ? (
-            <form onSubmit={handleSendOtp} className="space-y-4">
-              <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium">
-                  Email
-                </label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  disabled={loading}
-                  maxLength={255}
-                />
-              </div>
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Sending..." : "Send Login Code"}
-              </Button>
-            </form>
-          ) : (
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <label htmlFor="otp" className="text-sm font-medium">
-                  Verification Code
-                </label>
-                <Input
-                  id="otp"
-                  type="text"
-                  placeholder="Enter 6-digit code"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  maxLength={6}
-                  disabled={loading}
-                />
-              </div>
-              <Button 
-                onClick={handleVerifyOtp} 
-                className="w-full" 
-                disabled={loading || otp.length !== 6}
-              >
-                {loading ? "Verifying..." : "Verify Code"}
-              </Button>
-              <Button
-                onClick={handleResendOtp}
-                variant="outline"
-                className="w-full"
-                disabled={loading || resendCountdown > 0}
-              >
-                {resendCountdown > 0 ? `Resend Code (${resendCountdown}s)` : "Resend Code"}
-              </Button>
-              <Button
-                onClick={() => {
-                  setOtpSent(false);
-                  setOtp("");
-                }}
-                variant="ghost"
-                className="w-full"
-              >
-                Change Email
-              </Button>
+        <CardContent>
+          <form onSubmit={handleAuth} className="space-y-4">
+            <div className="space-y-2">
+              <label htmlFor="email" className="text-sm font-medium">
+                Email
+              </label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={loading}
+                maxLength={255}
+              />
             </div>
-          )}
+            <div className="space-y-2">
+              <label htmlFor="password" className="text-sm font-medium">
+                Password
+              </label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={loading}
+                maxLength={72}
+              />
+            </div>
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? (isSignUp ? "Creating account..." : "Signing in...") : (isSignUp ? "Sign Up" : "Sign In")}
+            </Button>
+            <Button
+              type="button"
+              onClick={() => setIsSignUp(!isSignUp)}
+              variant="ghost"
+              className="w-full"
+              disabled={loading}
+            >
+              {isSignUp ? "Already have an account? Sign in" : "Don't have an account? Sign up"}
+            </Button>
+          </form>
         </CardContent>
       </Card>
     </div>
