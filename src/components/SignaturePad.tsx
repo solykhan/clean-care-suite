@@ -26,7 +26,7 @@ export const SignaturePad = forwardRef<SignaturePadRef, SignaturePadProps>(
         return sigCanvas.current?.toDataURL() || "";
       },
       isEmpty: () => {
-        return sigCanvas.current?.isEmpty() || true;
+        return sigCanvas.current?.isEmpty() ?? true;
       },
       fromDataURL: (dataUrl: string) => {
         if (sigCanvas.current && dataUrl) {
