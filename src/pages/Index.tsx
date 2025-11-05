@@ -6,7 +6,7 @@ import { Building2, FileText, TrendingUp, Users } from "lucide-react";
 import { RoleSelectionDialog } from "@/components/RoleSelectionDialog";
 
 const Index = () => {
-  const [showRoleDialog, setShowRoleDialog] = useState(false);
+  const [showRoleDialog, setShowRoleDialog] = useState(true);
 
   return (
     <div className="bg-background">
