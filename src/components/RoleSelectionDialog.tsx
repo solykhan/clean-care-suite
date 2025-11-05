@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -18,15 +21,53 @@ interface RoleSelectionDialogProps {
 
 export const RoleSelectionDialog = ({ open, onOpenChange }: RoleSelectionDialogProps) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [selectedRole, setSelectedRole] = useState<"technician" | "admin">("technician");
+  const [loading, setLoading] = useState(false);
 
-  const handleContinue = () => {
-    if (selectedRole === "technician") {
-      navigate("/technician-dashboard");
-    } else {
-      navigate("/");
+  const handleContinue = async () => {
+    if (!user) return;
+    
+    setLoading(true);
+    try {
+      // Check if role already exists
+      const { data: existingRole } = await supabase
+        .from("user_roles")
+        .select("*")
+        .eq("user_id", user.id)
+        .single();
+
+      if (existingRole) {
+        // Update existing role
+        const { error } = await supabase
+          .from("user_roles")
+          .update({ role: selectedRole })
+          .eq("user_id", user.id);
+
+        if (error) throw error;
+      } else {
+        // Insert new role
+        const { error } = await supabase
+          .from("user_roles")
+          .insert({ user_id: user.id, role: selectedRole });
+
+        if (error) throw error;
+      }
+
+      toast.success("Role saved successfully!");
+      
+      // Navigate based on role
+      if (selectedRole === "technician") {
+        navigate("/technician-dashboard");
+      } else {
+        navigate("/");
+      }
+      onOpenChange(false);
+    } catch (error: any) {
+      toast.error("Failed to save role: " + error.message);
+    } finally {
+      setLoading(false);
     }
-    onOpenChange(false);
   };
 
   return (
@@ -53,8 +94,8 @@ export const RoleSelectionDialog = ({ open, onOpenChange }: RoleSelectionDialogP
               </Label>
             </div>
           </RadioGroup>
-          <Button onClick={handleContinue} className="w-full">
-            Continue
+          <Button onClick={handleContinue} className="w-full" disabled={loading}>
+            {loading ? "Saving..." : "Continue"}
           </Button>
         </div>
       </DialogContent>
