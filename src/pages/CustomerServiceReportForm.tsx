@@ -180,14 +180,6 @@ const CustomerServiceReportForm = () => {
                     <p className="text-sm font-medium">Areas Covered</p>
                     <p className="text-sm text-black/80">{agreement.areas_covered || "N/A"}</p>
                   </div>
-                  <div>
-                    <p className="text-sm font-medium">Frequency</p>
-                    <p className="text-sm text-black/80">{agreement.service_frequency || "N/A"}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">Status</p>
-                    <p className="text-sm text-black/80">{agreement.service_active_inactive || "N/A"}</p>
-                  </div>
                 </CardContent>
               </Card>
             ))}
