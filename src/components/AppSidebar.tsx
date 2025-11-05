@@ -1,5 +1,6 @@
 import { Home, Building2, FileText, PlayCircle, ClipboardList } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
+import { LogoutButton } from "@/components/LogoutButton";
 
 import {
   Sidebar,
@@ -10,6 +11,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarFooter,
   useSidebar,
 } from "@/components/ui/sidebar";
 
@@ -91,6 +93,10 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
+      <SidebarFooter>
+        <LogoutButton />
+      </SidebarFooter>
     </Sidebar>
   );
 }
