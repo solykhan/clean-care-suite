@@ -195,82 +195,84 @@ const ServiceReports = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="min-w-[180px]">Report Date</TableHead>
-                  <TableHead className="min-w-[120px]">Service ID</TableHead>
-                  <TableHead className="min-w-[150px]">Client</TableHead>
-                  <TableHead className="min-w-[120px]">Suburb</TableHead>
-                  <TableHead className="min-w-[150px]">Technician</TableHead>
-                  <TableHead className="min-w-[150px]">Site Officer</TableHead>
-                  <TableHead className="min-w-[200px]">Client Email</TableHead>
-                  <TableHead className="min-w-[200px]">Comments</TableHead>
-                  <TableHead className="min-w-[100px]">Signatures</TableHead>
-                  <TableHead className="min-w-[100px] text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {isLoading ? (
-                  Array.from({ length: 5 }).map((_, i) => (
-                    <TableRow key={i}>
-                      {Array.from({ length: 10 }).map((_, j) => (
-                        <TableCell key={j}>
-                          <Skeleton className="h-5 w-full" />
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))
-                ) : filteredReports && filteredReports.length > 0 ? (
-                  filteredReports.map((report) => {
-                    const run = getRunDetails(report.run_id);
-                    const hasSignatures = report.s_officer_sig && report.tech_sig;
-                    
-                    return (
-                      <TableRow key={report.id}>
-                        <TableCell className="font-medium">
-                          {format(new Date(report.report_date), "PPpp")}
-                        </TableCell>
-                        <TableCell>{report.service_id || "—"}</TableCell>
-                        <TableCell>{run?.clients || "—"}</TableCell>
-                        <TableCell>{run?.suburb || "—"}</TableCell>
-                        <TableCell>{report.technician_name || "—"}</TableCell>
-                        <TableCell>{report.site_officer_name || "—"}</TableCell>
-                        <TableCell className="max-w-[200px] truncate">
-                          {report.client_email || "—"}
-                        </TableCell>
-                        <TableCell className="max-w-[200px] truncate">
-                          {report.comments || "—"}
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant={hasSignatures ? "default" : "secondary"}>
-                            {hasSignatures ? "Complete" : "Partial"}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => navigate(`/service-report/${report.id}`)}
-                            className="gap-2"
-                          >
-                            <Eye className="h-4 w-4" />
-                            View
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })
-                ) : (
+          <div className="rounded-md border">
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
                   <TableRow>
-                    <TableCell colSpan={10} className="text-center py-8 text-muted-foreground">
-                      No service reports found. Create your first report to get started.
-                    </TableCell>
+                    <TableHead className="whitespace-nowrap">Report Date</TableHead>
+                    <TableHead className="whitespace-nowrap">Service ID</TableHead>
+                    <TableHead className="whitespace-nowrap">Client</TableHead>
+                    <TableHead className="whitespace-nowrap">Suburb</TableHead>
+                    <TableHead className="whitespace-nowrap">Technician</TableHead>
+                    <TableHead className="whitespace-nowrap">Site Officer</TableHead>
+                    <TableHead className="whitespace-nowrap">Client Email</TableHead>
+                    <TableHead className="whitespace-nowrap">Comments</TableHead>
+                    <TableHead className="whitespace-nowrap">Signatures</TableHead>
+                    <TableHead className="whitespace-nowrap text-right">Actions</TableHead>
                   </TableRow>
-                )}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {isLoading ? (
+                    Array.from({ length: 5 }).map((_, i) => (
+                      <TableRow key={i}>
+                        {Array.from({ length: 10 }).map((_, j) => (
+                          <TableCell key={j}>
+                            <Skeleton className="h-5 w-full" />
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))
+                  ) : filteredReports && filteredReports.length > 0 ? (
+                    filteredReports.map((report) => {
+                      const run = getRunDetails(report.run_id);
+                      const hasSignatures = report.s_officer_sig && report.tech_sig;
+                      
+                      return (
+                        <TableRow key={report.id}>
+                          <TableCell className="font-medium whitespace-nowrap">
+                            {format(new Date(report.report_date), "PPp")}
+                          </TableCell>
+                          <TableCell className="whitespace-nowrap">{report.service_id || "—"}</TableCell>
+                          <TableCell className="whitespace-nowrap">{run?.clients || "—"}</TableCell>
+                          <TableCell className="whitespace-nowrap">{run?.suburb || "—"}</TableCell>
+                          <TableCell className="whitespace-nowrap">{report.technician_name || "—"}</TableCell>
+                          <TableCell className="whitespace-nowrap">{report.site_officer_name || "—"}</TableCell>
+                          <TableCell className="max-w-[250px] truncate">
+                            {report.client_email || "—"}
+                          </TableCell>
+                          <TableCell className="max-w-[250px] truncate">
+                            {report.comments || "—"}
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant={hasSignatures ? "default" : "secondary"}>
+                              {hasSignatures ? "Complete" : "Partial"}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-right whitespace-nowrap">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => navigate(`/service-report/${report.id}`)}
+                              className="gap-2"
+                            >
+                              <Eye className="h-4 w-4" />
+                              View
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={10} className="text-center py-8 text-muted-foreground">
+                        No service reports found. Create your first report to get started.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
           </div>
         </CardContent>
       </Card>
