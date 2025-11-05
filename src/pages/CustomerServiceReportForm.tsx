@@ -14,10 +14,12 @@ import { ClipboardList } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useRef, useEffect } from "react";
 import { SignaturePad, SignaturePadRef } from "@/components/SignaturePad";
+import { format } from "date-fns";
 
 const formSchema = z.object({
   run_id: z.string().min(1, "Please select a run"),
   service_id: z.string().optional(),
+  report_date: z.string(),
   technician_name: z.string().max(255).optional(),
   client_email: z.string().email("Invalid email address").max(255).optional().or(z.literal("")),
   site_officer_name: z.string().max(255).optional(),
@@ -41,6 +43,7 @@ const CustomerServiceReportForm = () => {
     defaultValues: {
       run_id: "",
       service_id: "",
+      report_date: format(new Date(), "PPpp"),
       technician_name: "",
       client_email: "",
       site_officer_name: "",
@@ -224,6 +227,20 @@ const CustomerServiceReportForm = () => {
                           ))}
                         </SelectContent>
                       </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="report_date"
+                  render={({ field }) => (
+                    <FormItem className="w-fit min-w-[200px] md:w-auto">
+                      <FormLabel>Report Date</FormLabel>
+                      <FormControl>
+                        <Input {...field} disabled className="bg-muted" />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
