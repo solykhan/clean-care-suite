@@ -1,9 +1,13 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building2, FileText, TrendingUp, Users } from "lucide-react";
+import { RoleSelectionDialog } from "@/components/RoleSelectionDialog";
 
 const Index = () => {
+  const [showRoleDialog, setShowRoleDialog] = useState(false);
+
   return (
     <div className="bg-background">
       <div className="container mx-auto py-12 px-4">
@@ -97,13 +101,13 @@ const Index = () => {
         </div>
 
         <div className="text-center mt-12">
-          <Link to="/customers">
-            <Button size="lg" className="text-lg px-8">
-              Get Started
-            </Button>
-          </Link>
+          <Button size="lg" className="text-lg px-8" onClick={() => setShowRoleDialog(true)}>
+            Get Started
+          </Button>
         </div>
       </div>
+
+      <RoleSelectionDialog open={showRoleDialog} onOpenChange={setShowRoleDialog} />
     </div>
   );
 };
