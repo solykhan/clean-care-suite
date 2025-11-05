@@ -162,7 +162,7 @@ const CustomerServiceReportForm = () => {
         <div className="mb-6 overflow-x-auto">
           <div className="flex gap-4 pb-2">
             {serviceAgreements.map((agreement) => (
-              <Card key={agreement.id} className="min-w-[300px] flex-shrink-0 bg-[hsl(207,69%,74%)]">
+              <Card key={agreement.id} className="min-w-[300px] flex-shrink-0 bg-[hsl(207,69%,74%)] text-black">
                 <CardHeader>
                   <CardTitle className="text-lg">Service Agreement</CardTitle>
                   <CardDescription>ID: {agreement.service_id}</CardDescription>
@@ -170,19 +170,19 @@ const CustomerServiceReportForm = () => {
                 <CardContent className="space-y-2">
                   <div>
                     <p className="text-sm font-medium">Products</p>
-                    <p className="text-sm text-muted-foreground">{agreement.products || "N/A"}</p>
+                    <p className="text-sm text-black/80">{agreement.products || "N/A"}</p>
                   </div>
                   <div>
                     <p className="text-sm font-medium">Areas Covered</p>
-                    <p className="text-sm text-muted-foreground">{agreement.areas_covered || "N/A"}</p>
+                    <p className="text-sm text-black/80">{agreement.areas_covered || "N/A"}</p>
                   </div>
                   <div>
                     <p className="text-sm font-medium">Frequency</p>
-                    <p className="text-sm text-muted-foreground">{agreement.service_frequency || "N/A"}</p>
+                    <p className="text-sm text-black/80">{agreement.service_frequency || "N/A"}</p>
                   </div>
                   <div>
                     <p className="text-sm font-medium">Status</p>
-                    <p className="text-sm text-muted-foreground">{agreement.service_active_inactive || "N/A"}</p>
+                    <p className="text-sm text-black/80">{agreement.service_active_inactive || "N/A"}</p>
                   </div>
                 </CardContent>
               </Card>
