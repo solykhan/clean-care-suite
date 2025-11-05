@@ -17,12 +17,20 @@ const Auth = () => {
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
+  const [resendCountdown, setResendCountdown] = useState(0);
 
   useEffect(() => {
     if (user) {
       navigate("/");
     }
   }, [user, navigate]);
+
+  useEffect(() => {
+    if (resendCountdown > 0) {
+      const timer = setTimeout(() => setResendCountdown(resendCountdown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [resendCountdown]);
 
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,6 +54,7 @@ const Auth = () => {
       if (error) throw error;
 
       setOtpSent(true);
+      setResendCountdown(60);
       toast.success("Check your email for the verification code");
     } catch (error: any) {
       toast.error(error.message || "Failed to send verification code");
@@ -94,6 +103,7 @@ const Auth = () => {
       });
 
       if (error) throw error;
+      setResendCountdown(60);
       toast.success("New verification code sent!");
     } catch (error: any) {
       toast.error(error.message || "Failed to resend code");
@@ -162,9 +172,9 @@ const Auth = () => {
                 onClick={handleResendOtp}
                 variant="outline"
                 className="w-full"
-                disabled={loading}
+                disabled={loading || resendCountdown > 0}
               >
-                Resend Code
+                {resendCountdown > 0 ? `Resend Code (${resendCountdown}s)` : "Resend Code"}
               </Button>
               <Button
                 onClick={() => {
