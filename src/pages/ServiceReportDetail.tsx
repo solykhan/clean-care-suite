@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Download } from "lucide-react";
+import { ArrowLeft, Edit } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -91,6 +91,10 @@ const ServiceReportDetail = () => {
               {isLoading ? "Loading..." : `Report ID: ${report?.id}`}
             </p>
           </div>
+          <Button onClick={() => navigate(`/service-report/${id}/edit`)} className="gap-2">
+            <Edit className="h-4 w-4" />
+            Edit Report
+          </Button>
         </div>
       </div>
 
