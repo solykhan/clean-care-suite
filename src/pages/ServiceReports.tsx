@@ -234,7 +234,7 @@ const ServiceReports = () => {
                             {format(new Date(report.report_date), "PPp")}
                           </TableCell>
                           <TableCell className="whitespace-nowrap">{report.service_id || "—"}</TableCell>
-                          <TableCell className="whitespace-nowrap">{run?.clients || "—"}</TableCell>
+                          <TableCell className="whitespace-nowrap font-bold" style={{ color: '#129fb0' }}>{run?.clients || "—"}</TableCell>
                           <TableCell className="whitespace-nowrap">{run?.suburb || "—"}</TableCell>
                           <TableCell className="whitespace-nowrap">{report.technician_name || "—"}</TableCell>
                           <TableCell className="whitespace-nowrap">{report.site_officer_name || "—"}</TableCell>
