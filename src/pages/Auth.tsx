@@ -55,7 +55,7 @@ const Auth = () => {
 
       setOtpSent(true);
       setResendCountdown(60);
-      toast.success("Check your email for the verification code");
+      toast.success("Check your email for a magic link or enter the code below");
     } catch (error: any) {
       toast.error(error.message || "Failed to send verification code");
     } finally {
@@ -119,7 +119,7 @@ const Auth = () => {
           <CardTitle>Welcome</CardTitle>
           <CardDescription>
             {otpSent 
-              ? "Enter the verification code sent to your email"
+              ? "Check your email for a magic link to sign in, or enter the 6-digit code below"
               : "Sign in to your account"
             }
           </CardDescription>
