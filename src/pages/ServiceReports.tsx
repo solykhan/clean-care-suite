@@ -134,8 +134,8 @@ const ServiceReports = () => {
   }
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <div className="mb-8">
+    <div className="w-full py-8 px-4">
+      <div className="mb-8 max-w-7xl mx-auto">
         <div className="flex items-center gap-3 mb-2">
           <ClipboardList className="h-8 w-8 text-primary" />
           <h1 className="text-4xl font-bold text-foreground">Service Reports</h1>
@@ -144,7 +144,7 @@ const ServiceReports = () => {
       </div>
 
       {/* Filters and Actions */}
-      <Card className="mb-6">
+      <Card className="mb-6 max-w-7xl mx-auto">
         <CardContent className="pt-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1 relative">
@@ -185,7 +185,7 @@ const ServiceReports = () => {
       </Card>
 
       {/* Reports Table */}
-      <Card>
+      <Card className="mx-4">
         <CardHeader>
           <CardTitle>
             Reports ({filteredReports?.length || 0})
