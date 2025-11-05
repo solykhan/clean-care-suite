@@ -25,6 +25,7 @@ export function AppSidebar() {
   const { open } = useSidebar();
   const location = useLocation();
   const currentPath = location.pathname;
+  const isTechnicianDashboard = currentPath === "/technician-dashboard";
 
   const isActive = (path: string) => {
     if (path === "/") {
@@ -36,44 +37,50 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Hygiene Facility System</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {navigationItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={isActive(item.url)}>
-                    <NavLink to={item.url}>
-                      <item.icon className="h-4 w-4" />
-                      <span>{item.title}</span>
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {!isTechnicianDashboard && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Hygiene Facility System</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {navigationItems.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild isActive={isActive(item.url)}>
+                      <NavLink to={item.url}>
+                        <item.icon className="h-4 w-4" />
+                        <span>{item.title}</span>
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
 
         <SidebarGroup>
           <SidebarGroupLabel>Quick Actions</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={currentPath === "/customer-service-form"}>
-                  <NavLink to="/customer-service-form">
-                    <FileText className="h-4 w-4" />
-                    <span>Customer Service Form</span>
-                  </NavLink>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={currentPath === "/service-agreements"}>
-                  <NavLink to="/service-agreements">
-                    <FileText className="h-4 w-4" />
-                    <span>Service Agreements</span>
-                  </NavLink>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              {!isTechnicianDashboard && (
+                <>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={currentPath === "/customer-service-form"}>
+                      <NavLink to="/customer-service-form">
+                        <FileText className="h-4 w-4" />
+                        <span>Customer Service Form</span>
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={currentPath === "/service-agreements"}>
+                      <NavLink to="/service-agreements">
+                        <FileText className="h-4 w-4" />
+                        <span>Service Agreements</span>
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                </>
+              )}
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={currentPath === "/runs"}>
                   <NavLink to="/runs">
@@ -82,14 +89,16 @@ export function AppSidebar() {
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={currentPath === "/customer-service-report"}>
-                  <NavLink to="/customer-service-report">
-                    <ClipboardList className="h-4 w-4" />
-                    <span>Service Report</span>
-                  </NavLink>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              {!isTechnicianDashboard && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={currentPath === "/customer-service-report"}>
+                    <NavLink to="/customer-service-report">
+                      <ClipboardList className="h-4 w-4" />
+                      <span>Service Report</span>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={currentPath === "/service-reports"}>
                   <NavLink to="/service-reports">
