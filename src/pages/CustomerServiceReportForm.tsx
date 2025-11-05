@@ -159,8 +159,8 @@ const CustomerServiceReportForm = () => {
       </div>
 
       {serviceAgreements && serviceAgreements.length > 0 && (
-        <div className="mb-6 overflow-x-auto">
-          <div className="flex gap-4 pb-2">
+        <div className="mb-6">
+          <div className="flex flex-col gap-4">
             {serviceAgreements.map((agreement) => (
               <Card key={agreement.id} className="w-fit flex-shrink-0 bg-[hsl(207,69%,74%)] text-black">
                 <CardHeader>
