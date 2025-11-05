@@ -164,8 +164,7 @@ const CustomerServiceReportForm = () => {
             {serviceAgreements.map((agreement) => (
               <Card key={agreement.id} className="w-fit flex-shrink-0 bg-[hsl(207,69%,74%)] text-black">
                 <CardHeader>
-                  <CardTitle className="text-lg">Service Agreement</CardTitle>
-                  <CardDescription>ID: {agreement.service_id}</CardDescription>
+                  <CardDescription>Service ID: {agreement.service_id}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
                   <div>
