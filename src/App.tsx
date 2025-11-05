@@ -16,6 +16,7 @@ import ServiceAgreements from "./pages/ServiceAgreements";
 import CustomerServiceAgreementForm from "./pages/CustomerServiceAgreementForm";
 import Runs from "./pages/Runs";
 import CustomerServiceReportForm from "./pages/CustomerServiceReportForm";
+import TechnicianDashboard from "./pages/TechnicianDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -44,6 +45,7 @@ const App = () => (
                         <div className="flex-1">
                           <Routes>
                             <Route path="/" element={<Index />} />
+                            <Route path="/technician-dashboard" element={<TechnicianDashboard />} />
                             <Route path="/customers" element={<Customers />} />
                             <Route path="/customers/new" element={<AddCustomer />} />
                             <Route path="/customers/:id" element={<CustomerDetail />} />

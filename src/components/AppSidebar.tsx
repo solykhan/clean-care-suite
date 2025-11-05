@@ -1,4 +1,4 @@
-import { Home, Building2, FileText, PlayCircle, ClipboardList } from "lucide-react";
+import { Home, Building2, FileText, PlayCircle, ClipboardList, Gauge } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { LogoutButton } from "@/components/LogoutButton";
 
@@ -17,6 +17,7 @@ import {
 
 const navigationItems = [
   { title: "Dashboard", url: "/", icon: Home },
+  { title: "Technician Dashboard", url: "/technician-dashboard", icon: Gauge },
   { title: "Customers", url: "/customers", icon: Building2 },
 ];
 
