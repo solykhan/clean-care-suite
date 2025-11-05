@@ -36,6 +36,7 @@ export type Database = {
           sharps_1_4lt_8lt: number | null
           site_officer_name: string | null
           tech_sig: string | null
+          technician_email: string | null
           technician_name: string | null
           toilet_seat_sprays: number | null
           updated_at: string
@@ -65,6 +66,7 @@ export type Database = {
           sharps_1_4lt_8lt?: number | null
           site_officer_name?: string | null
           tech_sig?: string | null
+          technician_email?: string | null
           technician_name?: string | null
           toilet_seat_sprays?: number | null
           updated_at?: string
@@ -94,6 +96,7 @@ export type Database = {
           sharps_1_4lt_8lt?: number | null
           site_officer_name?: string | null
           tech_sig?: string | null
+          technician_email?: string | null
           technician_name?: string | null
           toilet_seat_sprays?: number | null
           updated_at?: string

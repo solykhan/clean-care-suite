@@ -19,6 +19,7 @@ const formSchema = z.object({
   run_id: z.string().min(1, "Please select a run"),
   service_id: z.string().optional(),
   technician_name: z.string().max(255).optional(),
+  technician_email: z.string().email("Invalid email address").max(255).optional().or(z.literal("")),
   site_officer_name: z.string().max(255).optional(),
   comments: z.string().max(1000).optional(),
   s_officer_sig: z.string().max(255).optional(),
@@ -41,6 +42,7 @@ const CustomerServiceReportForm = () => {
       run_id: "",
       service_id: "",
       technician_name: "",
+      technician_email: "",
       site_officer_name: "",
       comments: "",
       s_officer_sig: "",
@@ -284,6 +286,20 @@ const CustomerServiceReportForm = () => {
                     <FormLabel>Technician Signature *</FormLabel>
                     <SignaturePad ref={techSignaturePadRef} />
                   </div>
+
+                  <FormField
+                    control={form.control}
+                    name="technician_email"
+                    render={({ field }) => (
+                      <FormItem className="w-fit min-w-[250px] md:w-auto">
+                        <FormLabel>Technician Email</FormLabel>
+                        <FormControl>
+                          <Input {...field} value={field.value || ""} type="email" placeholder="Enter technician email" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
               </div>
 
