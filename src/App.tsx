@@ -17,6 +17,7 @@ import CustomerServiceAgreementForm from "./pages/CustomerServiceAgreementForm";
 import Runs from "./pages/Runs";
 import CustomerServiceReportForm from "./pages/CustomerServiceReportForm";
 import ServiceReports from "./pages/ServiceReports";
+import ServiceReportDetail from "./pages/ServiceReportDetail";
 import TechnicianDashboard from "./pages/TechnicianDashboard";
 import NotFound from "./pages/NotFound";
 
@@ -55,6 +56,7 @@ const App = () => (
                             <Route path="/runs" element={<Runs />} />
                             <Route path="/customer-service-report" element={<CustomerServiceReportForm />} />
                             <Route path="/service-reports" element={<ServiceReports />} />
+                            <Route path="/service-report/:id" element={<ServiceReportDetail />} />
                             <Route path="*" element={<NotFound />} />
                           </Routes>
                         </div>
