@@ -28,6 +28,7 @@ export type Database = {
           nappy_bins: number | null
           others: number | null
           pedal_bins: number | null
+          report_date: string
           run_id: string
           s_officer_sig: string | null
           sanitary_bins: number | null
@@ -58,6 +59,7 @@ export type Database = {
           nappy_bins?: number | null
           others?: number | null
           pedal_bins?: number | null
+          report_date?: string
           run_id: string
           s_officer_sig?: string | null
           sanitary_bins?: number | null
@@ -88,6 +90,7 @@ export type Database = {
           nappy_bins?: number | null
           others?: number | null
           pedal_bins?: number | null
+          report_date?: string
           run_id?: string
           s_officer_sig?: string | null
           sanitary_bins?: number | null
