@@ -84,6 +84,24 @@ const CustomerServiceReportForm = () => {
     },
   });
 
+  // Fetch service agreement products based on service_id
+  const serviceId = form.watch("service_id");
+  const { data: serviceAgreements, isLoading: isLoadingAgreements } = useQuery({
+    queryKey: ["service_agreements", serviceId],
+    queryFn: async () => {
+      if (!serviceId) return null;
+      
+      const { data, error } = await supabase
+        .from("service_agreements")
+        .select("*")
+        .eq("service_id", serviceId);
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!serviceId,
+  });
+
   // Auto-populate fields when service_id is provided in URL
   useEffect(() => {
     if (serviceIdFromUrl && runs && runs.length > 0) {
@@ -156,6 +174,37 @@ const CustomerServiceReportForm = () => {
         </div>
         <p className="text-muted-foreground">Create a new customer service report</p>
       </div>
+
+      {serviceAgreements && serviceAgreements.length > 0 && (
+        <div className="mb-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {serviceAgreements.map((agreement) => (
+            <Card key={agreement.id}>
+              <CardHeader>
+                <CardTitle className="text-lg">Service Agreement</CardTitle>
+                <CardDescription>ID: {agreement.service_id}</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <div>
+                  <p className="text-sm font-medium">Products</p>
+                  <p className="text-sm text-muted-foreground">{agreement.products || "N/A"}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Areas Covered</p>
+                  <p className="text-sm text-muted-foreground">{agreement.areas_covered || "N/A"}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Frequency</p>
+                  <p className="text-sm text-muted-foreground">{agreement.service_frequency || "N/A"}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Status</p>
+                  <p className="text-sm text-muted-foreground">{agreement.service_active_inactive || "N/A"}</p>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
 
       <Card>
         <CardHeader>
