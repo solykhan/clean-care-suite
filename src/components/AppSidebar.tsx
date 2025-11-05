@@ -60,7 +60,7 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
-        {!isTechnicianDashboard && (
+        {!isTechnician && !isTechnicianDashboard && (
           <SidebarGroup>
             <SidebarGroupLabel>Hygiene Facility System</SidebarGroupLabel>
             <SidebarGroupContent>
@@ -81,7 +81,7 @@ export function AppSidebar() {
         )}
 
         <SidebarGroup>
-          <SidebarGroupLabel>Quick Actions</SidebarGroupLabel>
+          <SidebarGroupLabel>{isTechnician ? "Technician" : "Quick Actions"}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {!isTechnician && !isTechnicianDashboard && (
