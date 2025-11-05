@@ -162,7 +162,7 @@ const CustomerServiceReportForm = () => {
         <div className="mb-6 overflow-x-auto">
           <div className="flex gap-4 pb-2">
             {serviceAgreements.map((agreement) => (
-              <Card key={agreement.id} className="min-w-[300px] flex-shrink-0 bg-[hsl(207,69%,74%)] text-black">
+              <Card key={agreement.id} className="w-fit flex-shrink-0 bg-[hsl(207,69%,74%)] text-black">
                 <CardHeader>
                   <CardTitle className="text-lg">Service Agreement</CardTitle>
                   <CardDescription>ID: {agreement.service_id}</CardDescription>
