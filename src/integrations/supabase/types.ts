@@ -17,6 +17,7 @@ export type Database = {
       customer_service_reports: {
         Row: {
           air_fresheners: number | null
+          client_email: string | null
           comments: string | null
           created_at: string
           grit_soap: number | null
@@ -36,7 +37,6 @@ export type Database = {
           sharps_1_4lt_8lt: number | null
           site_officer_name: string | null
           tech_sig: string | null
-          technician_email: string | null
           technician_name: string | null
           toilet_seat_sprays: number | null
           updated_at: string
@@ -47,6 +47,7 @@ export type Database = {
         }
         Insert: {
           air_fresheners?: number | null
+          client_email?: string | null
           comments?: string | null
           created_at?: string
           grit_soap?: number | null
@@ -66,7 +67,6 @@ export type Database = {
           sharps_1_4lt_8lt?: number | null
           site_officer_name?: string | null
           tech_sig?: string | null
-          technician_email?: string | null
           technician_name?: string | null
           toilet_seat_sprays?: number | null
           updated_at?: string
@@ -77,6 +77,7 @@ export type Database = {
         }
         Update: {
           air_fresheners?: number | null
+          client_email?: string | null
           comments?: string | null
           created_at?: string
           grit_soap?: number | null
@@ -96,7 +97,6 @@ export type Database = {
           sharps_1_4lt_8lt?: number | null
           site_officer_name?: string | null
           tech_sig?: string | null
-          technician_email?: string | null
           technician_name?: string | null
           toilet_seat_sprays?: number | null
           updated_at?: string
