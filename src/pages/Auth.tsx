@@ -5,12 +5,15 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { z } from "zod";
 
 const authSchema = z.object({
   email: z.string().email("Please enter a valid email address").max(255),
   password: z.string().min(6, "Password must be at least 6 characters").max(72),
+  role: z.enum(["technician", "admin"]).optional(),
 });
 
 const Auth = () => {
@@ -20,6 +23,7 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
+  const [role, setRole] = useState<"technician" | "admin">("technician");
 
   useEffect(() => {
     if (user) {
@@ -30,7 +34,11 @@ const Auth = () => {
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    const validation = authSchema.safeParse({ email, password });
+    const validation = authSchema.safeParse({ 
+      email, 
+      password,
+      role: isSignUp ? role : undefined 
+    });
     if (!validation.success) {
       toast.error(validation.error.errors[0].message);
       return;
@@ -40,7 +48,7 @@ const Auth = () => {
 
     try {
       if (isSignUp) {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email: email.trim().toLowerCase(),
           password,
           options: {
@@ -49,7 +57,24 @@ const Auth = () => {
         });
 
         if (error) throw error;
-        toast.success("Account created successfully!");
+        
+        // Insert user role
+        if (data.user) {
+          const { error: roleError } = await supabase
+            .from("user_roles")
+            .insert({
+              user_id: data.user.id,
+              role: role,
+            });
+
+          if (roleError) {
+            console.error("Error creating user role:", roleError);
+            toast.error("Account created but role assignment failed");
+          } else {
+            toast.success("Account created successfully!");
+          }
+        }
+        
         navigate("/");
       } else {
         const { error } = await supabase.auth.signInWithPassword({
@@ -107,6 +132,23 @@ const Auth = () => {
                 maxLength={72}
               />
             </div>
+            
+            {isSignUp && (
+              <div className="space-y-3">
+                <label className="text-sm font-medium">Role</label>
+                <RadioGroup value={role} onValueChange={(value) => setRole(value as "technician" | "admin")} disabled={loading}>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="technician" id="technician" />
+                    <Label htmlFor="technician" className="cursor-pointer">Technician</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="admin" id="admin" />
+                    <Label htmlFor="admin" className="cursor-pointer">Admin</Label>
+                  </div>
+                </RadioGroup>
+              </div>
+            )}
+            
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? (isSignUp ? "Creating account..." : "Signing in...") : (isSignUp ? "Sign Up" : "Sign In")}
             </Button>
