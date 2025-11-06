@@ -7,6 +7,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { AdminRoute } from "@/components/AdminRoute";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Customers from "./pages/Customers";
@@ -50,7 +51,7 @@ const App = () => (
                           <Routes>
                             <Route path="/" element={<Index />} />
                             <Route path="/technician-dashboard" element={<TechnicianDashboard />} />
-                            <Route path="/admin/users" element={<AdminUserManagement />} />
+                            <Route path="/admin/users" element={<AdminRoute><AdminUserManagement /></AdminRoute>} />
                             <Route path="/customers" element={<Customers />} />
                             <Route path="/customers/new" element={<AddCustomer />} />
                             <Route path="/customers/:id" element={<CustomerDetail />} />
