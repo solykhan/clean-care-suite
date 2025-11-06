@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { AuthProvider } from "@/hooks/useAuth";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { AdminRoute } from "@/components/AdminRoute";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Customers from "./pages/Customers";
@@ -33,39 +35,42 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
+            <Route path="/auth" element={<Auth />} />
             <Route
               path="/*"
               element={
-                <SidebarProvider>
-                  <div className="flex min-h-screen w-full">
-                    <AppSidebar />
-                    <main className="flex-1 flex flex-col">
-                      <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background px-4">
-                        <SidebarTrigger />
-                        <h2 className="text-lg font-semibold">Hygiene Facility Management</h2>
-                      </header>
-                      <div className="flex-1">
-                        <Routes>
-                          <Route path="/" element={<Index />} />
-                          <Route path="/technician-dashboard" element={<TechnicianDashboard />} />
-                          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-                          <Route path="/admin/users" element={<AdminUserManagement />} />
-                          <Route path="/customers" element={<Customers />} />
-                          <Route path="/customers/new" element={<AddCustomer />} />
-                          <Route path="/customers/:id" element={<CustomerDetail />} />
-                          <Route path="/service-agreements" element={<ServiceAgreements />} />
-                          <Route path="/customer-service-form" element={<CustomerServiceAgreementForm />} />
-                          <Route path="/runs" element={<Runs />} />
-                          <Route path="/customer-service-report" element={<CustomerServiceReportForm />} />
-                          <Route path="/service-reports" element={<ServiceReports />} />
-                          <Route path="/service-report/:id" element={<ServiceReportDetail />} />
-                          <Route path="/service-report/:id/edit" element={<EditServiceReport />} />
-                          <Route path="*" element={<NotFound />} />
-                        </Routes>
-                      </div>
-                    </main>
-                  </div>
-                </SidebarProvider>
+                <ProtectedRoute>
+                  <SidebarProvider>
+                    <div className="flex min-h-screen w-full">
+                      <AppSidebar />
+                      <main className="flex-1 flex flex-col">
+                        <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background px-4">
+                          <SidebarTrigger />
+                          <h2 className="text-lg font-semibold">Hygiene Facility Management</h2>
+                        </header>
+                        <div className="flex-1">
+                          <Routes>
+                            <Route path="/" element={<Index />} />
+                            <Route path="/technician-dashboard" element={<TechnicianDashboard />} />
+                            <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+                            <Route path="/admin/users" element={<AdminRoute><AdminUserManagement /></AdminRoute>} />
+                            <Route path="/customers" element={<Customers />} />
+                            <Route path="/customers/new" element={<AddCustomer />} />
+                            <Route path="/customers/:id" element={<CustomerDetail />} />
+                            <Route path="/service-agreements" element={<ServiceAgreements />} />
+                            <Route path="/customer-service-form" element={<CustomerServiceAgreementForm />} />
+                            <Route path="/runs" element={<Runs />} />
+                            <Route path="/customer-service-report" element={<CustomerServiceReportForm />} />
+                            <Route path="/service-reports" element={<ServiceReports />} />
+                            <Route path="/service-report/:id" element={<ServiceReportDetail />} />
+                            <Route path="/service-report/:id/edit" element={<EditServiceReport />} />
+                            <Route path="*" element={<NotFound />} />
+                          </Routes>
+                        </div>
+                      </main>
+                    </div>
+                  </SidebarProvider>
+                </ProtectedRoute>
               }
             />
           </Routes>
