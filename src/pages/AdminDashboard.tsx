@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, UserCheck, UserPlus } from "lucide-react";
 
 const AdminDashboard = () => {
-  const { data: stats, isLoading } = useQuery({
+  const { data: stats, isLoading, error } = useQuery({
     queryKey: ['userStats'],
     queryFn: async () => {
       const { data, error } = await supabase.functions.invoke('get-user-stats');
@@ -26,6 +27,16 @@ const AdminDashboard = () => {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto p-6">
+        <div className="text-destructive">
+          Failed to load statistics. Please try again later.
+        </div>
       </div>
     );
   }
@@ -86,8 +97,8 @@ const AdminDashboard = () => {
           <CardDescription>Manage your system</CardDescription>
         </CardHeader>
         <CardContent className="space-y-2">
-          <a
-            href="/admin/users"
+          <Link
+            to="/admin/users"
             className="block p-4 rounded-lg border hover:bg-accent transition-colors"
           >
             <div className="flex items-center gap-2">
@@ -97,7 +108,7 @@ const AdminDashboard = () => {
                 <p className="text-sm text-muted-foreground">Create and manage user accounts</p>
               </div>
             </div>
-          </a>
+          </Link>
         </CardContent>
       </Card>
     </div>
