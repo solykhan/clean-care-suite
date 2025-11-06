@@ -6,5 +6,8 @@ verify_jwt = false
 [functions.check-user-exists]
 verify_jwt = false
 
+[functions.get-user-stats]
+verify_jwt = true
+
 [functions.send-email]
 verify_jwt = false

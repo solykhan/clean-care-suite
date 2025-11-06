@@ -22,6 +22,7 @@ import ServiceReportDetail from "./pages/ServiceReportDetail";
 import EditServiceReport from "./pages/EditServiceReport";
 import TechnicianDashboard from "./pages/TechnicianDashboard";
 import AdminUserManagement from "./pages/AdminUserManagement";
+import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -51,6 +52,7 @@ const App = () => (
                           <Routes>
                             <Route path="/" element={<Index />} />
                             <Route path="/technician-dashboard" element={<TechnicianDashboard />} />
+                            <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
                             <Route path="/admin/users" element={<AdminRoute><AdminUserManagement /></AdminRoute>} />
                             <Route path="/customers" element={<Customers />} />
                             <Route path="/customers/new" element={<AddCustomer />} />
