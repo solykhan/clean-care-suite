@@ -1,4 +1,4 @@
-import { Home, Building2, FileText, PlayCircle, ClipboardList, Gauge } from "lucide-react";
+import { Home, Building2, FileText, PlayCircle, ClipboardList, Gauge, Shield, Users } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { LogoutButton } from "@/components/LogoutButton";
 import { useState, useEffect } from "react";
@@ -31,6 +31,7 @@ export function AppSidebar() {
   const currentPath = location.pathname;
   const isTechnicianDashboard = currentPath === "/technician-dashboard";
   const [userRole, setUserRole] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const fetchUserRole = async () => {
@@ -42,7 +43,9 @@ export function AppSidebar() {
         .eq("user_id", user.id)
         .maybeSingle();
 
-      setUserRole(data?.role || null);
+      const role = data?.role || null;
+      setUserRole(role);
+      setIsAdmin(role === "admin");
     };
 
     fetchUserRole();
@@ -135,6 +138,32 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {isAdmin && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Admin</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={currentPath === "/admin/dashboard"}>
+                    <NavLink to="/admin/dashboard">
+                      <Shield className="h-4 w-4" />
+                      <span>Admin Dashboard</span>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={currentPath === "/admin/users"}>
+                    <NavLink to="/admin/users">
+                      <Users className="h-4 w-4" />
+                      <span>User Management</span>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
       </SidebarContent>
 
       <SidebarFooter>
