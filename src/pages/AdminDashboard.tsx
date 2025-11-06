@@ -5,12 +5,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Users, UserCheck, UserPlus } from "lucide-react";
 
 const AdminDashboard = () => {
-  console.log('AdminDashboard component rendered');
-  
   const { data: stats, isLoading, error } = useQuery({
     queryKey: ['userStats'],
     queryFn: async () => {
-      console.log('Fetching user stats...');
       const { data, error } = await supabase.functions.invoke('get-user-stats');
 
       if (error) {
@@ -18,7 +15,6 @@ const AdminDashboard = () => {
         throw error;
       }
 
-      console.log('User stats received:', data);
       return data as {
         totalUsers: number;
         activeTechnicians: number;
@@ -26,8 +22,6 @@ const AdminDashboard = () => {
       };
     },
   });
-
-  console.log('AdminDashboard state:', { isLoading, error, stats });
 
   if (isLoading) {
     return (

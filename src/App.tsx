@@ -34,12 +34,11 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/auth" element={<Auth />} />
-            <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
+            <Route element={<Layout />}>
               <Route path="/" element={<Index />} />
               <Route path="/technician-dashboard" element={<TechnicianDashboard />} />
-              <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
-              <Route path="/admin/users" element={<AdminRoute><AdminUserManagement /></AdminRoute>} />
+              <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              <Route path="/admin/users" element={<AdminUserManagement />} />
               <Route path="/customers" element={<Customers />} />
               <Route path="/customers/new" element={<AddCustomer />} />
               <Route path="/customers/:id" element={<CustomerDetail />} />
