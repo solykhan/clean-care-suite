@@ -1,13 +1,23 @@
-import React from 'react'
-import { Webhook } from 'standardwebhooks'
-import { Resend } from 'resend'
-import { renderAsync } from '@react-email/components'
+import React from 'https://esm.sh/react@18.3.1'
+import { Webhook } from 'https://esm.sh/standardwebhooks@1.0.0'
+import { Resend } from 'https://esm.sh/resend@4.0.0'
+import { renderAsync } from 'https://esm.sh/@react-email/components@0.0.22'
 import { MagicLinkEmail } from './_templates/magic-link.tsx'
 
 const resend = new Resend(Deno.env.get('RESEND_API_KEY') as string)
 const hookSecret = Deno.env.get('SEND_EMAIL_HOOK_SECRET') as string
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+}
+
 Deno.serve(async (req) => {
+  // Handle CORS preflight requests
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders })
+  }
+
   if (req.method !== 'POST') {
     return new Response('not allowed', { status: 400 })
   }
@@ -55,7 +65,7 @@ Deno.serve(async (req) => {
     if (error) {
       throw error
     }
-  } catch (error) {
+  } catch (error: any) {
     console.log('Error sending email:', error)
     return new Response(
       JSON.stringify({
@@ -66,13 +76,13 @@ Deno.serve(async (req) => {
       }),
       {
         status: 401,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     )
   }
 
   return new Response(JSON.stringify({ success: true }), {
     status: 200,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   })
 })
