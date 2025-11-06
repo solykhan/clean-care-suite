@@ -2,9 +2,12 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { useEffect, useRef } from "react";
 
 export const AdminRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading: authLoading } = useAuth();
+  const hasShownToast = useRef(false);
 
   const { data: isAdmin, isLoading: roleLoading } = useQuery({
     queryKey: ['userRole', user?.id],
@@ -34,6 +37,13 @@ export const AdminRoute = ({ children }: { children: React.ReactNode }) => {
       </div>
     );
   }
+
+  useEffect(() => {
+    if (!authLoading && !roleLoading && user && isAdmin === false && !hasShownToast.current) {
+      toast.error("Access denied. Admin privileges required.");
+      hasShownToast.current = true;
+    }
+  }, [authLoading, roleLoading, user, isAdmin]);
 
   if (!user) {
     return <Navigate to="/auth" replace />;
