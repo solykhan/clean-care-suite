@@ -8,6 +8,13 @@ import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -24,6 +31,13 @@ import { Loader2, Trash2 } from "lucide-react";
 const userSchema = z.object({
   email: z.string().email("Please enter a valid email address").max(255),
   role: z.enum(["technician", "admin"]),
+});
+
+const roleUpdateSchema = z.object({
+  userId: z.string().uuid("Invalid user ID"),
+  role: z.enum(["technician", "admin"], {
+    errorMap: () => ({ message: "Role must be either 'technician' or 'admin'" })
+  }),
 });
 
 interface User {
@@ -43,6 +57,7 @@ const AdminUserManagement = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
   const [deletingUser, setDeletingUser] = useState(false);
+  const [updatingRoleFor, setUpdatingRoleFor] = useState<string | null>(null);
 
   const fetchUsers = async () => {
     try {
@@ -89,6 +104,32 @@ const AdminUserManagement = () => {
       toast.error(error.message || 'Failed to delete user');
     } finally {
       setDeletingUser(false);
+    }
+  };
+
+  const handleRoleChange = async (userId: string, newRole: string) => {
+    // Validate the input
+    const validation = roleUpdateSchema.safeParse({ userId, role: newRole });
+    if (!validation.success) {
+      toast.error(validation.error.errors[0].message);
+      return;
+    }
+
+    try {
+      setUpdatingRoleFor(userId);
+      const { error } = await supabase.functions.invoke('update-user-role', {
+        body: { userId, role: newRole }
+      });
+
+      if (error) throw error;
+
+      toast.success('User role updated successfully');
+      fetchUsers(); // Refresh user list
+    } catch (error: any) {
+      console.error('Error updating role:', error);
+      toast.error(error.message || 'Failed to update user role');
+    } finally {
+      setUpdatingRoleFor(null);
     }
   };
 
@@ -212,10 +253,21 @@ const AdminUserManagement = () => {
                         )}
                       </div>
                       <div className="flex items-center gap-2">
-                        {user.role && (
-                          <Badge variant={user.role === 'admin' ? 'default' : 'secondary'}>
-                            {user.role}
-                          </Badge>
+                        <Select
+                          value={user.role || ""}
+                          onValueChange={(value) => handleRoleChange(user.id, value)}
+                          disabled={updatingRoleFor === user.id}
+                        >
+                          <SelectTrigger className="w-[130px]">
+                            <SelectValue placeholder="No role" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="technician">Technician</SelectItem>
+                            <SelectItem value="admin">Admin</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        {updatingRoleFor === user.id && (
+                          <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
                         )}
                         <Button
                           variant="ghost"
@@ -258,7 +310,7 @@ const AdminUserManagement = () => {
                     <TableHead>Role</TableHead>
                     <TableHead>Created</TableHead>
                     <TableHead>Last Sign In</TableHead>
-                    <TableHead className="w-[100px]">Actions</TableHead>
+                    <TableHead className="w-[100px] text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -266,13 +318,19 @@ const AdminUserManagement = () => {
                     <TableRow key={user.id}>
                       <TableCell className="font-medium">{user.email}</TableCell>
                       <TableCell>
-                        {user.role ? (
-                          <Badge variant={user.role === 'admin' ? 'default' : 'secondary'}>
-                            {user.role}
-                          </Badge>
-                        ) : (
-                          <span className="text-muted-foreground text-sm">No role</span>
-                        )}
+                        <Select
+                          value={user.role || ""}
+                          onValueChange={(value) => handleRoleChange(user.id, value)}
+                          disabled={updatingRoleFor === user.id}
+                        >
+                          <SelectTrigger className="w-[140px]">
+                            <SelectValue placeholder="No role" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="technician">Technician</SelectItem>
+                            <SelectItem value="admin">Admin</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </TableCell>
                       <TableCell>{new Date(user.created_at).toLocaleDateString()}</TableCell>
                       <TableCell>
@@ -281,15 +339,20 @@ const AdminUserManagement = () => {
                           : <span className="text-muted-foreground text-sm">Never</span>
                         }
                       </TableCell>
-                      <TableCell>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleDeleteClick(user)}
-                          className="h-8 w-8 text-destructive hover:text-destructive"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          {updatingRoleFor === user.id && (
+                            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                          )}
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleDeleteClick(user)}
+                            className="h-8 w-8 text-destructive hover:text-destructive"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
