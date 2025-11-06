@@ -39,6 +39,14 @@ export const AdminRoute = ({ children }: { children: React.ReactNode }) => {
     retry: 1,
   });
 
+  useEffect(() => {
+    if (!authLoading && !roleLoading && user && isAdmin === false && !hasShownToast.current) {
+      console.log('[AdminRoute] Access denied, showing toast');
+      toast.error("Access denied. Admin privileges required.");
+      hasShownToast.current = true;
+    }
+  }, [authLoading, roleLoading, user, isAdmin]);
+
   console.log('[AdminRoute] Render state:', {
     authLoading,
     roleLoading,
@@ -67,14 +75,6 @@ export const AdminRoute = ({ children }: { children: React.ReactNode }) => {
       </div>
     );
   }
-
-  useEffect(() => {
-    if (!authLoading && !roleLoading && user && isAdmin === false && !hasShownToast.current) {
-      console.log('[AdminRoute] Access denied, showing toast');
-      toast.error("Access denied. Admin privileges required.");
-      hasShownToast.current = true;
-    }
-  }, [authLoading, roleLoading, user, isAdmin]);
 
   if (!user) {
     console.log('[AdminRoute] No user, redirecting to auth');
