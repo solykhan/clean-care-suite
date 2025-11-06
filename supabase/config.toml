@@ -9,5 +9,8 @@ verify_jwt = false
 [functions.get-user-stats]
 verify_jwt = true
 
+[functions.list-users]
+verify_jwt = false
+
 [functions.send-email]
 verify_jwt = false
