@@ -5,14 +5,11 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { z } from "zod";
 
 const authSchema = z.object({
   email: z.string().email("Please enter a valid email address").max(255),
-  role: z.enum(["technician", "admin"]).optional(),
 });
 
 const Auth = () => {
@@ -20,8 +17,6 @@ const Auth = () => {
   const { user } = useAuth();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
-  const [role, setRole] = useState<"technician" | "admin">("technician");
   const [otpSent, setOtpSent] = useState(false);
 
   useEffect(() => {
@@ -33,10 +28,7 @@ const Auth = () => {
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    const validation = authSchema.safeParse({ 
-      email, 
-      role: isSignUp ? role : undefined 
-    });
+    const validation = authSchema.safeParse({ email });
     if (!validation.success) {
       toast.error(validation.error.errors[0].message);
       return;
@@ -45,37 +37,34 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      if (isSignUp) {
-        // For signup, send OTP and store role
-        const { error } = await supabase.auth.signInWithOtp({
-          email: email.trim().toLowerCase(),
-          options: {
-            emailRedirectTo: `${window.location.origin}/`,
-            data: {
-              role: role,
-            },
-          },
-        });
+      // Check if user exists first
+      const { data: checkData, error: checkError } = await supabase.functions.invoke('check-user-exists', {
+        body: { email: email.trim().toLowerCase() }
+      });
 
-        if (error) throw error;
-        
-        setOtpSent(true);
-        toast.success("Check your email for the login link!");
-      } else {
-        // For login, just send OTP
-        const { error } = await supabase.auth.signInWithOtp({
-          email: email.trim().toLowerCase(),
-          options: {
-            emailRedirectTo: `${window.location.origin}/`,
-          },
-        });
-
-        if (error) throw error;
-        setOtpSent(true);
-        toast.success("Check your email for the login link!");
+      if (checkError) {
+        throw new Error("Failed to verify email");
       }
+
+      if (!checkData.exists) {
+        toast.error("Sign Up first by Admin");
+        setLoading(false);
+        return;
+      }
+
+      // User exists, send OTP
+      const { error } = await supabase.auth.signInWithOtp({
+        email: email.trim().toLowerCase(),
+        options: {
+          emailRedirectTo: `${window.location.origin}/`,
+        },
+      });
+
+      if (error) throw error;
+      setOtpSent(true);
+      toast.success("Check your email for the login link!");
     } catch (error: any) {
-      toast.error(error.message || `Failed to ${isSignUp ? "sign up" : "send login link"}`);
+      toast.error(error.message || "Failed to send login link");
     } finally {
       setLoading(false);
     }
@@ -114,7 +103,7 @@ const Auth = () => {
         <CardHeader>
           <CardTitle>Welcome</CardTitle>
           <CardDescription>
-            {isSignUp ? "Create a new account" : "Sign in to your account"}
+            Sign in to your account
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -134,33 +123,8 @@ const Auth = () => {
               />
             </div>
             
-            {isSignUp && (
-              <div className="space-y-3">
-                <label className="text-sm font-medium">Role</label>
-                <RadioGroup value={role} onValueChange={(value) => setRole(value as "technician" | "admin")} disabled={loading}>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="technician" id="technician" />
-                    <Label htmlFor="technician" className="cursor-pointer">Technician</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="admin" id="admin" />
-                    <Label htmlFor="admin" className="cursor-pointer">Admin</Label>
-                  </div>
-                </RadioGroup>
-              </div>
-            )}
-            
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Sending..." : (isSignUp ? "Send Sign Up Link" : "Send Login Link")}
-            </Button>
-            <Button
-              type="button"
-              onClick={() => setIsSignUp(!isSignUp)}
-              variant="ghost"
-              className="w-full"
-              disabled={loading}
-            >
-              {isSignUp ? "Already have an account? Sign in" : "Don't have an account? Sign up"}
+              {loading ? "Sending..." : "Send Login Link"}
             </Button>
           </form>
         </CardContent>
