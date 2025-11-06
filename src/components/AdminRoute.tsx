@@ -9,9 +9,12 @@ export const AdminRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading: authLoading } = useAuth();
   const hasShownToast = useRef(false);
 
+  console.log('AdminRoute - auth state:', { user: !!user, authLoading });
+
   const { data: isAdmin, isLoading: roleLoading } = useQuery({
     queryKey: ['userRole', user?.id],
     queryFn: async () => {
+      console.log('AdminRoute - checking admin role for user:', user?.id);
       if (!user?.id) return false;
       
       const { data, error } = await supabase
@@ -21,14 +24,17 @@ export const AdminRoute = ({ children }: { children: React.ReactNode }) => {
         });
 
       if (error) {
-        console.error('Error checking admin role:', error);
+        console.error('AdminRoute - Error checking admin role:', error);
         return false;
       }
 
+      console.log('AdminRoute - has_role result:', data);
       return data;
     },
     enabled: !!user?.id,
   });
+
+  console.log('AdminRoute - state:', { authLoading, roleLoading, isAdmin });
 
   if (authLoading || roleLoading) {
     return (
