@@ -9,7 +9,7 @@ export const AdminRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading: authLoading } = useAuth();
   const hasShownToast = useRef(false);
 
-  const { data: isAdmin, isLoading: roleLoading } = useQuery({
+  const { data: isAdmin, isLoading: roleLoading, error: roleError } = useQuery({
     queryKey: ['userRole', user?.id],
     queryFn: async () => {
       if (!user?.id) return false;
@@ -22,18 +22,30 @@ export const AdminRoute = ({ children }: { children: React.ReactNode }) => {
 
       if (error) {
         console.error('Error checking admin role:', error);
-        return false;
+        throw error;
       }
 
       return data;
     },
     enabled: !!user?.id,
+    retry: 1,
   });
 
   if (authLoading || roleLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (roleError) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center space-y-2">
+          <p className="text-destructive">Error checking admin permissions</p>
+          <p className="text-sm text-muted-foreground">{roleError.message}</p>
+        </div>
       </div>
     );
   }
