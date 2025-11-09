@@ -179,8 +179,8 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="Active">Active</SelectItem>
-                        <SelectItem value="Inactive">Inactive</SelectItem>
+                        <SelectItem value="Active">ACT</SelectItem>
+                        <SelectItem value="Inactive">INA</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
