@@ -64,7 +64,7 @@ export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementF
       service_id: serviceId || "",
       products: "",
       areas_covered: "",
-      service_active_inactive: "active",
+      service_active_inactive: "Active",
       service_frequency: "",
       invoice_type: "",
       cpm_device_onsite: "",
@@ -158,8 +158,8 @@ export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementF
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="active">Active</SelectItem>
-                        <SelectItem value="inactive">Inactive</SelectItem>
+                        <SelectItem value="Active">ACT</SelectItem>
+                        <SelectItem value="Inactive">INA</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
