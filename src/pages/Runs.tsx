@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { PlayCircle, Edit } from "lucide-react";
+import { PlayCircle, Edit, Calendar } from "lucide-react";
 import { toast } from "sonner";
 import { RunsImportDialog } from "@/components/RunsImportDialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -86,7 +86,13 @@ const Runs = () => {
               </div>
               <p className="text-muted-foreground">View all service runs</p>
             </div>
-            <RunsImportDialog />
+            <div className="flex gap-2">
+              <Button onClick={() => navigate("/runs/calendar")} variant="outline">
+                <Calendar className="mr-2 h-4 w-4" />
+                Calendar View
+              </Button>
+              <RunsImportDialog />
+            </div>
           </div>
           
           <div className="flex gap-4 flex-wrap">

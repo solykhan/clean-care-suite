@@ -15,6 +15,7 @@ import AddCustomer from "./pages/AddCustomer";
 import ServiceAgreements from "./pages/ServiceAgreements";
 import CustomerServiceAgreementForm from "./pages/CustomerServiceAgreementForm";
 import Runs from "./pages/Runs";
+import RunsCalendar from "./pages/RunsCalendar";
 import CustomerServiceReportForm from "./pages/CustomerServiceReportForm";
 import ServiceReports from "./pages/ServiceReports";
 import ServiceReportDetail from "./pages/ServiceReportDetail";
@@ -46,6 +47,7 @@ const App = () => (
               <Route path="/service-agreements" element={<ServiceAgreements />} />
               <Route path="/customer-service-form" element={<CustomerServiceAgreementForm />} />
               <Route path="/runs" element={<Runs />} />
+              <Route path="/runs/calendar" element={<RunsCalendar />} />
               <Route path="/customer-service-report" element={<CustomerServiceReportForm />} />
               <Route path="/service-reports" element={<ServiceReports />} />
               <Route path="/service-report/:id" element={<ServiceReportDetail />} />
