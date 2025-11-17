@@ -296,21 +296,7 @@ const CustomerDetail = () => {
                             {agreement.service_active_inactive || "N/A"}
                           </Badge>
                         </div>
-                        <div>
-                          <span className="text-xs text-muted-foreground">Unit Price</span>
-                          <p className="font-medium">${agreement.unit_price || "0.00"}</p>
-                        </div>
-                        <div>
-                          <span className="text-xs text-muted-foreground">Total</span>
-                          <p className="font-medium text-primary text-lg">${agreement.total || "0.00"}</p>
-                        </div>
                       </div>
-                      {agreement.comments && (
-                        <div className="mt-4 pt-4 border-t">
-                          <span className="text-xs text-muted-foreground">Comments:</span>
-                          <p className="text-sm mt-1">{agreement.comments}</p>
-                        </div>
-                      )}
                       <div className="mt-4 pt-4 border-t flex justify-end">
                         <EditServiceAgreementDialog 
                           agreement={agreement}
