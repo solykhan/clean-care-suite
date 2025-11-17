@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
 import { z } from "zod";
+import { AlertCircle } from "lucide-react";
 
 const authSchema = z.object({
   email: z.string().email("Please enter a valid email address").max(255),
@@ -15,9 +17,30 @@ const authSchema = z.object({
 const Auth = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [searchParams] = useSearchParams();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Check for auth errors in URL
+    const error = searchParams.get('error');
+    const errorDescription = searchParams.get('error_description');
+    
+    if (error) {
+      let errorMessage = "Authentication failed. ";
+      
+      if (error === 'invalid_token' || errorDescription?.includes('token')) {
+        errorMessage += "The login link has expired or is invalid. Please request a new one.";
+      } else {
+        errorMessage += errorDescription || "Please try again.";
+      }
+      
+      setAuthError(errorMessage);
+      toast.error(errorMessage);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (user) {
@@ -107,6 +130,12 @@ const Auth = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {authError && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{authError}</AlertDescription>
+            </Alert>
+          )}
           <form onSubmit={handleAuth} className="space-y-4">
             <div className="space-y-2">
               <label htmlFor="email" className="text-sm font-medium">
