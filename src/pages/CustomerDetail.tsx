@@ -280,7 +280,7 @@ const CustomerDetail = () => {
                       <div className="grid md:grid-cols-3 gap-4">
                         <div>
                           <span className="text-xs text-muted-foreground">Products</span>
-                          <p className="font-medium">{agreement.products || "N/A"}</p>
+                          <p className="font-bold" style={{ color: '#0fa0b3' }}>{agreement.products || "N/A"}</p>
                         </div>
                         <div>
                           <span className="text-xs text-muted-foreground">Areas Covered</span>
