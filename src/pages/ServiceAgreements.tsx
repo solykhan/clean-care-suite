@@ -25,19 +25,31 @@ const ServiceAgreements = () => {
   const { data: serviceAgreements, isLoading } = useQuery({
     queryKey: ["service-agreements", refreshKey],
     queryFn: async () => {
-      const { data, error } = await supabase
+      // Fetch service agreements
+      const { data: agreements, error: agreementsError } = await supabase
         .from("service_agreements")
-        .select(`
-          *,
-          customers (
-            site_name,
-            site_suburb
-          )
-        `)
+        .select("*")
         .order("created_at", { ascending: false });
 
-      if (error) throw error;
-      return data;
+      if (agreementsError) throw agreementsError;
+
+      // Fetch customers
+      const { data: customers, error: customersError } = await supabase
+        .from("customers")
+        .select("service_id, site_name, site_suburb");
+
+      if (customersError) throw customersError;
+
+      // Create a map of customers by service_id for quick lookup
+      const customersMap = new Map(
+        customers?.map(c => [c.service_id, c]) || []
+      );
+
+      // Join the data manually
+      return agreements?.map(agreement => ({
+        ...agreement,
+        customer: customersMap.get(agreement.service_id)
+      })) || [];
     },
   });
 
@@ -106,8 +118,8 @@ const ServiceAgreements = () => {
                           {agreement.service_active_inactive || "N/A"}
                         </Badge>
                       </TableCell>
-                      <TableCell>{agreement.customers?.site_name || "-"}</TableCell>
-                      <TableCell>{agreement.customers?.site_suburb || "-"}</TableCell>
+                      <TableCell>{agreement.customer?.site_name || "-"}</TableCell>
+                      <TableCell>{agreement.customer?.site_suburb || "-"}</TableCell>
                       <TableCell className="whitespace-nowrap">
                         <EditServiceAgreementDialog 
                           agreement={agreement}
