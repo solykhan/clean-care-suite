@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { ArrowLeft, Building2, Phone, MapPin, FileText, DollarSign } from "lucide-react";
 import { toast } from "sonner";
 import { ServiceAgreementForm } from "@/components/ServiceAgreementForm";
+import { EditServiceAgreementDialog } from "@/components/EditServiceAgreementDialog";
 
 const CustomerDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -310,6 +311,14 @@ const CustomerDetail = () => {
                           <p className="text-sm mt-1">{agreement.comments}</p>
                         </div>
                       )}
+                      <div className="mt-4 pt-4 border-t flex justify-end">
+                        <EditServiceAgreementDialog 
+                          agreement={agreement}
+                          onSuccess={() => {
+                            queryClient.invalidateQueries({ queryKey: ["service-agreements", customer.service_id] });
+                          }}
+                        />
+                      </div>
                     </CardContent>
                   </Card>
                 ))}
