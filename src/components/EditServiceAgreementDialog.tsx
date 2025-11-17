@@ -37,7 +37,7 @@ const formSchema = z.object({
   products: z.string().optional(),
   areas_covered: z.string().optional(),
   service_active_inactive: z.string().optional(),
-  
+  service_frequency: z.string().optional(),
   invoice_type: z.string().optional(),
   cpm_device_onsite: z.string().optional(),
   unit_price: z.string().optional(),
@@ -65,6 +65,7 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
       products: agreement.products || "",
       areas_covered: agreement.areas_covered || "",
       service_active_inactive: agreement.service_active_inactive || "active",
+      service_frequency: agreement.service_frequency || "",
       invoice_type: agreement.invoice_type || "",
       cpm_device_onsite: agreement.cpm_device_onsite || "",
       unit_price: agreement.unit_price?.toString() || "",
@@ -83,7 +84,7 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
         products: agreement.products || "",
         areas_covered: agreement.areas_covered || "",
         service_active_inactive: agreement.service_active_inactive || "active",
-        
+        service_frequency: agreement.service_frequency || "",
         invoice_type: agreement.invoice_type || "",
         cpm_device_onsite: agreement.cpm_device_onsite || "",
         unit_price: agreement.unit_price?.toString() || "",
@@ -103,7 +104,7 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
         products: values.products || null,
         areas_covered: values.areas_covered || null,
         service_active_inactive: values.service_active_inactive || null,
-        
+        service_frequency: values.service_frequency || null,
         invoice_type: values.invoice_type || null,
         cpm_device_onsite: values.cpm_device_onsite || null,
         comments: values.comments || null,
@@ -340,6 +341,20 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
                         placeholder="0.00" 
                         {...field} 
                       />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="service_frequency"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Service Frequency</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter frequency" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
