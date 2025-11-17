@@ -51,10 +51,22 @@ const formSchema = z.object({
   service_frequency: z.string().optional(),
   invoice_type: z.string().optional(),
   cpm_device_onsite: z.string().optional(),
-  unit_price: z.string().optional(),
-  cpm_pricing: z.string().optional(),
-  cpi: z.string().optional(),
-  total: z.string().optional(),
+  unit_price: z.string().optional().refine(
+    (val) => !val || (parseFloat(val) > 0 && !isNaN(parseFloat(val))),
+    { message: "Unit price must be a positive number" }
+  ),
+  cpm_pricing: z.string().optional().refine(
+    (val) => !val || (parseFloat(val) > 0 && !isNaN(parseFloat(val))),
+    { message: "CPM pricing must be a positive number" }
+  ),
+  cpi: z.string().optional().refine(
+    (val) => !val || (parseFloat(val) > 0 && !isNaN(parseFloat(val))),
+    { message: "CPI must be a positive number" }
+  ),
+  total: z.string().optional().refine(
+    (val) => !val || (parseFloat(val) > 0 && !isNaN(parseFloat(val))),
+    { message: "Total must be a positive number" }
+  ),
   comments: z.string().optional(),
 });
 
