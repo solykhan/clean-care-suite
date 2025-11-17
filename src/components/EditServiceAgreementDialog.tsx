@@ -39,12 +39,6 @@ const formSchema = z.object({
   service_active_inactive: z.string().optional(),
   service_frequency: z.string().optional(),
   invoice_type: z.string().optional(),
-  cpm_device_onsite: z.string().optional(),
-  unit_price: z.string().optional(),
-  cpm_pricing: z.string().optional(),
-  cpi: z.string().optional(),
-  total: z.string().optional(),
-  comments: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -67,12 +61,6 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
       service_active_inactive: agreement.service_active_inactive || "active",
       service_frequency: agreement.service_frequency || "",
       invoice_type: agreement.invoice_type || "",
-      cpm_device_onsite: agreement.cpm_device_onsite || "",
-      unit_price: agreement.unit_price?.toString() || "",
-      cpm_pricing: agreement.cpm_pricing?.toString() || "",
-      cpi: agreement.cpi?.toString() || "",
-      total: agreement.total?.toString() || "",
-      comments: agreement.comments || "",
     },
   });
 
@@ -86,12 +74,6 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
         service_active_inactive: agreement.service_active_inactive || "active",
         service_frequency: agreement.service_frequency || "",
         invoice_type: agreement.invoice_type || "",
-        cpm_device_onsite: agreement.cpm_device_onsite || "",
-        unit_price: agreement.unit_price?.toString() || "",
-        cpm_pricing: agreement.cpm_pricing?.toString() || "",
-        cpi: agreement.cpi?.toString() || "",
-        total: agreement.total?.toString() || "",
-        comments: agreement.comments || "",
       });
     }
   }, [open, agreement, form]);
@@ -106,12 +88,12 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
         service_active_inactive: values.service_active_inactive || null,
         service_frequency: values.service_frequency || null,
         invoice_type: values.invoice_type || null,
-        cpm_device_onsite: values.cpm_device_onsite || null,
-        comments: values.comments || null,
-        unit_price: values.unit_price ? parseFloat(values.unit_price) : null,
-        cpm_pricing: values.cpm_pricing ? parseFloat(values.cpm_pricing) : null,
-        cpi: values.cpi ? parseFloat(values.cpi) : null,
-        total: values.total ? parseFloat(values.total) : null,
+        cpm_device_onsite: null,
+        comments: null,
+        unit_price: null,
+        cpm_pricing: null,
+        cpi: null,
+        total: null,
       };
 
       const { error } = await supabase
@@ -249,119 +231,7 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
                   </FormItem>
                 )}
               />
-
-              <FormField
-                control={form.control}
-                name="cpm_device_onsite"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>CPM Device Onsite</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter device info" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
             </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="unit_price"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Unit Price</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="number" 
-                        step="0.01"
-                        placeholder="0.00" 
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="cpm_pricing"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>CPM Pricing</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="number" 
-                        step="0.01"
-                        placeholder="0.00" 
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="cpi"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>CPI</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="number" 
-                        step="0.01"
-                        placeholder="0.00" 
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="total"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Total</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="number" 
-                        step="0.01"
-                        placeholder="0.00" 
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <FormField
-              control={form.control}
-              name="comments"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Comments</FormLabel>
-                  <FormControl>
-                    <Textarea 
-                      placeholder="Additional comments or notes"
-                      className="resize-none"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
 
             <div className="flex justify-end gap-2 pt-4">
               <Button
