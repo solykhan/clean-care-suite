@@ -82,13 +82,6 @@ const ServiceAgreements = () => {
                     <TableHead className="font-bold whitespace-nowrap">Areas Covered</TableHead>
                     <TableHead className="font-bold whitespace-nowrap">Service Frequency</TableHead>
                     <TableHead className="font-bold whitespace-nowrap">Invoice Type</TableHead>
-                    <TableHead className="font-bold whitespace-nowrap">Unit Price</TableHead>
-                    <TableHead className="font-bold whitespace-nowrap">CPM Pricing</TableHead>
-                    <TableHead className="font-bold whitespace-nowrap">CPI</TableHead>
-                    <TableHead className="font-bold whitespace-nowrap">Total</TableHead>
-                    <TableHead className="font-bold whitespace-nowrap">CPM Device Onsite</TableHead>
-                    <TableHead className="font-bold whitespace-nowrap">Comments</TableHead>
-                    <TableHead className="font-bold whitespace-nowrap">Created At</TableHead>
                     <TableHead className="font-bold whitespace-nowrap">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -113,27 +106,6 @@ const ServiceAgreements = () => {
                       <TableCell>{agreement.areas_covered || "-"}</TableCell>
                       <TableCell>{agreement.service_frequency || "-"}</TableCell>
                       <TableCell>{agreement.invoice_type || "-"}</TableCell>
-                      <TableCell className="whitespace-nowrap">
-                        {agreement.unit_price ? `$${agreement.unit_price}` : "-"}
-                      </TableCell>
-                      <TableCell className="whitespace-nowrap">
-                        {agreement.cpm_pricing ? `$${agreement.cpm_pricing}` : "-"}
-                      </TableCell>
-                      <TableCell className="whitespace-nowrap">
-                        {agreement.cpi ? `$${agreement.cpi}` : "-"}
-                      </TableCell>
-                      <TableCell className="font-semibold whitespace-nowrap">
-                        {agreement.total ? `$${agreement.total}` : "-"}
-                      </TableCell>
-                      <TableCell>{agreement.cpm_device_onsite || "-"}</TableCell>
-                      <TableCell>
-                        {agreement.comments || "-"}
-                      </TableCell>
-                      <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
-                        {agreement.created_at
-                          ? new Date(agreement.created_at).toLocaleDateString()
-                          : "-"}
-                      </TableCell>
                       <TableCell className="whitespace-nowrap">
                         <EditServiceAgreementDialog 
                           agreement={agreement}
