@@ -27,7 +27,13 @@ const ServiceAgreements = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("service_agreements")
-        .select("*")
+        .select(`
+          *,
+          customers (
+            site_name,
+            site_suburb
+          )
+        `)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
@@ -78,10 +84,8 @@ const ServiceAgreements = () => {
                   <TableRow>
                     <TableHead className="font-bold whitespace-nowrap">Service ID</TableHead>
                     <TableHead className="font-bold whitespace-nowrap">Status</TableHead>
-                    <TableHead className="font-bold whitespace-nowrap">Products</TableHead>
-                    <TableHead className="font-bold whitespace-nowrap">Areas Covered</TableHead>
-                    <TableHead className="font-bold whitespace-nowrap">Service Frequency</TableHead>
-                    <TableHead className="font-bold whitespace-nowrap">Invoice Type</TableHead>
+                    <TableHead className="font-bold whitespace-nowrap">Customer Name</TableHead>
+                    <TableHead className="font-bold whitespace-nowrap">Suburbs</TableHead>
                     <TableHead className="font-bold whitespace-nowrap">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -102,10 +106,8 @@ const ServiceAgreements = () => {
                           {agreement.service_active_inactive || "N/A"}
                         </Badge>
                       </TableCell>
-                      <TableCell>{agreement.products || "-"}</TableCell>
-                      <TableCell>{agreement.areas_covered || "-"}</TableCell>
-                      <TableCell>{agreement.service_frequency || "-"}</TableCell>
-                      <TableCell>{agreement.invoice_type || "-"}</TableCell>
+                      <TableCell>{agreement.customers?.site_name || "-"}</TableCell>
+                      <TableCell>{agreement.customers?.site_suburb || "-"}</TableCell>
                       <TableCell className="whitespace-nowrap">
                         <EditServiceAgreementDialog 
                           agreement={agreement}
