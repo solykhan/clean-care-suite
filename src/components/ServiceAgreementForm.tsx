@@ -37,7 +37,7 @@ const formSchema = z.object({
   products: z.string().optional(),
   areas_covered: z.string().optional(),
   service_active_inactive: z.string().optional(),
-  service_frequency: z.string().optional(),
+  
   invoice_type: z.string().optional(),
   cpm_device_onsite: z.string().optional(),
   unit_price: z.string().optional(),
@@ -65,7 +65,7 @@ export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementF
       products: "",
       areas_covered: "",
       service_active_inactive: "Active",
-      service_frequency: "",
+      
       invoice_type: "",
       cpm_device_onsite: "",
       unit_price: "",
@@ -85,7 +85,7 @@ export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementF
         products: values.products || null,
         areas_covered: values.areas_covered || null,
         service_active_inactive: values.service_active_inactive || null,
-        service_frequency: values.service_frequency || null,
+        
         invoice_type: values.invoice_type || null,
         cpm_device_onsite: values.cpm_device_onsite || null,
         comments: values.comments || null,
@@ -167,30 +167,6 @@ export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementF
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="service_frequency"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Service Frequency</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select frequency" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="weekly">Weekly</SelectItem>
-                        <SelectItem value="fortnightly">Fortnightly</SelectItem>
-                        <SelectItem value="monthly">Monthly</SelectItem>
-                        <SelectItem value="quarterly">Quarterly</SelectItem>
-                        <SelectItem value="annually">Annually</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
             </div>
 
             <FormField
