@@ -72,33 +72,33 @@ const ServiceAgreements = () => {
       <Card>
         <CardContent className="p-0">
           {serviceAgreements && serviceAgreements.length > 0 ? (
-            <div className="overflow-x-auto">
-              <Table>
+            <div className="overflow-x-auto w-full">
+              <Table className="w-full table-auto">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="font-bold">Service ID</TableHead>
-                    <TableHead className="font-bold">Status</TableHead>
-                    <TableHead className="font-bold">Products</TableHead>
-                    <TableHead className="font-bold">Areas Covered</TableHead>
-                    <TableHead className="font-bold">Service Frequency</TableHead>
-                    <TableHead className="font-bold">Invoice Type</TableHead>
-                    <TableHead className="font-bold">Unit Price</TableHead>
-                    <TableHead className="font-bold">CPM Pricing</TableHead>
-                    <TableHead className="font-bold">CPI</TableHead>
-                    <TableHead className="font-bold">Total</TableHead>
-                    <TableHead className="font-bold">CPM Device Onsite</TableHead>
-                    <TableHead className="font-bold">Comments</TableHead>
-                    <TableHead className="font-bold">Created At</TableHead>
-                    <TableHead className="font-bold">Actions</TableHead>
+                    <TableHead className="font-bold whitespace-nowrap">Service ID</TableHead>
+                    <TableHead className="font-bold whitespace-nowrap">Status</TableHead>
+                    <TableHead className="font-bold whitespace-nowrap">Products</TableHead>
+                    <TableHead className="font-bold whitespace-nowrap">Areas Covered</TableHead>
+                    <TableHead className="font-bold whitespace-nowrap">Service Frequency</TableHead>
+                    <TableHead className="font-bold whitespace-nowrap">Invoice Type</TableHead>
+                    <TableHead className="font-bold whitespace-nowrap">Unit Price</TableHead>
+                    <TableHead className="font-bold whitespace-nowrap">CPM Pricing</TableHead>
+                    <TableHead className="font-bold whitespace-nowrap">CPI</TableHead>
+                    <TableHead className="font-bold whitespace-nowrap">Total</TableHead>
+                    <TableHead className="font-bold whitespace-nowrap">CPM Device Onsite</TableHead>
+                    <TableHead className="font-bold whitespace-nowrap">Comments</TableHead>
+                    <TableHead className="font-bold whitespace-nowrap">Created At</TableHead>
+                    <TableHead className="font-bold whitespace-nowrap">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {serviceAgreements.map((agreement) => (
                     <TableRow key={agreement.id}>
-                      <TableCell className="font-mono text-xs">
+                      <TableCell className="font-mono text-xs whitespace-nowrap">
                         {agreement.service_id}
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="whitespace-nowrap">
                         <Badge
                           variant={
                             agreement.service_active_inactive === "Active"
@@ -113,28 +113,28 @@ const ServiceAgreements = () => {
                       <TableCell>{agreement.areas_covered || "-"}</TableCell>
                       <TableCell>{agreement.service_frequency || "-"}</TableCell>
                       <TableCell>{agreement.invoice_type || "-"}</TableCell>
-                      <TableCell>
+                      <TableCell className="whitespace-nowrap">
                         {agreement.unit_price ? `$${agreement.unit_price}` : "-"}
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="whitespace-nowrap">
                         {agreement.cpm_pricing ? `$${agreement.cpm_pricing}` : "-"}
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="whitespace-nowrap">
                         {agreement.cpi ? `$${agreement.cpi}` : "-"}
                       </TableCell>
-                      <TableCell className="font-semibold">
+                      <TableCell className="font-semibold whitespace-nowrap">
                         {agreement.total ? `$${agreement.total}` : "-"}
                       </TableCell>
                       <TableCell>{agreement.cpm_device_onsite || "-"}</TableCell>
-                      <TableCell className="max-w-xs truncate">
+                      <TableCell>
                         {agreement.comments || "-"}
                       </TableCell>
-                      <TableCell className="text-xs text-muted-foreground">
+                      <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
                         {agreement.created_at
                           ? new Date(agreement.created_at).toLocaleDateString()
                           : "-"}
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="whitespace-nowrap">
                         <EditServiceAgreementDialog 
                           agreement={agreement}
                           onSuccess={handleSuccess}
