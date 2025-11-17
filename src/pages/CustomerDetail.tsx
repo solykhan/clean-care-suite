@@ -287,10 +287,6 @@ const CustomerDetail = () => {
                           <p className="font-medium">{agreement.areas_covered || "N/A"}</p>
                         </div>
                         <div>
-                          <span className="text-xs text-muted-foreground">Service Frequency</span>
-                          <p className="font-medium">{agreement.service_frequency || "N/A"}</p>
-                        </div>
-                        <div>
                           <span className="text-xs text-muted-foreground">Status</span>
                           <Badge variant={agreement.service_active_inactive === "Active" ? "default" : "secondary"}>
                             {agreement.service_active_inactive || "N/A"}
