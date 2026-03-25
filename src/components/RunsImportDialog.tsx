@@ -266,9 +266,10 @@ export function RunsImportDialog() {
       resetDialog();
       window.location.reload();
     } catch (error: any) {
-      setError(error.message);
+      console.error("Import error full details:", JSON.stringify(error), error);
+      setError(error.message || JSON.stringify(error));
       toast.error("Import failed", {
-        description: error.message,
+        description: error.message || JSON.stringify(error),
       });
     } finally {
       setImporting(false);
