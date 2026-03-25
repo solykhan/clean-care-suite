@@ -258,6 +258,52 @@ export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementF
     return () => subscription.unsubscribe();
   }, [form]);
 
+  const handleAddToRuns = async () => {
+    const values = form.getValues();
+    if (!values.service_id) {
+      toast.error("Service ID is required to add to Runs");
+      return;
+    }
+    setAddingToRuns(true);
+    try {
+      // Check for duplicate run
+      const { data: existing } = await supabase
+        .from("runs")
+        .select("id")
+        .eq("service_id", values.service_id)
+        .eq("products", values.products || "")
+        .eq("week_day", values.week_day || "")
+        .eq("weeks", values.weeks || "")
+        .eq("frequency", values.service_frequency || "")
+        .maybeSingle();
+
+      if (existing) {
+        toast.error("Cannot add duplicate data", {
+          description: "A run with the same Service ID, product, week day, weeks, and frequency already exists.",
+        });
+        return;
+      }
+
+      const { error } = await supabase.from("runs").insert({
+        service_id: values.service_id,
+        clients: customer?.site_name || null,
+        suburb: customer?.site_suburb || null,
+        products: values.products || null,
+        week_day: values.week_day || null,
+        weeks: values.weeks || null,
+        frequency: values.service_frequency || null,
+        completed: "pending",
+      });
+
+      if (error) throw error;
+      toast.success("Run added successfully");
+    } catch (error: any) {
+      toast.error("Failed to add to Runs", { description: error.message });
+    } finally {
+      setAddingToRuns(false);
+    }
+  };
+
   const onSubmit = async (values: FormValues) => {
     setLoading(true);
     try {
