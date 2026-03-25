@@ -913,6 +913,14 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
               <div className="flex gap-2">
                 <Button
                   type="button"
+                  variant="secondary"
+                  onClick={handleAddToRuns}
+                  disabled={loading || deleteLoading || addingToRuns}
+                >
+                  {addingToRuns ? "Adding..." : "Add to Runs"}
+                </Button>
+                <Button
+                  type="button"
                   variant="outline"
                   onClick={() => setOpen(false)}
                   disabled={loading}
