@@ -1,0 +1,1 @@
+ALTER TABLE public.service_agreements ADD COLUMN IF NOT EXISTS technicians text;
