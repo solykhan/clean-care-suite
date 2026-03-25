@@ -79,10 +79,25 @@ interface EditServiceAgreementDialogProps {
   onSuccess?: () => void;
 }
 
+const DEFAULT_FREQUENCIES = [
+  "BI MONTHLY",
+  "MONTHLY",
+  "QUARTERLY",
+  "WEEKLY",
+  "FORTNIGHTLY",
+  "ANNUALLY",
+  "TWICE A WEEK",
+  "PURCHASE",
+  "ONLY RENTAL",
+];
+
 export function EditServiceAgreementDialog({ agreement, onSuccess }: EditServiceAgreementDialogProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [frequencies, setFrequencies] = useState<string[]>(DEFAULT_FREQUENCIES);
+  const [addingFrequency, setAddingFrequency] = useState(false);
+  const [newFrequency, setNewFrequency] = useState("");
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
