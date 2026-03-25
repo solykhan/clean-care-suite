@@ -230,31 +230,6 @@ export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementF
                   </FormItem>
                 )}
               />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="invoice_type"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Invoice Type</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select invoice type" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="fixed">Fixed</SelectItem>
-                        <SelectItem value="variable">Variable</SelectItem>
-                        <SelectItem value="usage_based">Usage Based</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
 
               <FormField
                 control={form.control}

@@ -290,22 +290,6 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
                   </FormItem>
                 )}
               />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="invoice_type"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Invoice Type</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter invoice type" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
 
               <FormField
                 control={form.control}
