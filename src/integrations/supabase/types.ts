@@ -218,6 +218,7 @@ export type Database = {
         Row: {
           clients: string | null
           completed: boolean | null
+          completion_date: string | null
           created_at: string | null
           frequency: string | null
           id: string
@@ -232,6 +233,7 @@ export type Database = {
         Insert: {
           clients?: string | null
           completed?: boolean | null
+          completion_date?: string | null
           created_at?: string | null
           frequency?: string | null
           id?: string
@@ -246,6 +248,7 @@ export type Database = {
         Update: {
           clients?: string | null
           completed?: boolean | null
+          completion_date?: string | null
           created_at?: string | null
           frequency?: string | null
           id?: string

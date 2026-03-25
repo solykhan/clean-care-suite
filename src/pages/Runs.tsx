@@ -155,6 +155,7 @@ const Runs = () => {
                     <TableHead className="font-bold">Frequency</TableHead>
                     <TableHead className="font-bold">Technicians</TableHead>
                     <TableHead className="font-bold text-center">Completed</TableHead>
+                    <TableHead className="font-bold">Completion Date</TableHead>
                     <TableHead className="font-bold text-center">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -171,7 +172,7 @@ const Runs = () => {
                     ))
                   ) : filteredRuns.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={10} className="text-center py-8 text-muted-foreground">
+                      <TableCell colSpan={11} className="text-center py-8 text-muted-foreground">
                         No runs found
                       </TableCell>
                     </TableRow>
@@ -189,6 +190,7 @@ const Runs = () => {
                         <TableCell className="text-center">
                           <Checkbox checked={run.completed || false} disabled />
                         </TableCell>
+                        <TableCell>{run.completion_date ? new Date(run.completion_date).toLocaleDateString() : "-"}</TableCell>
                         <TableCell className="text-center">
                           <Button
                             size="sm"
