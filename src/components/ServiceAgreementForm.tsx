@@ -48,6 +48,7 @@ const formSchema = z.object({
   comments: z.string().optional(),
   week_day: z.string().optional(),
   weeks: z.string().optional(),
+  technicians: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -196,6 +197,14 @@ const DEFAULT_INVOICE_TYPES = [
   "RENTAL",
 ];
 
+const DEFAULT_TECHNICIANS = [
+  "Lynessa",
+  "Amanda",
+  "Betty",
+  "Dani",
+  "Jayden",
+];
+
 export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementFormProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -209,6 +218,9 @@ export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementF
   const [invoiceTypes, setInvoiceTypes] = useState<string[]>(DEFAULT_INVOICE_TYPES);
   const [addingInvoiceType, setAddingInvoiceType] = useState(false);
   const [newInvoiceType, setNewInvoiceType] = useState("");
+  const [technicians, setTechnicians] = useState<string[]>(DEFAULT_TECHNICIANS);
+  const [addingTechnician, setAddingTechnician] = useState(false);
+  const [newTechnician, setNewTechnician] = useState("");
 
   const { data: customer } = useQuery<{ site_name: string; site_suburb: string | null } | null>({
     queryKey: ["customer-by-service-id", serviceId],
@@ -240,6 +252,7 @@ export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementF
       comments: "",
       week_day: "",
       weeks: "",
+      technicians: "",
     },
   });
 
@@ -292,6 +305,7 @@ export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementF
         week_day: values.week_day || null,
         weeks: values.weeks || null,
         frequency: values.service_frequency || null,
+        technicians: values.technicians || null,
         completed: "pending",
       });
 
@@ -747,6 +761,82 @@ export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementF
                 )}
               />
             </div>
+
+            <FormField
+              control={form.control}
+              name="technicians"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Technician</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select technician" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {technicians.map((t) => (
+                        <SelectItem key={t} value={t}>{t}</SelectItem>
+                      ))}
+                      <div className="p-1 border-t mt-1">
+                        {addingTechnician ? (
+                          <div className="flex gap-1 p-1">
+                            <Input
+                              autoFocus
+                              value={newTechnician}
+                              onChange={(e) => setNewTechnician(e.target.value)}
+                              placeholder="New technician..."
+                              className="h-7 text-xs"
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                  e.preventDefault();
+                                  const trimmed = newTechnician.trim();
+                                  if (trimmed && !technicians.includes(trimmed)) {
+                                    setTechnicians((prev) => [...prev, trimmed]);
+                                    field.onChange(trimmed);
+                                  }
+                                  setNewTechnician("");
+                                  setAddingTechnician(false);
+                                }
+                                if (e.key === "Escape") {
+                                  setAddingTechnician(false);
+                                  setNewTechnician("");
+                                }
+                              }}
+                            />
+                            <Button
+                              type="button"
+                              size="sm"
+                              className="h-7 px-2 text-xs"
+                              onClick={() => {
+                                const trimmed = newTechnician.trim();
+                                if (trimmed && !technicians.includes(trimmed)) {
+                                  setTechnicians((prev) => [...prev, trimmed]);
+                                  field.onChange(trimmed);
+                                }
+                                setNewTechnician("");
+                                setAddingTechnician(false);
+                              }}
+                            >
+                              Add
+                            </Button>
+                          </div>
+                        ) : (
+                          <button
+                            type="button"
+                            className="flex items-center gap-1 w-full px-2 py-1.5 text-xs text-primary hover:bg-accent rounded-sm"
+                            onClick={() => setAddingTechnician(true)}
+                          >
+                            <Plus className="h-3 w-3" /> Add technician
+                          </button>
+                        )}
+                      </div>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <FormField
               control={form.control}
