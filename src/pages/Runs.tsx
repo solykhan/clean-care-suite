@@ -155,6 +155,7 @@ const Runs = () => {
                     <TableHead className="font-bold">Frequency</TableHead>
                     <TableHead className="font-bold">Technicians</TableHead>
                     <TableHead className="font-bold text-center">Completed</TableHead>
+                    <TableHead className="font-bold">Completion Date</TableHead>
                     <TableHead className="font-bold text-center">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
