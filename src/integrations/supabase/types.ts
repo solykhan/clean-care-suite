@@ -217,7 +217,7 @@ export type Database = {
       runs: {
         Row: {
           clients: string | null
-          completed: boolean | null
+          completed: string | null
           completion_date: string | null
           created_at: string | null
           frequency: string | null
@@ -232,7 +232,7 @@ export type Database = {
         }
         Insert: {
           clients?: string | null
-          completed?: boolean | null
+          completed?: string | null
           completion_date?: string | null
           created_at?: string | null
           frequency?: string | null
@@ -247,7 +247,7 @@ export type Database = {
         }
         Update: {
           clients?: string | null
-          completed?: boolean | null
+          completed?: string | null
           completion_date?: string | null
           created_at?: string | null
           frequency?: string | null

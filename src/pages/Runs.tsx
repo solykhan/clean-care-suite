@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
 import { PlayCircle, Edit, Calendar } from "lucide-react";
 import { toast } from "sonner";
 import { RunsImportDialog } from "@/components/RunsImportDialog";
@@ -40,7 +40,7 @@ const Runs = () => {
       const matchesTechnician = technicianFilter === "all" || run.technicians === technicianFilter;
       const matchesWeeks = weeksFilter === "all" || run.weeks === weeksFilter;
       const matchesWeekDay = weekDayFilter === "all" || run.week_day === weekDayFilter;
-      const isNotCompleted = !run.completed;
+      const isNotCompleted = run.completed !== 'completed';
       
       return matchesTechnician && matchesWeeks && matchesWeekDay && isNotCompleted;
     });
@@ -188,7 +188,9 @@ const Runs = () => {
                         <TableCell>{run.frequency || "-"}</TableCell>
                         <TableCell>{run.technicians || "-"}</TableCell>
                         <TableCell className="text-center">
-                          <Checkbox checked={run.completed || false} disabled />
+                          <Badge variant={run.completed === 'completed' ? 'default' : 'secondary'}>
+                            {run.completed || 'pending'}
+                          </Badge>
                         </TableCell>
                         <TableCell>{run.completion_date ? new Date(run.completion_date).toLocaleDateString() : "-"}</TableCell>
                         <TableCell className="text-center">

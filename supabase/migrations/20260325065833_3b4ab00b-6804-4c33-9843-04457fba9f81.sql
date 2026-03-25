@@ -1,0 +1,1 @@
+ALTER TABLE public.runs ALTER COLUMN completed TYPE text USING CASE WHEN completed = true THEN 'completed' ELSE 'pending' END;
