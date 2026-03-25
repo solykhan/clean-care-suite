@@ -232,10 +232,6 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
   const [addingInvoiceType, setAddingInvoiceType] = useState(false);
   const [newInvoiceType, setNewInvoiceType] = useState("");
 
-  // Auto-calculate total: (unit_price * CPI) + unit_price
-  const watchedUnitPrice = form.watch?.("unit_price");
-  const watchedCpi = form.watch?.("cpi");
-
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
