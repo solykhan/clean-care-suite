@@ -220,6 +220,14 @@ const DEFAULT_INVOICE_TYPES = [
   "RENTAL",
 ];
 
+const DEFAULT_TECHNICIANS = [
+  "Lynessa",
+  "Amanda",
+  "Betty",
+  "Dani",
+  "Jayden",
+];
+
 export function EditServiceAgreementDialog({ agreement, onSuccess }: EditServiceAgreementDialogProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
