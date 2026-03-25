@@ -95,7 +95,7 @@ const Runs = () => {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 sm:flex sm:flex-wrap gap-4">
+          <div className="flex gap-2">
             <div className="sm:flex-1 sm:min-w-[200px]">
               <Select value={technicianFilter} onValueChange={setTechnicianFilter}>
                 <SelectTrigger>
