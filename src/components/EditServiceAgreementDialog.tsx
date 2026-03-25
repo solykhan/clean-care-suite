@@ -41,7 +41,7 @@ import {
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Plus } from "lucide-react";
 
 const formSchema = z.object({
   service_id: z.string().min(1, "Service ID is required"),
@@ -79,10 +79,25 @@ interface EditServiceAgreementDialogProps {
   onSuccess?: () => void;
 }
 
+const DEFAULT_FREQUENCIES = [
+  "BI MONTHLY",
+  "MONTHLY",
+  "QUARTERLY",
+  "WEEKLY",
+  "FORTNIGHTLY",
+  "ANNUALLY",
+  "TWICE A WEEK",
+  "PURCHASE",
+  "ONLY RENTAL",
+];
+
 export function EditServiceAgreementDialog({ agreement, onSuccess }: EditServiceAgreementDialogProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [frequencies, setFrequencies] = useState<string[]>(DEFAULT_FREQUENCIES);
+  const [addingFrequency, setAddingFrequency] = useState(false);
+  const [newFrequency, setNewFrequency] = useState("");
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -391,9 +406,71 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Service Frequency</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter frequency" {...field} />
-                    </FormControl>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select frequency" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {frequencies.map((freq) => (
+                          <SelectItem key={freq} value={freq}>{freq}</SelectItem>
+                        ))}
+                        <div className="p-1 border-t mt-1">
+                          {addingFrequency ? (
+                            <div className="flex gap-1 p-1">
+                              <Input
+                                autoFocus
+                                value={newFrequency}
+                                onChange={(e) => setNewFrequency(e.target.value)}
+                                placeholder="New frequency..."
+                                className="h-7 text-xs"
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter") {
+                                    e.preventDefault();
+                                    const trimmed = newFrequency.trim().toUpperCase();
+                                    if (trimmed && !frequencies.includes(trimmed)) {
+                                      setFrequencies((prev) => [...prev, trimmed]);
+                                      field.onChange(trimmed);
+                                    }
+                                    setNewFrequency("");
+                                    setAddingFrequency(false);
+                                  }
+                                  if (e.key === "Escape") {
+                                    setAddingFrequency(false);
+                                    setNewFrequency("");
+                                  }
+                                }}
+                              />
+                              <Button
+                                type="button"
+                                size="sm"
+                                className="h-7 px-2 text-xs"
+                                onClick={() => {
+                                  const trimmed = newFrequency.trim().toUpperCase();
+                                  if (trimmed && !frequencies.includes(trimmed)) {
+                                    setFrequencies((prev) => [...prev, trimmed]);
+                                    field.onChange(trimmed);
+                                  }
+                                  setNewFrequency("");
+                                  setAddingFrequency(false);
+                                }}
+                              >
+                                Add
+                              </Button>
+                            </div>
+                          ) : (
+                            <button
+                              type="button"
+                              className="flex items-center gap-1 w-full px-2 py-1.5 text-xs text-primary hover:bg-accent rounded-sm"
+                              onClick={() => setAddingFrequency(true)}
+                            >
+                              <Plus className="h-3 w-3" /> Add frequency
+                            </button>
+                          )}
+                        </div>
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
