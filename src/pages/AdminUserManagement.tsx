@@ -30,6 +30,7 @@ import { Loader2, Trash2 } from "lucide-react";
 
 const userSchema = z.object({
   email: z.string().email("Please enter a valid email address").max(255),
+  password: z.string().min(6, "Password must be at least 6 characters"),
   role: z.enum(["technician", "admin"]),
 });
 
@@ -50,6 +51,7 @@ interface User {
 
 const AdminUserManagement = () => {
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [role, setRole] = useState<"technician" | "admin">("technician");
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
@@ -136,7 +138,7 @@ const AdminUserManagement = () => {
   const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const validation = userSchema.safeParse({ email, role });
+    const validation = userSchema.safeParse({ email, password, role });
     if (!validation.success) {
       toast.error(validation.error.errors[0].message);
       return;
@@ -145,24 +147,18 @@ const AdminUserManagement = () => {
     setLoading(true);
 
     try {
-      // Create user account with signUp
-      const { error } = await supabase.auth.signUp({
-        email: email.trim().toLowerCase(),
-        password: Math.random().toString(36).slice(-12), // Random temp password
-        options: {
-          emailRedirectTo: `${window.location.origin}/`,
-          data: {
-            role: role,
-          },
-        },
+      const { data, error } = await supabase.functions.invoke('create-user', {
+        body: { email: email.trim().toLowerCase(), password, role },
       });
 
       if (error) throw error;
+      if (data?.error) throw new Error(data.error);
 
-      toast.success(`User created successfully! Login link sent to ${email}`);
+      toast.success(`User "${email}" created successfully!`);
       setEmail("");
+      setPassword("");
       setRole("technician");
-      fetchUsers(); // Refresh user list
+      fetchUsers();
     } catch (error: any) {
       toast.error(error.message || "Failed to create user");
     } finally {
@@ -197,6 +193,20 @@ const AdminUserManagement = () => {
                 />
               </div>
 
+              <div className="space-y-2">
+                <label htmlFor="password" className="text-sm font-medium">
+                  Password
+                </label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Min. 6 characters"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={loading}
+                />
+              </div>
+
               <div className="space-y-3">
                 <label className="text-sm font-medium">Role</label>
                 <RadioGroup 
@@ -216,7 +226,11 @@ const AdminUserManagement = () => {
               </div>
 
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Creating User..." : "Create User"}
+                {loading ? (
+                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Creating User...</>
+                ) : (
+                  "Create User"
+                )}
               </Button>
             </form>
           </CardContent>
