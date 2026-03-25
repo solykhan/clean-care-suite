@@ -209,6 +209,19 @@ export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementF
   const [addingInvoiceType, setAddingInvoiceType] = useState(false);
   const [newInvoiceType, setNewInvoiceType] = useState("");
 
+  const { data: customer } = useQuery({
+    queryKey: ["customer-by-service-id", serviceId],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("customers")
+        .select("site_name")
+        .eq("service_id", serviceId!)
+        .maybeSingle();
+      return data;
+    },
+    enabled: !!serviceId,
+  });
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
