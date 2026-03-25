@@ -95,11 +95,11 @@ const Runs = () => {
             </div>
           </div>
           
-          <div className="flex gap-2">
-            <div className="flex-1 min-w-0">
+          <div className="flex flex-col gap-2">
+            <div>
               <Select value={technicianFilter} onValueChange={setTechnicianFilter}>
-                <SelectTrigger className="w-full text-xs px-2">
-                  <SelectValue placeholder="Technician" />
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="All Technicians" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Technicians</SelectItem>
@@ -110,10 +110,10 @@ const Runs = () => {
               </Select>
             </div>
             
-            <div className="flex-1 min-w-0">
+            <div>
               <Select value={weeksFilter} onValueChange={setWeeksFilter}>
-                <SelectTrigger className="w-full text-xs px-2">
-                  <SelectValue placeholder="Weeks" />
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="All Weeks" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Weeks</SelectItem>
@@ -124,10 +124,10 @@ const Runs = () => {
               </Select>
             </div>
             
-            <div className="flex-1 min-w-0">
+            <div>
               <Select value={weekDayFilter} onValueChange={setWeekDayFilter}>
-                <SelectTrigger className="w-full text-xs px-2">
-                  <SelectValue placeholder="Week Day" />
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="All Week Days" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Week Days</SelectItem>
