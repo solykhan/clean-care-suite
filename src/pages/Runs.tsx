@@ -95,8 +95,8 @@ const Runs = () => {
             </div>
           </div>
           
-          <div className="flex gap-4 flex-wrap">
-            <div className="flex-1 min-w-[200px]">
+          <div className="grid grid-cols-1 sm:flex sm:flex-wrap gap-4">
+            <div className="sm:flex-1 sm:min-w-[200px]">
               <Select value={technicianFilter} onValueChange={setTechnicianFilter}>
                 <SelectTrigger>
                   <SelectValue placeholder="Filter by Technician" />
@@ -110,7 +110,7 @@ const Runs = () => {
               </Select>
             </div>
             
-            <div className="flex-1 min-w-[200px]">
+            <div className="sm:flex-1 sm:min-w-[200px]">
               <Select value={weeksFilter} onValueChange={setWeeksFilter}>
                 <SelectTrigger>
                   <SelectValue placeholder="Filter by Weeks" />
@@ -124,7 +124,7 @@ const Runs = () => {
               </Select>
             </div>
             
-            <div className="flex-1 min-w-[200px]">
+            <div className="sm:flex-1 sm:min-w-[200px]">
               <Select value={weekDayFilter} onValueChange={setWeekDayFilter}>
                 <SelectTrigger>
                   <SelectValue placeholder="Filter by Week Day" />
