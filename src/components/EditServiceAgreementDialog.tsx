@@ -233,7 +233,7 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
   const [addingInvoiceType, setAddingInvoiceType] = useState(false);
   const [newInvoiceType, setNewInvoiceType] = useState("");
 
-  const { data: customer } = useQuery({
+  const { data: customer } = useQuery<{ site_name: string; site_suburb: string | null } | null>({
     queryKey: ["customer-by-service-id", agreement.service_id],
     queryFn: async () => {
       const { data } = await supabase
@@ -241,7 +241,7 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
         .select("site_name, site_suburb")
         .eq("service_id", agreement.service_id)
         .maybeSingle();
-      return data;
+      return data as { site_name: string; site_suburb: string | null } | null;
     },
     enabled: !!agreement.service_id,
   });
