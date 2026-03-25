@@ -158,7 +158,20 @@ export function AppSidebar() {
         )}
       </SidebarContent>
 
-      <SidebarFooter>
+      <SidebarFooter className="space-y-1">
+        {user && (
+          <div className="flex items-center gap-2 px-2 py-2 rounded-md bg-muted/50">
+            <div className="p-1.5 bg-primary/10 rounded-full shrink-0">
+              <User className="h-3.5 w-3.5 text-primary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-medium truncate text-foreground">
+                {user.email}
+              </p>
+              <p className="text-xs text-muted-foreground capitalize">{userRole || "—"}</p>
+            </div>
+          </div>
+        )}
         <LogoutButton />
       </SidebarFooter>
     </Sidebar>
