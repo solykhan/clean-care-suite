@@ -1,62 +1,9 @@
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building2, FileText, TrendingUp, Users } from "lucide-react";
-import { RoleSelectionDialog } from "@/components/RoleSelectionDialog";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
 
 const Index = () => {
-  const navigate = useNavigate();
-  const { user } = useAuth();
-  const [showRoleDialog, setShowRoleDialog] = useState(false);
-  const [isCheckingRole, setIsCheckingRole] = useState(true);
-
-  useEffect(() => {
-    const checkUserRole = async () => {
-      if (!user) {
-        setIsCheckingRole(false);
-        return;
-      }
-
-      try {
-        const { data: userRole } = await supabase
-          .from("user_roles")
-          .select("role")
-          .eq("user_id", user.id)
-          .single();
-
-        if (userRole) {
-          // User has a role, redirect to appropriate dashboard
-          if (userRole.role === "technician") {
-            navigate("/technician-dashboard");
-          }
-          // If admin, stay on this page (admin dashboard)
-        } else {
-          // No role found, show dialog
-          setShowRoleDialog(true);
-        }
-      } catch (error) {
-        // If no role exists, show dialog
-        setShowRoleDialog(true);
-      } finally {
-        setIsCheckingRole(false);
-      }
-    };
-
-    checkUserRole();
-  }, [user, navigate]);
-
-  if (isCheckingRole) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
-
   return (
     <div className="bg-background">
       <div className="container mx-auto py-12 px-4">
@@ -148,15 +95,7 @@ const Index = () => {
             </CardContent>
           </Card>
         </div>
-
-        <div className="text-center mt-12">
-          <Button size="lg" className="text-lg px-8" onClick={() => setShowRoleDialog(true)}>
-            Get Started
-          </Button>
-        </div>
       </div>
-
-      <RoleSelectionDialog open={showRoleDialog} onOpenChange={setShowRoleDialog} />
     </div>
   );
 };

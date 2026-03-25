@@ -2,10 +2,11 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { AdminRoute } from "@/components/AdminRoute";
+import { TechnicianRoute } from "@/components/TechnicianRoute";
 import { Layout } from "@/components/Layout";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
@@ -35,23 +36,31 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
+            {/* Public route */}
             <Route path="/auth" element={<Auth />} />
+
+            {/* All authenticated routes share the Layout */}
             <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
-              <Route path="/" element={<Index />} />
-              <Route path="/technician-dashboard" element={<TechnicianDashboard />} />
+
+              {/* Admin-only routes */}
+              <Route path="/" element={<AdminRoute><Index /></AdminRoute>} />
+              <Route path="/customers" element={<AdminRoute><Customers /></AdminRoute>} />
+              <Route path="/customers/new" element={<AdminRoute><AddCustomer /></AdminRoute>} />
+              <Route path="/customers/:id" element={<AdminRoute><CustomerDetail /></AdminRoute>} />
+              <Route path="/service-agreements" element={<AdminRoute><ServiceAgreements /></AdminRoute>} />
+              <Route path="/customer-service-form" element={<AdminRoute><CustomerServiceAgreementForm /></AdminRoute>} />
+              <Route path="/customer-service-report" element={<AdminRoute><CustomerServiceReportForm /></AdminRoute>} />
+              <Route path="/service-reports" element={<AdminRoute><ServiceReports /></AdminRoute>} />
+              <Route path="/service-report/:id" element={<AdminRoute><ServiceReportDetail /></AdminRoute>} />
+              <Route path="/service-report/:id/edit" element={<AdminRoute><EditServiceReport /></AdminRoute>} />
               <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
               <Route path="/admin/users" element={<AdminRoute><AdminUserManagement /></AdminRoute>} />
-              <Route path="/customers" element={<Customers />} />
-              <Route path="/customers/new" element={<AddCustomer />} />
-              <Route path="/customers/:id" element={<CustomerDetail />} />
-              <Route path="/service-agreements" element={<ServiceAgreements />} />
-              <Route path="/customer-service-form" element={<CustomerServiceAgreementForm />} />
-              <Route path="/runs" element={<Runs />} />
-              <Route path="/runs/calendar" element={<RunsCalendar />} />
-              <Route path="/customer-service-report" element={<CustomerServiceReportForm />} />
-              <Route path="/service-reports" element={<ServiceReports />} />
-              <Route path="/service-report/:id" element={<ServiceReportDetail />} />
-              <Route path="/service-report/:id/edit" element={<EditServiceReport />} />
+
+              {/* Technician + Admin routes */}
+              <Route path="/technician-dashboard" element={<TechnicianRoute><TechnicianDashboard /></TechnicianRoute>} />
+              <Route path="/runs" element={<TechnicianRoute><Runs /></TechnicianRoute>} />
+              <Route path="/runs/calendar" element={<TechnicianRoute><RunsCalendar /></TechnicianRoute>} />
+
               <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>
