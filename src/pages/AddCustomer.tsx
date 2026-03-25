@@ -80,8 +80,7 @@ const AddCustomer = () => {
         const { data, error } = await supabase
           .from("customers")
           .select("service_id")
-          .order("service_id", { ascending: false })
-          .limit(100);
+          .limit(10000);
 
         if (error) throw error;
 
