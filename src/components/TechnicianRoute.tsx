@@ -1,8 +1,12 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 
-export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, loading } = useAuth();
+/**
+ * Allows access to both admins and technicians.
+ * Blocks unauthenticated users (redirects to /auth).
+ */
+export const TechnicianRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user, role, loading } = useAuth();
 
   if (loading) {
     return (
@@ -13,6 +17,11 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }
 
   if (!user) {
+    return <Navigate to="/auth" replace />;
+  }
+
+  // Both admin and technician are allowed
+  if (role !== "admin" && role !== "technician") {
     return <Navigate to="/auth" replace />;
   }
 
