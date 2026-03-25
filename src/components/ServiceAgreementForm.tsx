@@ -317,6 +317,9 @@ export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementF
               <div className="p-3 bg-muted rounded-md">
                 <p className="text-xs text-muted-foreground">Customer</p>
                 <p className="font-semibold text-base">{customer.site_name}</p>
+                {customer.site_suburb && (
+                  <p className="text-sm text-muted-foreground mt-0.5">{customer.site_suburb}</p>
+                )}
               </div>
             )}
             <FormField
