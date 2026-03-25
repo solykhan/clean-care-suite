@@ -110,10 +110,10 @@ const Runs = () => {
               </Select>
             </div>
             
-            <div className="flex-1 min-w-0">
+            <div>
               <Select value={weeksFilter} onValueChange={setWeeksFilter}>
-                <SelectTrigger className="w-full text-xs px-2">
-                  <SelectValue placeholder="Weeks" />
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="All Weeks" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Weeks</SelectItem>
