@@ -99,6 +99,8 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
       cpi: agreement.cpi?.toString() || "",
       total: agreement.total?.toString() || "",
       comments: agreement.comments || "",
+      week_day: agreement.week_day || "",
+      weeks: agreement.weeks || "",
     },
   });
 

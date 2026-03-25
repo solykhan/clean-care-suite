@@ -75,6 +75,8 @@ export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementF
       cpi: "",
       total: "",
       comments: "",
+      week_day: "",
+      weeks: "",
     },
   });
 
