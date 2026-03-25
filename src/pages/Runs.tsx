@@ -40,7 +40,7 @@ const Runs = () => {
       const matchesTechnician = technicianFilter === "all" || run.technicians === technicianFilter;
       const matchesWeeks = weeksFilter === "all" || run.weeks === weeksFilter;
       const matchesWeekDay = weekDayFilter === "all" || run.week_day === weekDayFilter;
-      const isNotCompleted = !run.completed;
+      const isNotCompleted = run.completed !== 'completed';
       
       return matchesTechnician && matchesWeeks && matchesWeekDay && isNotCompleted;
     });
