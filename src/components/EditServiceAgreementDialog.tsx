@@ -138,6 +138,8 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
         invoice_type: values.invoice_type || null,
         cpm_device_onsite: values.cpm_device_onsite || null,
         comments: values.comments || null,
+        week_day: values.week_day || null,
+        weeks: values.weeks || null,
         unit_price: values.unit_price ? parseFloat(values.unit_price) : null,
         cpm_pricing: values.cpm_pricing ? parseFloat(values.cpm_pricing) : null,
         cpi: values.cpi ? parseFloat(values.cpi) : null,
