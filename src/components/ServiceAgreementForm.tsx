@@ -333,6 +333,7 @@ export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementF
         comments: values.comments || null,
         week_day: values.week_day || null,
         weeks: values.weeks || null,
+        technicians: values.technicians || null,
         unit_price: values.unit_price ? parseFloat(values.unit_price) : null,
         cpm_pricing: values.cpm_pricing ? parseFloat(values.cpm_pricing) : null,
         cpi: values.cpi ? parseFloat(values.cpi) : null,
