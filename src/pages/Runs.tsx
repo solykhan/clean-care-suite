@@ -1,10 +1,10 @@
 // Runs page
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { PlayCircle, Edit, Calendar } from "lucide-react";
+import { PlayCircle, Edit, Calendar, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { RunsImportDialog } from "@/components/RunsImportDialog";
 import { AddRunDialog } from "@/components/AddRunDialog";
@@ -12,9 +12,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const Runs = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [technicianFilter, setTechnicianFilter] = useState<string>("all");
   const [weeksFilter, setWeeksFilter] = useState<string>("all");
   const [weekDayFilter, setWeekDayFilter] = useState<string>("all");
@@ -63,18 +75,16 @@ const Runs = () => {
     return Array.from(new Set(runs.map(r => r.week_day).filter(Boolean)));
   }, [runs]);
 
-  if (error) {
-    return (
-      <div className="container mx-auto py-8">
-        <Card className="border-destructive">
-          <CardHeader>
-            <CardTitle className="text-destructive">Error Loading Runs</CardTitle>
-            <CardDescription>Unable to fetch runs data. Please try again.</CardDescription>
-          </CardHeader>
-        </Card>
-      </div>
-    );
-  }
+  const handleDelete = async (id: string) => {
+    try {
+      const { error } = await supabase.from("runs").delete().eq("id", id);
+      if (error) throw error;
+      toast.success("Run deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["runs"] });
+    } catch (error) {
+      toast.error("Failed to delete run");
+    }
+  };
 
   return (
     <div className="bg-background">
@@ -197,13 +207,39 @@ const Runs = () => {
                         </TableCell>
                         <TableCell>{run.completion_date ? new Date(run.completion_date).toLocaleDateString() : "-"}</TableCell>
                         <TableCell className="text-center">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => navigate(`/customer-service-report?service_id=${run.service_id}`)}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
+                          <div className="flex items-center justify-center gap-1">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => navigate(`/customer-service-report?service_id=${run.service_id}`)}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button size="sm" variant="outline" className="text-destructive hover:text-destructive">
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Delete Run</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    Are you sure you want to delete this run for <strong>{run.service_id}</strong>? This action cannot be undone.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogAction
+                                    onClick={() => handleDelete(run.id)}
+                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                  >
+                                    Delete
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))
