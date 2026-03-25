@@ -213,12 +213,16 @@ export function RunsImportDialog() {
         Object.entries(columnMapping).forEach(([csvCol, dbCol]) => {
           if (dbCol !== "skip" && row[csvCol]) {
             // Convert completed to boolean
-            if (dbCol === "completed") {
-              const value = String(row[csvCol]).toLowerCase();
-              obj[dbCol] = value === 'true' || value === '1' || value === 'yes';
-            } else {
-              obj[dbCol] = row[csvCol];
-            }
+              if (dbCol === "completed") {
+                const value = String(row[csvCol]).toLowerCase();
+                obj[dbCol] = value === 'true' || value === '1' || value === 'yes';
+              } else if (dbCol === "completion_date") {
+                // Try to parse as a date string
+                const d = new Date(row[csvCol]);
+                obj[dbCol] = isNaN(d.getTime()) ? null : d.toISOString().split('T')[0];
+              } else {
+                obj[dbCol] = row[csvCol];
+              }
           }
         });
         return obj;
