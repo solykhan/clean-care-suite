@@ -188,7 +188,9 @@ const Runs = () => {
                         <TableCell>{run.frequency || "-"}</TableCell>
                         <TableCell>{run.technicians || "-"}</TableCell>
                         <TableCell className="text-center">
-                          <Checkbox checked={run.completed || false} disabled />
+                          <Badge variant={run.completed === 'completed' ? 'default' : 'secondary'}>
+                            {run.completed || 'pending'}
+                          </Badge>
                         </TableCell>
                         <TableCell>{run.completion_date ? new Date(run.completion_date).toLocaleDateString() : "-"}</TableCell>
                         <TableCell className="text-center">
