@@ -138,7 +138,7 @@ const AdminUserManagement = () => {
   const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const validation = userSchema.safeParse({ email, role });
+    const validation = userSchema.safeParse({ email, password, role });
     if (!validation.success) {
       toast.error(validation.error.errors[0].message);
       return;
@@ -147,24 +147,18 @@ const AdminUserManagement = () => {
     setLoading(true);
 
     try {
-      // Create user account with signUp
-      const { error } = await supabase.auth.signUp({
-        email: email.trim().toLowerCase(),
-        password: Math.random().toString(36).slice(-12), // Random temp password
-        options: {
-          emailRedirectTo: `${window.location.origin}/`,
-          data: {
-            role: role,
-          },
-        },
+      const { data, error } = await supabase.functions.invoke('create-user', {
+        body: { email: email.trim().toLowerCase(), password, role },
       });
 
       if (error) throw error;
+      if (data?.error) throw new Error(data.error);
 
-      toast.success(`User created successfully! Login link sent to ${email}`);
+      toast.success(`User "${email}" created successfully!`);
       setEmail("");
+      setPassword("");
       setRole("technician");
-      fetchUsers(); // Refresh user list
+      fetchUsers();
     } catch (error: any) {
       toast.error(error.message || "Failed to create user");
     } finally {
