@@ -653,12 +653,14 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
                 name="total"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Total</FormLabel>
+                    <FormLabel>Total <span className="text-xs text-muted-foreground">(auto-calculated)</span></FormLabel>
                     <FormControl>
                       <Input 
                         type="number" 
                         step="0.01"
-                        placeholder="0.00" 
+                        placeholder="0.00"
+                        readOnly
+                        className="bg-muted cursor-not-allowed"
                         {...field} 
                       />
                     </FormControl>
