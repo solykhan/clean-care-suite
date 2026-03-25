@@ -204,6 +204,20 @@ const DEFAULT_PRODUCTS = [
   "white soap 4 Ltr",
 ];
 
+const DEFAULT_INVOICE_TYPES = [
+  "BI MONTHLY",
+  "MONTHLY",
+  "QUARTERLY",
+  "6 WEEKLY",
+  "WEEKLY",
+  "FORTNIGHTLY",
+  "6 MONTHLY",
+  "ANNUALLY",
+  "TWICE A WEEK",
+  "PURCHASE ONLY",
+  "RENTAL",
+];
+
 export function EditServiceAgreementDialog({ agreement, onSuccess }: EditServiceAgreementDialogProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -214,6 +228,9 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
   const [products, setProducts] = useState<string[]>(DEFAULT_PRODUCTS);
   const [addingProduct, setAddingProduct] = useState(false);
   const [newProduct, setNewProduct] = useState("");
+  const [invoiceTypes, setInvoiceTypes] = useState<string[]>(DEFAULT_INVOICE_TYPES);
+  const [addingInvoiceType, setAddingInvoiceType] = useState(false);
+  const [newInvoiceType, setNewInvoiceType] = useState("");
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
