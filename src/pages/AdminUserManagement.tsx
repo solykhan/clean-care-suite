@@ -31,6 +31,7 @@ import { Loader2, Trash2 } from "lucide-react";
 const userSchema = z.object({
   email: z.string().email("Please enter a valid email address").max(255),
   password: z.string().min(6, "Password must be at least 6 characters"),
+  username: z.string().optional(),
   role: z.enum(["technician", "admin"]),
 });
 
@@ -52,6 +53,7 @@ interface User {
 const AdminUserManagement = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
   const [role, setRole] = useState<"technician" | "admin">("technician");
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
@@ -138,7 +140,7 @@ const AdminUserManagement = () => {
   const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const validation = userSchema.safeParse({ email, password, role });
+    const validation = userSchema.safeParse({ email, password, username, role });
     if (!validation.success) {
       toast.error(validation.error.errors[0].message);
       return;
@@ -148,7 +150,7 @@ const AdminUserManagement = () => {
 
     try {
       const { data, error } = await supabase.functions.invoke('create-user', {
-        body: { email: email.trim().toLowerCase(), password, role },
+        body: { email: email.trim().toLowerCase(), password, role, username: username.trim() || undefined },
       });
 
       if (error) throw error;
@@ -157,6 +159,7 @@ const AdminUserManagement = () => {
       toast.success(`User "${email}" created successfully!`);
       setEmail("");
       setPassword("");
+      setUsername("");
       setRole("technician");
       fetchUsers();
     } catch (error: any) {
@@ -203,6 +206,20 @@ const AdminUserManagement = () => {
                   placeholder="Min. 6 characters"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  disabled={loading}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="username" className="text-sm font-medium">
+                  Technician Name <span className="text-muted-foreground font-normal">(must match name in Runs)</span>
+                </label>
+                <Input
+                  id="username"
+                  type="text"
+                  placeholder="e.g. Lynessa, Amanda..."
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   disabled={loading}
                 />
               </div>

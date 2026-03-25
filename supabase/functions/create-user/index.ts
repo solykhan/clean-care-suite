@@ -12,7 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    const { email, password, role } = await req.json();
+    const { email, password, role, username } = await req.json();
 
     if (!email || !password || !role) {
       return new Response(
@@ -40,12 +40,12 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    // Create the user with a confirmed email (no verification needed)
+    // Create the user with a confirmed email
     const { data: userData, error: createError } = await supabaseAdmin.auth.admin.createUser({
       email: email.trim().toLowerCase(),
       password,
       email_confirm: true,
-      user_metadata: { role },
+      user_metadata: { role, username: username || null },
     });
 
     if (createError) {
@@ -65,11 +65,17 @@ serve(async (req) => {
 
     if (roleError) {
       console.error('Error assigning role:', roleError);
-      // User was created but role assignment failed — still return success with warning
-      return new Response(
-        JSON.stringify({ success: true, warning: 'User created but role assignment failed: ' + roleError.message, user: userData.user }),
-        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+    }
+
+    // Set username in profiles table (used to match technician name in runs)
+    if (username) {
+      const { error: profileError } = await supabaseAdmin
+        .from('profiles')
+        .upsert({ id: userId, username: username.trim() }, { onConflict: 'id' });
+
+      if (profileError) {
+        console.error('Error setting username in profiles:', profileError);
+      }
     }
 
     return new Response(
