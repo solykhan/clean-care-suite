@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { PlayCircle, Edit, Calendar } from "lucide-react";
 import { toast } from "sonner";
 import { RunsImportDialog } from "@/components/RunsImportDialog";
+import { AddRunDialog } from "@/components/AddRunDialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
