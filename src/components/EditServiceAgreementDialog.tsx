@@ -489,9 +489,71 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Invoice Type</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter invoice type" {...field} />
-                    </FormControl>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select invoice type" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {invoiceTypes.map((t) => (
+                          <SelectItem key={t} value={t}>{t}</SelectItem>
+                        ))}
+                        <div className="p-1 border-t mt-1">
+                          {addingInvoiceType ? (
+                            <div className="flex gap-1 p-1">
+                              <Input
+                                autoFocus
+                                value={newInvoiceType}
+                                onChange={(e) => setNewInvoiceType(e.target.value)}
+                                placeholder="New invoice type..."
+                                className="h-7 text-xs"
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter") {
+                                    e.preventDefault();
+                                    const trimmed = newInvoiceType.trim().toUpperCase();
+                                    if (trimmed && !invoiceTypes.includes(trimmed)) {
+                                      setInvoiceTypes((prev) => [...prev, trimmed]);
+                                      field.onChange(trimmed);
+                                    }
+                                    setNewInvoiceType("");
+                                    setAddingInvoiceType(false);
+                                  }
+                                  if (e.key === "Escape") {
+                                    setAddingInvoiceType(false);
+                                    setNewInvoiceType("");
+                                  }
+                                }}
+                              />
+                              <Button
+                                type="button"
+                                size="sm"
+                                className="h-7 px-2 text-xs"
+                                onClick={() => {
+                                  const trimmed = newInvoiceType.trim().toUpperCase();
+                                  if (trimmed && !invoiceTypes.includes(trimmed)) {
+                                    setInvoiceTypes((prev) => [...prev, trimmed]);
+                                    field.onChange(trimmed);
+                                  }
+                                  setNewInvoiceType("");
+                                  setAddingInvoiceType(false);
+                                }}
+                              >
+                                Add
+                              </Button>
+                            </div>
+                          ) : (
+                            <button
+                              type="button"
+                              className="flex items-center gap-1 w-full px-2 py-1.5 text-xs text-primary hover:bg-accent rounded-sm"
+                              onClick={() => setAddingInvoiceType(true)}
+                            >
+                              <Plus className="h-3 w-3" /> Add invoice type
+                            </button>
+                          )}
+                        </div>
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
