@@ -85,7 +85,7 @@ const AddCustomer = () => {
 
         if (error) throw error;
 
-        let newServiceId = "1000";
+        let newServiceId = "5000";
         
         if (data && data.length > 0) {
           // Find the highest numeric service_id
@@ -95,7 +95,7 @@ const AddCustomer = () => {
             .sort((a, b) => b - a);
           
           if (numericIds.length > 0) {
-            newServiceId = String(numericIds[0] + 1);
+            newServiceId = String(Math.max(numericIds[0] + 1, 5000));
           }
         }
 
