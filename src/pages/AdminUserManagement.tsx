@@ -51,6 +51,7 @@ interface User {
 
 const AdminUserManagement = () => {
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [role, setRole] = useState<"technician" | "admin">("technician");
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
