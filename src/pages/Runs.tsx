@@ -95,7 +95,7 @@ const Runs = () => {
             </div>
           </div>
           
-          <div className="flex gap-2">
+          <div className="flex flex-col gap-2">
             <div className="flex-1 min-w-0">
               <Select value={technicianFilter} onValueChange={setTechnicianFilter}>
                 <SelectTrigger className="w-full text-xs px-2">
