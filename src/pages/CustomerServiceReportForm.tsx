@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { ClipboardList } from "lucide-react";
+import { ClipboardList, ArrowLeft } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useRef, useEffect } from "react";
 import { SignaturePad, SignaturePadRef } from "@/components/SignaturePad";
@@ -157,6 +157,10 @@ const CustomerServiceReportForm = () => {
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="mb-8">
+        <Button variant="outline" size="sm" onClick={() => navigate("/runs")} className="mb-4">
+          <ArrowLeft className="h-4 w-4" />
+          Back to Runs
+        </Button>
         <div className="flex items-center gap-3 mb-2">
           <ClipboardList className="h-8 w-8 text-primary" />
           <h1 className="text-4xl font-bold text-foreground">Customer Service Report</h1>
