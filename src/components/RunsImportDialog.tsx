@@ -27,6 +27,7 @@ const DATABASE_COLUMNS = [
   { value: "frequency", label: "Frequency" },
   { value: "technicians", label: "Technicians" },
   { value: "completed", label: "Completed" },
+  { value: "completion_date", label: "Completion Date" },
   { value: "skip", label: "-- Skip Column --" }
 ];
 
