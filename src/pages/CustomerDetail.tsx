@@ -1,14 +1,25 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, Building2, Phone, MapPin, FileText, DollarSign } from "lucide-react";
+import { ArrowLeft, Building2, Phone, MapPin, FileText, DollarSign, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { ServiceAgreementForm } from "@/components/ServiceAgreementForm";
 import { EditServiceAgreementDialog } from "@/components/EditServiceAgreementDialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const CustomerDetail = () => {
   const { id } = useParams<{ id: string }>();
