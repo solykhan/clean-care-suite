@@ -279,6 +279,8 @@ export type Database = {
           total: number | null
           unit_price: number | null
           updated_at: string | null
+          week_day: string | null
+          weeks: string | null
         }
         Insert: {
           areas_covered?: string | null
@@ -296,6 +298,8 @@ export type Database = {
           total?: number | null
           unit_price?: number | null
           updated_at?: string | null
+          week_day?: string | null
+          weeks?: string | null
         }
         Update: {
           areas_covered?: string | null
@@ -313,6 +317,8 @@ export type Database = {
           total?: number | null
           unit_price?: number | null
           updated_at?: string | null
+          week_day?: string | null
+          weeks?: string | null
         }
         Relationships: []
       }

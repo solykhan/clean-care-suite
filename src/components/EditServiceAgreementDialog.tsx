@@ -51,6 +51,8 @@ const formSchema = z.object({
   service_frequency: z.string().optional(),
   invoice_type: z.string().optional(),
   cpm_device_onsite: z.string().optional(),
+  week_day: z.string().optional(),
+  weeks: z.string().optional(),
   unit_price: z.string().optional().refine(
     (val) => !val || (parseFloat(val) > 0 && !isNaN(parseFloat(val))),
     { message: "Unit price must be a positive number" }
@@ -97,6 +99,8 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
       cpi: agreement.cpi?.toString() || "",
       total: agreement.total?.toString() || "",
       comments: agreement.comments || "",
+      week_day: agreement.week_day || "",
+      weeks: agreement.weeks || "",
     },
   });
 
@@ -116,6 +120,8 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
         cpi: agreement.cpi?.toString() || "",
         total: agreement.total?.toString() || "",
         comments: agreement.comments || "",
+        week_day: agreement.week_day || "",
+        weeks: agreement.weeks || "",
       });
     }
   }, [open, agreement, form]);
@@ -132,6 +138,8 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
         invoice_type: values.invoice_type || null,
         cpm_device_onsite: values.cpm_device_onsite || null,
         comments: values.comments || null,
+        week_day: values.week_day || null,
+        weeks: values.weeks || null,
         unit_price: values.unit_price ? parseFloat(values.unit_price) : null,
         cpm_pricing: values.cpm_pricing ? parseFloat(values.cpm_pricing) : null,
         cpi: values.cpi ? parseFloat(values.cpi) : null,
@@ -425,6 +433,49 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
                 </FormItem>
               )}
             />
+
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="week_day"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Week Day</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select day" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Monday">Monday</SelectItem>
+                        <SelectItem value="Tuesday">Tuesday</SelectItem>
+                        <SelectItem value="Wednesday">Wednesday</SelectItem>
+                        <SelectItem value="Thursday">Thursday</SelectItem>
+                        <SelectItem value="Friday">Friday</SelectItem>
+                        <SelectItem value="Saturday">Saturday</SelectItem>
+                        <SelectItem value="Sunday">Sunday</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="weeks"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Week</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g. 1, 2, 3, 4" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <div className="flex justify-between gap-2 pt-4">
               <AlertDialog>
