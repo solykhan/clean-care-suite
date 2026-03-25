@@ -75,18 +75,16 @@ const Runs = () => {
     return Array.from(new Set(runs.map(r => r.week_day).filter(Boolean)));
   }, [runs]);
 
-  if (error) {
-    return (
-      <div className="container mx-auto py-8">
-        <Card className="border-destructive">
-          <CardHeader>
-            <CardTitle className="text-destructive">Error Loading Runs</CardTitle>
-            <CardDescription>Unable to fetch runs data. Please try again.</CardDescription>
-          </CardHeader>
-        </Card>
-      </div>
-    );
-  }
+  const handleDelete = async (id: string) => {
+    try {
+      const { error } = await supabase.from("runs").delete().eq("id", id);
+      if (error) throw error;
+      toast.success("Run deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["runs"] });
+    } catch (error) {
+      toast.error("Failed to delete run");
+    }
+  };
 
   return (
     <div className="bg-background">
