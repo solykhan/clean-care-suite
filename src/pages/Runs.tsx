@@ -124,10 +124,10 @@ const Runs = () => {
               </Select>
             </div>
             
-            <div className="flex-1 min-w-0">
+            <div>
               <Select value={weekDayFilter} onValueChange={setWeekDayFilter}>
-                <SelectTrigger className="w-full text-xs px-2">
-                  <SelectValue placeholder="Week Day" />
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="All Week Days" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Week Days</SelectItem>
