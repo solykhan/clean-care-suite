@@ -229,18 +229,18 @@ export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementF
   });
 
   // Auto-calculate total: (unit_price * CPI) + unit_price
-  const watchedUnitPrice = form.watch("unit_price");
-  const watchedCpi = form.watch("cpi");
   useEffect(() => {
-    const up = parseFloat(watchedUnitPrice || "");
-    const cpi = parseFloat(watchedCpi || "");
-    if (!isNaN(up) && !isNaN(cpi)) {
-      const calculated = (up * cpi) + up;
-      form.setValue("total", calculated.toFixed(2));
-    } else {
-      form.setValue("total", "");
-    }
-  }, [watchedUnitPrice, watchedCpi, form]);
+    const subscription = form.watch((values) => {
+      const up = parseFloat(values.unit_price || "");
+      const cpi = parseFloat(values.cpi || "");
+      if (!isNaN(up) && !isNaN(cpi)) {
+        form.setValue("total", ((up * cpi) + up).toFixed(2));
+      } else {
+        form.setValue("total", "");
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [form]);
 
   const onSubmit = async (values: FormValues) => {
     setLoading(true);
