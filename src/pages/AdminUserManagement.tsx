@@ -30,6 +30,7 @@ import { Loader2, Trash2 } from "lucide-react";
 
 const userSchema = z.object({
   email: z.string().email("Please enter a valid email address").max(255),
+  password: z.string().min(6, "Password must be at least 6 characters"),
   role: z.enum(["technician", "admin"]),
 });
 
