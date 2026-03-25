@@ -223,6 +223,7 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [addingToRuns, setAddingToRuns] = useState(false);
   const [frequencies, setFrequencies] = useState<string[]>(DEFAULT_FREQUENCIES);
   const [addingFrequency, setAddingFrequency] = useState(false);
   const [newFrequency, setNewFrequency] = useState("");
