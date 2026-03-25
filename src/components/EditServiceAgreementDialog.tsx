@@ -51,6 +51,8 @@ const formSchema = z.object({
   service_frequency: z.string().optional(),
   invoice_type: z.string().optional(),
   cpm_device_onsite: z.string().optional(),
+  week_day: z.string().optional(),
+  weeks: z.string().optional(),
   unit_price: z.string().optional().refine(
     (val) => !val || (parseFloat(val) > 0 && !isNaN(parseFloat(val))),
     { message: "Unit price must be a positive number" }
