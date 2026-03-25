@@ -233,6 +233,19 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
   const [addingInvoiceType, setAddingInvoiceType] = useState(false);
   const [newInvoiceType, setNewInvoiceType] = useState("");
 
+  const { data: customer } = useQuery({
+    queryKey: ["customer-by-service-id", agreement.service_id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("customers")
+        .select("site_name")
+        .eq("service_id", agreement.service_id)
+        .maybeSingle();
+      return data;
+    },
+    enabled: !!agreement.service_id,
+  });
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
