@@ -238,7 +238,7 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
     queryFn: async () => {
       const { data } = await supabase
         .from("customers")
-        .select("site_name")
+        .select("site_name, site_suburb")
         .eq("service_id", agreement.service_id)
         .maybeSingle();
       return data;
