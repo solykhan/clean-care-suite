@@ -242,6 +242,9 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
   const [invoiceTypes, setInvoiceTypes] = useState<string[]>(DEFAULT_INVOICE_TYPES);
   const [addingInvoiceType, setAddingInvoiceType] = useState(false);
   const [newInvoiceType, setNewInvoiceType] = useState("");
+  const [technicians, setTechnicians] = useState<string[]>(DEFAULT_TECHNICIANS);
+  const [addingTechnician, setAddingTechnician] = useState(false);
+  const [newTechnician, setNewTechnician] = useState("");
 
   const { data: customer } = useQuery<{ site_name: string; site_suburb: string | null } | null>({
     queryKey: ["customer-by-service-id", agreement.service_id],
