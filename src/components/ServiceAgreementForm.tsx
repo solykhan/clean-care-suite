@@ -305,6 +305,7 @@ export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementF
         week_day: values.week_day || null,
         weeks: values.weeks || null,
         frequency: values.service_frequency || null,
+        technicians: values.technicians || null,
         completed: "pending",
       });
 
