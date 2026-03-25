@@ -98,7 +98,7 @@ const Runs = () => {
           <div className="flex flex-col gap-2 items-start">
             <div>
               <Select value={technicianFilter} onValueChange={setTechnicianFilter}>
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-auto min-w-[160px]">
                   <SelectValue placeholder="All Technicians" />
                 </SelectTrigger>
                 <SelectContent>
@@ -112,7 +112,7 @@ const Runs = () => {
             
             <div>
               <Select value={weeksFilter} onValueChange={setWeeksFilter}>
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-auto min-w-[120px]">
                   <SelectValue placeholder="All Weeks" />
                 </SelectTrigger>
                 <SelectContent>
@@ -126,7 +126,7 @@ const Runs = () => {
             
             <div>
               <Select value={weekDayFilter} onValueChange={setWeekDayFilter}>
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-auto min-w-[140px]">
                   <SelectValue placeholder="All Week Days" />
                 </SelectTrigger>
                 <SelectContent>
