@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useQuery } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
@@ -208,6 +209,19 @@ export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementF
   const [addingInvoiceType, setAddingInvoiceType] = useState(false);
   const [newInvoiceType, setNewInvoiceType] = useState("");
 
+  const { data: customer } = useQuery({
+    queryKey: ["customer-by-service-id", serviceId],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("customers")
+        .select("site_name")
+        .eq("service_id", serviceId!)
+        .maybeSingle();
+      return data;
+    },
+    enabled: !!serviceId,
+  });
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -299,6 +313,12 @@ export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementF
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {customer?.site_name && (
+              <div className="p-3 bg-muted rounded-md">
+                <p className="text-xs text-muted-foreground">Customer</p>
+                <p className="font-semibold text-base">{customer.site_name}</p>
+              </div>
+            )}
             <FormField
               control={form.control}
               name="service_id"
