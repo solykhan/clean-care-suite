@@ -381,13 +381,71 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Products/Services</FormLabel>
-                  <FormControl>
-                    <Textarea 
-                      placeholder="Enter products or services included"
-                      className="resize-none"
-                      {...field}
-                    />
-                  </FormControl>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select product/service" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent className="max-h-72">
+                      {products.map((p) => (
+                        <SelectItem key={p} value={p}>{p}</SelectItem>
+                      ))}
+                      <div className="p-1 border-t mt-1">
+                        {addingProduct ? (
+                          <div className="flex gap-1 p-1">
+                            <Input
+                              autoFocus
+                              value={newProduct}
+                              onChange={(e) => setNewProduct(e.target.value)}
+                              placeholder="New product..."
+                              className="h-7 text-xs"
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                  e.preventDefault();
+                                  const trimmed = newProduct.trim();
+                                  if (trimmed && !products.includes(trimmed)) {
+                                    setProducts((prev) => [...prev, trimmed]);
+                                    field.onChange(trimmed);
+                                  }
+                                  setNewProduct("");
+                                  setAddingProduct(false);
+                                }
+                                if (e.key === "Escape") {
+                                  setAddingProduct(false);
+                                  setNewProduct("");
+                                }
+                              }}
+                            />
+                            <Button
+                              type="button"
+                              size="sm"
+                              className="h-7 px-2 text-xs"
+                              onClick={() => {
+                                const trimmed = newProduct.trim();
+                                if (trimmed && !products.includes(trimmed)) {
+                                  setProducts((prev) => [...prev, trimmed]);
+                                  field.onChange(trimmed);
+                                }
+                                setNewProduct("");
+                                setAddingProduct(false);
+                              }}
+                            >
+                              Add
+                            </Button>
+                          </div>
+                        ) : (
+                          <button
+                            type="button"
+                            className="flex items-center gap-1 w-full px-2 py-1.5 text-xs text-primary hover:bg-accent rounded-sm"
+                            onClick={() => setAddingProduct(true)}
+                          >
+                            <Plus className="h-3 w-3" /> Add product
+                          </button>
+                        )}
+                      </div>
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
