@@ -254,7 +254,8 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
 
   // Auto-calculate total: (unit_price * CPI) + unit_price
   useEffect(() => {
-    const subscription = form.watch((values) => {
+    const subscription = form.watch((values, { name }) => {
+      if (name !== "unit_price" && name !== "cpi") return;
       const up = parseFloat(values.unit_price || "");
       const cpi = parseFloat(values.cpi || "");
       if (!isNaN(up) && !isNaN(cpi)) {
