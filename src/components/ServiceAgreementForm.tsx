@@ -214,7 +214,7 @@ export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementF
     queryFn: async () => {
       const { data } = await supabase
         .from("customers")
-        .select("site_name")
+        .select("site_name, site_suburb")
         .eq("service_id", serviceId!)
         .maybeSingle();
       return data;
