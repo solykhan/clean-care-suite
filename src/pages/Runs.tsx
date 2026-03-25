@@ -207,13 +207,39 @@ const Runs = () => {
                         </TableCell>
                         <TableCell>{run.completion_date ? new Date(run.completion_date).toLocaleDateString() : "-"}</TableCell>
                         <TableCell className="text-center">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => navigate(`/customer-service-report?service_id=${run.service_id}`)}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
+                          <div className="flex items-center justify-center gap-1">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => navigate(`/customer-service-report?service_id=${run.service_id}`)}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button size="sm" variant="outline" className="text-destructive hover:text-destructive">
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Delete Run</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    Are you sure you want to delete this run for <strong>{run.service_id}</strong>? This action cannot be undone.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogAction
+                                    onClick={() => handleDelete(run.id)}
+                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                  >
+                                    Delete
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))
