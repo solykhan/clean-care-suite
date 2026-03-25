@@ -276,6 +276,7 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
       comments: agreement.comments || "",
       week_day: agreement.week_day || "",
       weeks: agreement.weeks || "",
+      technicians: agreement.technicians || "",
     },
   });
 
@@ -312,6 +313,7 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
         comments: agreement.comments || "",
         week_day: agreement.week_day || "",
         weeks: agreement.weeks || "",
+        technicians: agreement.technicians || "",
       });
     }
   }, [open, agreement, form]);
