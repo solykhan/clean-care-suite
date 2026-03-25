@@ -48,6 +48,7 @@ const formSchema = z.object({
   comments: z.string().optional(),
   week_day: z.string().optional(),
   weeks: z.string().optional(),
+  technicians: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
