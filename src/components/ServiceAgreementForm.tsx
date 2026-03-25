@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -227,6 +227,20 @@ export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementF
       weeks: "",
     },
   });
+
+  // Auto-calculate total: (unit_price * CPI) + unit_price
+  const watchedUnitPrice = form.watch("unit_price");
+  const watchedCpi = form.watch("cpi");
+  useEffect(() => {
+    const up = parseFloat(watchedUnitPrice || "");
+    const cpi = parseFloat(watchedCpi || "");
+    if (!isNaN(up) && !isNaN(cpi)) {
+      const calculated = (up * cpi) + up;
+      form.setValue("total", calculated.toFixed(2));
+    } else {
+      form.setValue("total", "");
+    }
+  }, [watchedUnitPrice, watchedCpi, form]);
 
   const onSubmit = async (values: FormValues) => {
     setLoading(true);
@@ -570,12 +584,14 @@ export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementF
                 name="total"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Total</FormLabel>
+                    <FormLabel>Total <span className="text-xs text-muted-foreground">(auto-calculated)</span></FormLabel>
                     <FormControl>
                       <Input 
                         type="number" 
                         step="0.01"
-                        placeholder="0.00" 
+                        placeholder="0.00"
+                        readOnly
+                        className="bg-muted cursor-not-allowed"
                         {...field} 
                       />
                     </FormControl>

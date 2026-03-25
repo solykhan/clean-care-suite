@@ -252,6 +252,20 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
     },
   });
 
+  // Auto-calculate total: (unit_price * CPI) + unit_price
+  const watchedUnitPrice = form.watch("unit_price");
+  const watchedCpi = form.watch("cpi");
+  useEffect(() => {
+    const up = parseFloat(watchedUnitPrice || "");
+    const cpi = parseFloat(watchedCpi || "");
+    if (!isNaN(up) && !isNaN(cpi)) {
+      const calculated = (up * cpi) + up;
+      form.setValue("total", calculated.toFixed(2));
+    } else {
+      form.setValue("total", "");
+    }
+  }, [watchedUnitPrice, watchedCpi, form]);
+
   // Reset form when agreement changes or dialog opens
   useEffect(() => {
     if (open) {
@@ -639,12 +653,14 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
                 name="total"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Total</FormLabel>
+                    <FormLabel>Total <span className="text-xs text-muted-foreground">(auto-calculated)</span></FormLabel>
                     <FormControl>
                       <Input 
                         type="number" 
                         step="0.01"
-                        placeholder="0.00" 
+                        placeholder="0.00"
+                        readOnly
+                        className="bg-muted cursor-not-allowed"
                         {...field} 
                       />
                     </FormControl>
