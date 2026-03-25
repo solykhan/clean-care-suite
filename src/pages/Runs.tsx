@@ -190,6 +190,7 @@ const Runs = () => {
                         <TableCell className="text-center">
                           <Checkbox checked={run.completed || false} disabled />
                         </TableCell>
+                        <TableCell>{run.completion_date ? new Date(run.completion_date).toLocaleDateString() : "-"}</TableCell>
                         <TableCell className="text-center">
                           <Button
                             size="sm"
