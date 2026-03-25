@@ -762,18 +762,28 @@ export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementF
               />
             </div>
 
-            <div className="flex justify-end gap-2 pt-4">
+            <div className="flex justify-between items-center pt-4">
               <Button
                 type="button"
-                variant="outline"
-                onClick={() => setOpen(false)}
-                disabled={loading}
+                variant="secondary"
+                onClick={handleAddToRuns}
+                disabled={loading || addingToRuns}
               >
-                Cancel
+                {addingToRuns ? "Adding..." : "Add to Runs"}
               </Button>
-              <Button type="submit" disabled={loading}>
-                {loading ? "Creating..." : "Create Service Agreement"}
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setOpen(false)}
+                  disabled={loading}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={loading}>
+                  {loading ? "Creating..." : "Create Service Agreement"}
+                </Button>
+              </div>
             </div>
           </form>
         </Form>
