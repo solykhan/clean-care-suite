@@ -252,6 +252,7 @@ export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementF
       comments: "",
       week_day: "",
       weeks: "",
+      technicians: "",
     },
   });
 
