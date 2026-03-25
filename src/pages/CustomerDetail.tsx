@@ -24,6 +24,18 @@ import {
 const CustomerDetail = () => {
   const { id } = useParams<{ id: string }>();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  const handleDelete = async () => {
+    const { error } = await supabase.from("customers").delete().eq("id", id!);
+    if (error) {
+      toast.error("Failed to delete customer");
+    } else {
+      toast.success("Customer deleted");
+      queryClient.invalidateQueries({ queryKey: ["customers"] });
+      navigate("/customers");
+    }
+  };
 
   const { data: customer, isLoading: customerLoading } = useQuery({
     queryKey: ["customer", id],
