@@ -140,7 +140,7 @@ const AdminUserManagement = () => {
   const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const validation = userSchema.safeParse({ email, password, role });
+    const validation = userSchema.safeParse({ email, password, username, role });
     if (!validation.success) {
       toast.error(validation.error.errors[0].message);
       return;
@@ -150,7 +150,7 @@ const AdminUserManagement = () => {
 
     try {
       const { data, error } = await supabase.functions.invoke('create-user', {
-        body: { email: email.trim().toLowerCase(), password, role },
+        body: { email: email.trim().toLowerCase(), password, role, username: username.trim() || undefined },
       });
 
       if (error) throw error;
@@ -159,6 +159,7 @@ const AdminUserManagement = () => {
       toast.success(`User "${email}" created successfully!`);
       setEmail("");
       setPassword("");
+      setUsername("");
       setRole("technician");
       fetchUsers();
     } catch (error: any) {
