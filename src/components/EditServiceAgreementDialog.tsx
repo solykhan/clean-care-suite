@@ -238,7 +238,7 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
     queryFn: async () => {
       const { data } = await supabase
         .from("customers")
-        .select("site_name")
+        .select("site_name, site_suburb")
         .eq("service_id", agreement.service_id)
         .maybeSingle();
       return data;
@@ -386,6 +386,9 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
               <div className="p-3 bg-muted rounded-md">
                 <p className="text-xs text-muted-foreground">Customer</p>
                 <p className="font-semibold text-base">{customer.site_name}</p>
+                {customer.site_suburb && (
+                  <p className="text-sm text-muted-foreground mt-0.5">{customer.site_suburb}</p>
+                )}
               </div>
             )}
             <FormField
