@@ -94,6 +94,7 @@ const Runs = () => {
                 Calendar View
               </Button>
               <RunsImportDialog />
+              <AddRunDialog />
             </div>
           </div>
           
