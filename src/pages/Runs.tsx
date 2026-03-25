@@ -26,6 +26,7 @@ import {
 
 const Runs = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [technicianFilter, setTechnicianFilter] = useState<string>("all");
   const [weeksFilter, setWeeksFilter] = useState<string>("all");
   const [weekDayFilter, setWeekDayFilter] = useState<string>("all");
