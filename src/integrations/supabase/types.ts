@@ -276,6 +276,7 @@ export type Database = {
           service_active_inactive: string | null
           service_frequency: string | null
           service_id: string
+          technicians: string | null
           total: number | null
           unit_price: number | null
           updated_at: string | null
@@ -295,6 +296,7 @@ export type Database = {
           service_active_inactive?: string | null
           service_frequency?: string | null
           service_id: string
+          technicians?: string | null
           total?: number | null
           unit_price?: number | null
           updated_at?: string | null
@@ -314,6 +316,7 @@ export type Database = {
           service_active_inactive?: string | null
           service_frequency?: string | null
           service_id?: string
+          technicians?: string | null
           total?: number | null
           unit_price?: number | null
           updated_at?: string | null
