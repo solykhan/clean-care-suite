@@ -2,32 +2,79 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PlayCircle, CheckCircle, Clock, AlertCircle } from "lucide-react";
+import { PlayCircle, CheckCircle, Clock, AlertCircle, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAuth } from "@/hooks/useAuth";
 
 const TechnicianDashboard = () => {
   const navigate = useNavigate();
+  const { user, role } = useAuth();
+  const isTechnician = role === "technician";
+
+  // Fetch the logged-in user's profile to get their username (= technician name)
+  const { data: profile } = useQuery({
+    queryKey: ["profile", user?.id],
+    queryFn: async () => {
+      if (!user?.id) return null;
+      const { data } = await supabase
+        .from("profiles")
+        .select("username")
+        .eq("id", user.id)
+        .single();
+      return data;
+    },
+    enabled: !!user?.id,
+  });
+
+  const technicianName = profile?.username || null;
 
   const { data: runs, isLoading } = useQuery({
-    queryKey: ["runs"],
+    queryKey: ["runs", isTechnician ? technicianName : "all"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("runs").select("*");
+      let query = supabase.from("runs").select("*");
+      // For technicians, only fetch their own runs
+      if (isTechnician && technicianName) {
+        query = query.eq("technicians", technicianName);
+      }
+      const { data, error } = await query;
       if (error) throw error;
       return data;
     },
+    enabled: !isTechnician || !!technicianName, // Wait for name before fetching if technician
   });
 
   const totalRuns = runs?.length || 0;
-  const completedRuns = runs?.filter((run) => run.completed === 'completed')?.length || 0;
-  const pendingRuns = runs?.filter((run) => run.completed !== 'completed')?.length || 0;
+  const completedRuns = runs?.filter((run) => run.completed === "completed")?.length || 0;
+  const pendingRuns = runs?.filter((run) => run.completed !== "completed")?.length || 0;
 
   return (
     <div className="container mx-auto p-6 space-y-6">
+      {/* Welcome banner for technician */}
+      {isTechnician && (
+        <Card className="border-primary/30 bg-primary/5">
+          <CardContent className="flex items-center gap-3 py-4">
+            <div className="p-2 bg-primary/10 rounded-full">
+              <User className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <p className="font-semibold text-foreground">
+                Welcome, {technicianName || user?.email}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                {user?.email} · Technician
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Technician Dashboard</h1>
         <p className="text-muted-foreground mt-2">
-          Manage your service runs efficiently
+          {isTechnician && technicianName
+            ? `Showing runs assigned to ${technicianName}`
+            : "Manage your service runs efficiently"}
         </p>
       </div>
 
@@ -44,7 +91,9 @@ const TechnicianDashboard = () => {
             ) : (
               <div className="text-2xl font-bold">{totalRuns}</div>
             )}
-            <p className="text-xs text-muted-foreground mt-1">All service runs</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              {isTechnician ? "Your service runs" : "All service runs"}
+            </p>
           </CardContent>
         </Card>
 
@@ -87,15 +136,19 @@ const TechnicianDashboard = () => {
             Service Runs
           </CardTitle>
           <CardDescription>
-            View and manage all your scheduled service runs
+            {isTechnician
+              ? "View and manage your assigned service runs"
+              : "View and manage all scheduled service runs"}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-sm text-muted-foreground">
-            Access your complete list of service runs, filter by technician, week, or status.
+            {isTechnician
+              ? "Access your list of service runs filtered to your assignments."
+              : "Access your complete list of service runs, filter by technician, week, or status."}
           </p>
           <Button onClick={() => navigate("/runs")} className="w-full">
-            View All Runs
+            View My Runs
           </Button>
         </CardContent>
       </Card>

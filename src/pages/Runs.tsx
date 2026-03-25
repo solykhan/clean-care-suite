@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,52 +28,76 @@ import {
 const Runs = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { user, role } = useAuth();
+  const isTechnician = role === "technician";
+
   const [technicianFilter, setTechnicianFilter] = useState<string>("all");
   const [weeksFilter, setWeeksFilter] = useState<string>("all");
   const [weekDayFilter, setWeekDayFilter] = useState<string>("all");
 
-  const { data: runs, isLoading, error } = useQuery({
-    queryKey: ["runs"],
+  // Fetch logged-in user's profile (to get their technician name)
+  const { data: profile } = useQuery({
+    queryKey: ["profile", user?.id],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("runs")
-        .select("*")
-        .order("created_at", { ascending: false });
-      
+      if (!user?.id) return null;
+      const { data } = await supabase
+        .from("profiles")
+        .select("username")
+        .eq("id", user.id)
+        .single();
+      return data;
+    },
+    enabled: !!user?.id,
+  });
+
+  const technicianName = profile?.username || null;
+
+  const { data: runs, isLoading, error } = useQuery({
+    queryKey: ["runs", isTechnician ? technicianName : "all"],
+    queryFn: async () => {
+      let query = supabase.from("runs").select("*").order("created_at", { ascending: false });
+
+      // For technicians, only fetch their own runs
+      if (isTechnician && technicianName) {
+        query = query.eq("technicians", technicianName);
+      }
+
+      const { data, error } = await query;
       if (error) {
         toast.error("Failed to load runs");
         throw error;
       }
       return data;
     },
+    enabled: !isTechnician || !!technicianName,
   });
 
   const filteredRuns = useMemo(() => {
     if (!runs) return [];
-    
+
     return runs.filter((run) => {
-      const matchesTechnician = technicianFilter === "all" || run.technicians === technicianFilter;
+      const matchesTechnician = isTechnician || technicianFilter === "all" || run.technicians === technicianFilter;
       const matchesWeeks = weeksFilter === "all" || run.weeks === weeksFilter;
       const matchesWeekDay = weekDayFilter === "all" || run.week_day === weekDayFilter;
-      const isNotCompleted = run.completed !== 'completed';
-      
+      const isNotCompleted = run.completed !== "completed";
+
       return matchesTechnician && matchesWeeks && matchesWeekDay && isNotCompleted;
     });
-  }, [runs, technicianFilter, weeksFilter, weekDayFilter]);
+  }, [runs, technicianFilter, weeksFilter, weekDayFilter, isTechnician]);
 
   const uniqueTechnicians = useMemo(() => {
     if (!runs) return [];
-    return Array.from(new Set(runs.map(r => r.technicians).filter(Boolean)));
+    return Array.from(new Set(runs.map((r) => r.technicians).filter(Boolean)));
   }, [runs]);
 
   const uniqueWeeks = useMemo(() => {
     if (!runs) return [];
-    return Array.from(new Set(runs.map(r => r.weeks).filter(Boolean)));
+    return Array.from(new Set(runs.map((r) => r.weeks).filter(Boolean)));
   }, [runs]);
 
   const uniqueWeekDays = useMemo(() => {
     if (!runs) return [];
-    return Array.from(new Set(runs.map(r => r.week_day).filter(Boolean)));
+    return Array.from(new Set(runs.map((r) => r.week_day).filter(Boolean)));
   }, [runs]);
 
   const handleDelete = async (id: string) => {
@@ -96,33 +121,49 @@ const Runs = () => {
                 <PlayCircle className="h-8 w-8 text-primary" />
                 <h1 className="text-4xl font-bold text-foreground">Runs</h1>
               </div>
-              <p className="text-muted-foreground">View all service runs</p>
+              <p className="text-muted-foreground">
+                {isTechnician && technicianName
+                  ? `Showing runs assigned to ${technicianName}`
+                  : "View all service runs"}
+              </p>
             </div>
-            <div className="flex gap-2">
+            {/* Only admins can import/add runs */}
+            {!isTechnician && (
+              <div className="flex gap-2">
+                <Button onClick={() => navigate("/runs/calendar")} variant="outline">
+                  <Calendar className="mr-2 h-4 w-4" />
+                  Calendar View
+                </Button>
+                <RunsImportDialog />
+                <AddRunDialog />
+              </div>
+            )}
+            {isTechnician && (
               <Button onClick={() => navigate("/runs/calendar")} variant="outline">
                 <Calendar className="mr-2 h-4 w-4" />
                 Calendar View
               </Button>
-              <RunsImportDialog />
-              <AddRunDialog />
-            </div>
+            )}
           </div>
-          
+
           <div className="flex flex-col gap-2 items-start">
-            <div>
-              <Select value={technicianFilter} onValueChange={setTechnicianFilter}>
-                <SelectTrigger className="w-auto min-w-[160px]">
-                  <SelectValue placeholder="All Technicians" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Technicians</SelectItem>
-                  {uniqueTechnicians.map((tech) => (
-                    <SelectItem key={tech} value={tech}>{tech}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            
+            {/* Technician filter only for admins */}
+            {!isTechnician && (
+              <div>
+                <Select value={technicianFilter} onValueChange={setTechnicianFilter}>
+                  <SelectTrigger className="w-auto min-w-[160px]">
+                    <SelectValue placeholder="All Technicians" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Technicians</SelectItem>
+                    {uniqueTechnicians.map((tech) => (
+                      <SelectItem key={tech} value={tech}>{tech}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
             <div>
               <Select value={weeksFilter} onValueChange={setWeeksFilter}>
                 <SelectTrigger className="w-auto min-w-[120px]">
@@ -136,7 +177,7 @@ const Runs = () => {
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div>
               <Select value={weekDayFilter} onValueChange={setWeekDayFilter}>
                 <SelectTrigger className="w-auto min-w-[140px]">
@@ -176,7 +217,7 @@ const Runs = () => {
                   {isLoading ? (
                     Array.from({ length: 5 }).map((_, i) => (
                       <TableRow key={i}>
-                        {Array.from({ length: 10 }).map((_, j) => (
+                        {Array.from({ length: 11 }).map((_, j) => (
                           <TableCell key={j}>
                             <div className="h-4 bg-muted rounded animate-pulse"></div>
                           </TableCell>
@@ -186,7 +227,9 @@ const Runs = () => {
                   ) : filteredRuns.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={11} className="text-center py-8 text-muted-foreground">
-                        No runs found
+                        {isTechnician && !technicianName
+                          ? "Your profile name hasn't been set yet. Ask your admin to set your username."
+                          : "No runs found"}
                       </TableCell>
                     </TableRow>
                   ) : (
@@ -201,11 +244,13 @@ const Runs = () => {
                         <TableCell>{run.frequency || "-"}</TableCell>
                         <TableCell>{run.technicians || "-"}</TableCell>
                         <TableCell className="text-center">
-                          <Badge variant={run.completed === 'completed' ? 'default' : 'secondary'}>
-                            {run.completed || 'pending'}
+                          <Badge variant={run.completed === "completed" ? "default" : "secondary"}>
+                            {run.completed || "pending"}
                           </Badge>
                         </TableCell>
-                        <TableCell>{run.completion_date ? new Date(run.completion_date).toLocaleDateString() : "-"}</TableCell>
+                        <TableCell>
+                          {run.completion_date ? new Date(run.completion_date).toLocaleDateString() : "-"}
+                        </TableCell>
                         <TableCell className="text-center">
                           <div className="flex items-center justify-center gap-1">
                             <Button
@@ -215,30 +260,34 @@ const Runs = () => {
                             >
                               <Edit className="h-4 w-4" />
                             </Button>
-                            <AlertDialog>
-                              <AlertDialogTrigger asChild>
-                                <Button size="sm" variant="outline" className="text-destructive hover:text-destructive">
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent>
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>Delete Run</AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    Are you sure you want to delete this run for <strong>{run.service_id}</strong>? This action cannot be undone.
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                  <AlertDialogAction
-                                    onClick={() => handleDelete(run.id)}
-                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                                  >
-                                    Delete
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
+                            {/* Only admins can delete runs */}
+                            {!isTechnician && (
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button size="sm" variant="outline" className="text-destructive hover:text-destructive">
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>Delete Run</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      Are you sure you want to delete this run for{" "}
+                                      <strong>{run.service_id}</strong>? This action cannot be undone.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction
+                                      onClick={() => handleDelete(run.id)}
+                                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                    >
+                                      Delete
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            )}
                           </div>
                         </TableCell>
                       </TableRow>
