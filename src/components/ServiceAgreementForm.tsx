@@ -313,6 +313,12 @@ export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementF
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {customer?.site_name && (
+              <div className="p-3 bg-muted rounded-md">
+                <p className="text-xs text-muted-foreground">Customer</p>
+                <p className="font-semibold text-base">{customer.site_name}</p>
+              </div>
+            )}
             <FormField
               control={form.control}
               name="service_id"
