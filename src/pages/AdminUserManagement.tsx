@@ -210,6 +210,20 @@ const AdminUserManagement = () => {
                 />
               </div>
 
+              <div className="space-y-2">
+                <label htmlFor="username" className="text-sm font-medium">
+                  Technician Name <span className="text-muted-foreground font-normal">(must match name in Runs)</span>
+                </label>
+                <Input
+                  id="username"
+                  type="text"
+                  placeholder="e.g. Lynessa, Amanda..."
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  disabled={loading}
+                />
+              </div>
+
               <div className="space-y-3">
                 <label className="text-sm font-medium">Role</label>
                 <RadioGroup 
