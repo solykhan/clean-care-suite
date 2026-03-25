@@ -236,7 +236,7 @@ const Runs = () => {
                     filteredRuns.map((run) => (
                       <TableRow key={run.id} className="hover:bg-muted/30">
                         <TableCell className="font-medium">{run.service_id}</TableCell>
-                        <TableCell>{run.clients || "-"}</TableCell>
+                        <TableCell className="font-bold text-primary">{run.clients || "-"}</TableCell>
                         <TableCell>{run.suburb || "-"}</TableCell>
                         <TableCell>{run.weeks || "-"}</TableCell>
                         <TableCell>{run.week_day || "-"}</TableCell>
