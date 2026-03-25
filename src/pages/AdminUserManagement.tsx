@@ -193,6 +193,20 @@ const AdminUserManagement = () => {
                 />
               </div>
 
+              <div className="space-y-2">
+                <label htmlFor="password" className="text-sm font-medium">
+                  Password
+                </label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Min. 6 characters"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={loading}
+                />
+              </div>
+
               <div className="space-y-3">
                 <label className="text-sm font-medium">Role</label>
                 <RadioGroup 
@@ -212,7 +226,11 @@ const AdminUserManagement = () => {
               </div>
 
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Creating User..." : "Create User"}
+                {loading ? (
+                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Creating User...</>
+                ) : (
+                  "Create User"
+                )}
               </Button>
             </form>
           </CardContent>
