@@ -30,15 +30,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setRole(null);
       return;
     }
-    supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", user.id)
-      .single()
-      .then(({ data }) => {
+    const loadRole = async () => {
+      try {
+        const { data } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", user.id)
+          .single();
         setRole((data?.role as AppRole) ?? null);
-      })
-      .catch(() => setRole(null));
+      } catch {
+        setRole(null);
+      }
+    };
+    loadRole();
   }, [user?.id]);
 
   useEffect(() => {
