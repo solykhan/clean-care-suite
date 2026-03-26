@@ -157,14 +157,14 @@ const AdminDashboard = () => {
                 <CardContent className="space-y-4">
                   <Progress value={tech.pct} className="h-2" />
                   <div className="flex items-center justify-between text-sm">
-                    <div className="flex items-center gap-1.5">
-                      <CheckCircle className="h-4 w-4 text-green-500" />
-                      <span className="font-medium text-green-600">{tech.completed}</span>
+                  <div className="flex items-center gap-1.5">
+                      <CheckCircle className="h-4 w-4 text-primary" />
+                      <span className="font-medium text-primary">{tech.completed}</span>
                       <span className="text-muted-foreground">completed</span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <Clock className="h-4 w-4 text-orange-400" />
-                      <span className="font-medium text-orange-500">{tech.pending}</span>
+                      <Clock className="h-4 w-4 text-destructive/70" />
+                      <span className="font-medium text-destructive/80">{tech.pending}</span>
                       <span className="text-muted-foreground">pending</span>
                     </div>
                   </div>
