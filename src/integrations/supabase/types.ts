@@ -193,6 +193,36 @@ export type Database = {
         }
         Relationships: []
       }
+      invoices: {
+        Row: {
+          created_at: string
+          entry_date: string | null
+          id: string
+          inv_id: string
+          particulars: string | null
+          updated_at: string
+          user_date: string | null
+        }
+        Insert: {
+          created_at?: string
+          entry_date?: string | null
+          id?: string
+          inv_id: string
+          particulars?: string | null
+          updated_at?: string
+          user_date?: string | null
+        }
+        Update: {
+          created_at?: string
+          entry_date?: string | null
+          id?: string
+          inv_id?: string
+          particulars?: string | null
+          updated_at?: string
+          user_date?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
