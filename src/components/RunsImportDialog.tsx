@@ -15,7 +15,7 @@ import { Upload, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import * as XLSX from "xlsx";
+import { parseXLSX } from "@/lib/parseXLSX";
 
 const DATABASE_COLUMNS = [
   { value: "service_id", label: "Service ID (Required)" },
