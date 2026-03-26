@@ -161,6 +161,7 @@ const CustomerDetail = () => {
                   </AlertDialogContent>
                 </AlertDialog>
               </div>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="grid md:grid-cols-2 gap-6">
