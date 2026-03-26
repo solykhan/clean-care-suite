@@ -90,7 +90,7 @@ const Runs = () => {
 
       return matchesTechnician && matchesWeeks && matchesWeekDay && isNotCompleted && matchesSearch;
     });
-  }, [runs, technicianFilter, weeksFilter, weekDayFilter, isTechnician]);
+  }, [runs, technicianFilter, weeksFilter, weekDayFilter, isTechnician, searchTerm]);
 
   const uniqueTechnicians = useMemo(() => {
     if (!runs) return [];
