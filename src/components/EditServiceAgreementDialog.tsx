@@ -43,6 +43,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Pencil, Trash2, Plus } from "lucide-react";
+import { EditInvoiceDialog } from "@/components/EditInvoiceDialog";
 
 const formSchema = z.object({
   service_id: z.string().min(1, "Service ID is required"),
