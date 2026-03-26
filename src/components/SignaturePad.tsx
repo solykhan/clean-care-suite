@@ -23,7 +23,20 @@ export const SignaturePad = forwardRef<SignaturePadRef, SignaturePadProps>(
         sigCanvas.current?.clear();
       },
       toDataURL: () => {
-        return sigCanvas.current?.toDataURL() || "";
+        const dataUrl = sigCanvas.current?.toDataURL() || "";
+        // Validate signature: must be valid PNG data URL and under 100KB
+        if (dataUrl && dataUrl.startsWith('data:image/png;base64,')) {
+          const base64 = dataUrl.split(',')[1];
+          const sizeInBytes = (base64.length * 3) / 4;
+          if (sizeInBytes > 100000) {
+            console.warn('Signature exceeds 100KB limit');
+            return "";
+          }
+        } else if (dataUrl && !dataUrl.startsWith('data:image/png;base64,')) {
+          console.warn('Invalid signature format');
+          return "";
+        }
+        return dataUrl;
       },
       isEmpty: () => {
         return sigCanvas.current?.isEmpty() ?? true;
