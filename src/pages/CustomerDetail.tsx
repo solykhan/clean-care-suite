@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { ArrowLeft, Building2, Phone, MapPin, FileText, DollarSign, Trash2 } from "lucide-react";
 import { AddInvoiceDialog } from "@/components/AddInvoiceDialog";
+import { EditInvoiceDialog } from "@/components/EditInvoiceDialog";
 import { toast } from "sonner";
 import { ServiceAgreementForm } from "@/components/ServiceAgreementForm";
 import { EditServiceAgreementDialog } from "@/components/EditServiceAgreementDialog";
@@ -138,6 +139,7 @@ const CustomerDetail = () => {
                   defaultInvId={customer.service_id}
                   triggerLabel="Add Invoice"
                 />
+                <EditInvoiceDialog serviceId={customer.service_id} />
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button variant="destructive" size="sm" className="gap-2">
