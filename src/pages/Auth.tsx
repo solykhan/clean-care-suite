@@ -33,6 +33,8 @@ const Auth = () => {
 
     if (userRole?.role === "technician") {
       navigate("/technician-dashboard");
+    } else if (userRole?.role === "admin") {
+      navigate("/admin/dashboard");
     } else {
       navigate("/");
     }
