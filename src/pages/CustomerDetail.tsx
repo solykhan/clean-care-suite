@@ -139,6 +139,7 @@ const CustomerDetail = () => {
                   defaultInvId={customer.service_id}
                   triggerLabel="Add Invoice"
                 />
+                <EditInvoiceDialog serviceId={customer.service_id} />
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button variant="destructive" size="sm" className="gap-2">
