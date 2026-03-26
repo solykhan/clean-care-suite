@@ -154,7 +154,16 @@ const Runs = () => {
           </div>
 
           <div className="flex flex-col gap-2 items-start">
-            {/* Technician filter only for admins */}
+            {/* Search by suburb or client */}
+            <div className="relative w-64">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search suburb or client..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
             {!isTechnician && (
               <div>
                 <Select value={technicianFilter} onValueChange={setTechnicianFilter}>
