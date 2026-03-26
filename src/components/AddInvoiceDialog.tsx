@@ -75,12 +75,17 @@ export function AddInvoiceDialog({ defaultInvId, triggerLabel }: AddInvoiceDialo
     }
   };
 
+  const handleOpenChange = (val: boolean) => {
+    if (val) form.reset({ inv_id: defaultInvId ?? "", particulars: "" });
+    setOpen(val);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button>
           <Plus className="h-4 w-4 mr-2" />
-          Add Invoice
+          {triggerLabel ?? "Add Invoice"}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-md">
