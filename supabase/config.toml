@@ -1,7 +1,7 @@
 project_id = "pkkcaknnktqevvlydjna"
 
 [functions.ai-map-columns]
-verify_jwt = false
+verify_jwt = true
 
 [functions.check-user-exists]
 verify_jwt = false

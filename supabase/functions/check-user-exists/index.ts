@@ -47,9 +47,8 @@ serve(async (req) => {
     );
   } catch (error) {
     console.error('Error in check-user-exists:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return new Response(
-      JSON.stringify({ exists: false, error: errorMessage }),
+      JSON.stringify({ exists: false, error: 'An error occurred while processing your request' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
