@@ -49,7 +49,7 @@ const App = () => (
               <Route path="/customers/:id" element={<AdminRoute><CustomerDetail /></AdminRoute>} />
               <Route path="/service-agreements" element={<AdminRoute><ServiceAgreements /></AdminRoute>} />
               <Route path="/customer-service-form" element={<AdminRoute><CustomerServiceAgreementForm /></AdminRoute>} />
-              <Route path="/customer-service-report" element={<AdminRoute><CustomerServiceReportForm /></AdminRoute>} />
+              <Route path="/customer-service-report" element={<TechnicianRoute><CustomerServiceReportForm /></TechnicianRoute>} />
               <Route path="/service-reports" element={<AdminRoute><ServiceReports /></AdminRoute>} />
               <Route path="/service-report/:id" element={<AdminRoute><ServiceReportDetail /></AdminRoute>} />
               <Route path="/service-report/:id/edit" element={<AdminRoute><EditServiceReport /></AdminRoute>} />
