@@ -1,4 +1,4 @@
-import { Home, Building2, FileText, PlayCircle, ClipboardList, Gauge, Shield, Users, User } from "lucide-react";
+import { Home, Building2, FileText, PlayCircle, ClipboardList, Gauge, Shield, Users, User, Receipt } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { LogoutButton } from "@/components/LogoutButton";
 import { useState, useEffect } from "react";
@@ -149,6 +149,14 @@ export function AppSidebar() {
                     <NavLink to="/admin/users">
                       <Users className="h-4 w-4" />
                       <span>User Management</span>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={currentPath === "/invoices"}>
+                    <NavLink to="/invoices">
+                      <Receipt className="h-4 w-4" />
+                      <span>Invoices</span>
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
