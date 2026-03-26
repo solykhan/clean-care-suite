@@ -39,14 +39,19 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-export function AddInvoiceDialog() {
+interface AddInvoiceDialogProps {
+  defaultInvId?: string;
+  triggerLabel?: string;
+}
+
+export function AddInvoiceDialog({ defaultInvId, triggerLabel }: AddInvoiceDialogProps = {}) {
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const queryClient = useQueryClient();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { inv_id: "", particulars: "" },
+    defaultValues: { inv_id: defaultInvId ?? "", particulars: "" },
   });
 
   const onSubmit = async (values: FormValues) => {
@@ -70,12 +75,17 @@ export function AddInvoiceDialog() {
     }
   };
 
+  const handleOpenChange = (val: boolean) => {
+    if (val) form.reset({ inv_id: defaultInvId ?? "", particulars: "" });
+    setOpen(val);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button>
           <Plus className="h-4 w-4 mr-2" />
-          Add Invoice
+          {triggerLabel ?? "Add Invoice"}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-md">
