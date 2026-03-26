@@ -24,6 +24,7 @@ import EditServiceReport from "./pages/EditServiceReport";
 import TechnicianDashboard from "./pages/TechnicianDashboard";
 import AdminUserManagement from "./pages/AdminUserManagement";
 import AdminDashboard from "./pages/AdminDashboard";
+import Invoices from "./pages/Invoices";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
