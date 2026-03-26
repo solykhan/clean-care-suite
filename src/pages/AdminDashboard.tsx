@@ -145,34 +145,39 @@ const AdminDashboard = () => {
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {technicianStats.map((tech) => (
               <Card key={tech.name} className="hover:shadow-md transition-shadow">
-                <CardHeader className="flex flex-row items-center gap-3 pb-3">
+                <CardHeader className="flex flex-row items-center gap-3 pb-2">
                   <div className="p-2 rounded-full bg-primary/10">
                     <User className="h-4 w-4 text-primary" />
                   </div>
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <CardTitle className="text-base truncate">{tech.name || '—'}</CardTitle>
-                    <CardDescription>{tech.total} total run{tech.total !== 1 ? 's' : ''}</CardDescription>
+                    <div className="flex items-center justify-between mt-0.5">
+                      <CardDescription>{tech.total} total run{tech.total !== 1 ? 's' : ''}</CardDescription>
+                      <Badge variant={tech.pct === 100 ? "default" : tech.pct >= 50 ? "secondary" : "outline"} className="text-xs">
+                        {tech.pct}% done
+                      </Badge>
+                    </div>
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <Progress value={tech.pct} className="h-2" />
-                  <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-1.5">
-                      <CheckCircle className="h-4 w-4 text-primary" />
-                      <span className="font-medium text-primary">{tech.completed}</span>
-                      <span className="text-muted-foreground">completed</span>
+                <CardContent className="space-y-3">
+                  {/* Big stat numbers */}
+                  <div className="grid grid-cols-2 divide-x divide-border rounded-lg border bg-muted/30">
+                    <div className="flex flex-col items-center py-3 px-2">
+                      <div className="flex items-center gap-1 mb-1">
+                        <CheckCircle className="h-3.5 w-3.5 text-primary" />
+                        <span className="text-xs text-muted-foreground">Completed</span>
+                      </div>
+                      <span className="text-3xl font-bold text-primary">{tech.completed}</span>
                     </div>
-                    <div className="flex items-center gap-1.5">
-                      <Clock className="h-4 w-4 text-destructive/70" />
-                      <span className="font-medium text-destructive/80">{tech.pending}</span>
-                      <span className="text-muted-foreground">pending</span>
+                    <div className="flex flex-col items-center py-3 px-2">
+                      <div className="flex items-center gap-1 mb-1">
+                        <Clock className="h-3.5 w-3.5 text-destructive/70" />
+                        <span className="text-xs text-muted-foreground">Pending</span>
+                      </div>
+                      <span className="text-3xl font-bold text-destructive/80">{tech.pending}</span>
                     </div>
                   </div>
-                  <div className="flex justify-end">
-                    <Badge variant={tech.pct === 100 ? "default" : tech.pct >= 50 ? "secondary" : "outline"}>
-                      {tech.pct}% done
-                    </Badge>
-                  </div>
+                  <Progress value={tech.pct} className="h-1.5" />
                 </CardContent>
               </Card>
             ))}
