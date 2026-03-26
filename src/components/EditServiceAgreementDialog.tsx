@@ -43,6 +43,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Pencil, Trash2, Plus } from "lucide-react";
+import { EditInvoiceDialog } from "@/components/EditInvoiceDialog";
 
 const formSchema = z.object({
   service_id: z.string().min(1, "Service ID is required"),
@@ -1002,7 +1003,8 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
                 </AlertDialogContent>
               </AlertDialog>
               
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-wrap">
+                <EditInvoiceDialog serviceId={agreement.service_id} />
                 <Button
                   type="button"
                   variant="secondary"
