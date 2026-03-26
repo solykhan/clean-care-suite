@@ -15,7 +15,7 @@ import { Upload, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import * as XLSX from "xlsx";
+import { parseXLSX } from "@/lib/parseXLSX";
 
 const DATABASE_COLUMNS = [
   { value: "service_id", label: "Service ID (Required)" },
@@ -69,23 +69,6 @@ export function CustomerImportDialog() {
     return { headers, data };
   };
 
-  const parseXLSX = async (file: File) => {
-    const buffer = await file.arrayBuffer();
-    const workbook = XLSX.read(buffer, { type: "array" });
-    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-    const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 }) as any[][];
-    
-    const headers = jsonData[0].map((h: any) => String(h).trim());
-    const data = jsonData.slice(1).map(row => {
-      const obj: any = {};
-      headers.forEach((header, index) => {
-        obj[header] = row[index] ? String(row[index]).trim() : "";
-      });
-      return obj;
-    });
-    
-    return { headers, data };
-  };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
