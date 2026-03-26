@@ -51,8 +51,19 @@ export function InvoiceImportDialog() {
 
   const convertDate = (value: any): string | null => {
     if (!value) return null;
-    if (typeof value === "string" && value.includes("-")) return value;
-    const num = Number(value);
+    const str = String(value).trim();
+
+    // Already ISO format YYYY-MM-DD (produced by parseXLSX for Date cells)
+    if (/^\d{4}-\d{2}-\d{2}/.test(str)) return str.substring(0, 10);
+
+    // DD/MM/YYYY or MM/DD/YYYY slash formats
+    if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(str)) {
+      const [d, m, y] = str.split("/");
+      return `${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
+    }
+
+    // Excel serial number fallback
+    const num = Number(str);
     if (!isNaN(num) && num > 0) {
       const epoch = new Date(1899, 11, 30);
       const d = new Date(epoch.getTime() + num * 86400000);
