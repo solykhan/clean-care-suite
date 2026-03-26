@@ -83,8 +83,12 @@ const Runs = () => {
       const matchesWeeks = weeksFilter === "all" || run.weeks === weeksFilter;
       const matchesWeekDay = weekDayFilter === "all" || run.week_day === weekDayFilter;
       const isNotCompleted = run.completed !== "completed";
+      const matchesSearch =
+        searchTerm === "" ||
+        run.suburb?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        run.clients?.toLowerCase().includes(searchTerm.toLowerCase());
 
-      return matchesTechnician && matchesWeeks && matchesWeekDay && isNotCompleted;
+      return matchesTechnician && matchesWeeks && matchesWeekDay && isNotCompleted && matchesSearch;
     });
   }, [runs, technicianFilter, weeksFilter, weekDayFilter, isTechnician]);
 
