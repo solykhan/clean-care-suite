@@ -22,14 +22,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [roleLoading, setRoleLoading] = useState(true);
   const [role, setRole] = useState<AppRole>(null);
 
-  // Fetch role separately whenever user changes — never inside the auth callback
+  // Fetch role whenever user changes; keep loading true until role is resolved
   useEffect(() => {
     if (!user) {
       setRole(null);
+      setRoleLoading(false);
       return;
     }
+    setRoleLoading(true);
     const loadRole = async () => {
       try {
         const { data } = await supabase
@@ -40,24 +43,26 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setRole((data?.role as AppRole) ?? null);
       } catch {
         setRole(null);
+      } finally {
+        setRoleLoading(false);
       }
     };
     loadRole();
   }, [user?.id]);
 
   useEffect(() => {
-    // Get the initial session first
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
+      if (!session?.user) setRoleLoading(false);
       setLoading(false);
     });
 
-    // Then listen for subsequent auth changes (sign in / sign out)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
+        if (!session?.user) setRoleLoading(false);
         setLoading(false);
       }
     );
