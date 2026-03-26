@@ -29,7 +29,7 @@ export const AdminRoute = ({ children }: { children: React.ReactNode }) => {
   }
 
   if (!isAdmin) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/technician-dashboard" replace />;
   }
 
   return <>{children}</>;
