@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { ArrowLeft, Building2, Phone, MapPin, FileText, DollarSign, Trash2 } from "lucide-react";
+import { AddInvoiceDialog } from "@/components/AddInvoiceDialog";
 import { toast } from "sonner";
 import { ServiceAgreementForm } from "@/components/ServiceAgreementForm";
 import { EditServiceAgreementDialog } from "@/components/EditServiceAgreementDialog";

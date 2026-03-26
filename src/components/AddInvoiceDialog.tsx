@@ -39,14 +39,19 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-export function AddInvoiceDialog() {
+interface AddInvoiceDialogProps {
+  defaultInvId?: string;
+  triggerLabel?: string;
+}
+
+export function AddInvoiceDialog({ defaultInvId, triggerLabel }: AddInvoiceDialogProps = {}) {
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const queryClient = useQueryClient();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { inv_id: "", particulars: "" },
+    defaultValues: { inv_id: defaultInvId ?? "", particulars: "" },
   });
 
   const onSubmit = async (values: FormValues) => {
