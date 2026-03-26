@@ -2,54 +2,77 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, UserCheck, UserPlus } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Users, UserCheck, UserPlus, CheckCircle, Clock, User } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const AdminDashboard = () => {
-  const { data: stats, isLoading, error } = useQuery({
+  const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: ['userStats'],
     queryFn: async () => {
       const { data, error } = await supabase.functions.invoke('get-user-stats');
-
-      if (error) {
-        console.error('Error fetching user stats:', error);
-        throw error;
-      }
-
-      return data as {
-        totalUsers: number;
-        activeTechnicians: number;
-        recentSignups: number;
-      };
+      if (error) throw error;
+      return data as { totalUsers: number; activeTechnicians: number; recentSignups: number };
     },
   });
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
+  // Fetch all technician profiles
+  const { data: technicianProfiles, isLoading: profilesLoading } = useQuery({
+    queryKey: ['technicianProfiles'],
+    queryFn: async () => {
+      const { data: roles, error: rolesError } = await supabase
+        .from('user_roles')
+        .select('user_id')
+        .eq('role', 'technician');
+      if (rolesError) throw rolesError;
 
-  if (error) {
-    return (
-      <div className="container mx-auto p-6">
-        <div className="text-destructive">
-          Failed to load statistics. Please try again later.
-        </div>
-      </div>
+      const userIds = roles?.map(r => r.user_id) ?? [];
+      if (userIds.length === 0) return [];
+
+      const { data: profiles, error: profilesError } = await supabase
+        .from('profiles')
+        .select('id, username')
+        .in('id', userIds);
+      if (profilesError) throw profilesError;
+
+      return profiles ?? [];
+    },
+  });
+
+  // Fetch all runs
+  const { data: allRuns, isLoading: runsLoading } = useQuery({
+    queryKey: ['allRunsForDashboard'],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('runs').select('id, technicians, completed');
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
+  const isLoading = statsLoading || profilesLoading || runsLoading;
+
+  // Build per-technician run stats
+  const technicianStats = (technicianProfiles ?? []).map((profile) => {
+    const name = profile.username ?? '';
+    const myRuns = (allRuns ?? []).filter(
+      (r) => r.technicians && r.technicians.toLowerCase().includes(name.toLowerCase())
     );
-  }
+    const completed = myRuns.filter((r) => r.completed === 'completed').length;
+    const pending = myRuns.filter((r) => r.completed !== 'completed').length;
+    const total = myRuns.length;
+    const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+    return { name, completed, pending, total, pct };
+  });
 
   return (
     <div className="container mx-auto p-6 space-y-6">
       <div className="space-y-2">
         <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-        <p className="text-muted-foreground">
-          Overview of users and system statistics
-        </p>
+        <p className="text-muted-foreground">Overview of users and system statistics</p>
       </div>
 
+      {/* Summary stats */}
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -57,10 +80,10 @@ const AdminDashboard = () => {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats?.totalUsers || 0}</div>
-            <p className="text-xs text-muted-foreground">
-              All registered users in the system
-            </p>
+            {statsLoading ? <Skeleton className="h-8 w-16" /> : (
+              <div className="text-2xl font-bold">{stats?.totalUsers || 0}</div>
+            )}
+            <p className="text-xs text-muted-foreground">All registered users in the system</p>
           </CardContent>
         </Card>
 
@@ -70,10 +93,10 @@ const AdminDashboard = () => {
             <UserCheck className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats?.activeTechnicians || 0}</div>
-            <p className="text-xs text-muted-foreground">
-              Users with technician role
-            </p>
+            {statsLoading ? <Skeleton className="h-8 w-16" /> : (
+              <div className="text-2xl font-bold">{stats?.activeTechnicians || 0}</div>
+            )}
+            <p className="text-xs text-muted-foreground">Users with technician role</p>
           </CardContent>
         </Card>
 
@@ -83,14 +106,81 @@ const AdminDashboard = () => {
             <UserPlus className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats?.recentSignups || 0}</div>
-            <p className="text-xs text-muted-foreground">
-              New users in the last 7 days
-            </p>
+            {statsLoading ? <Skeleton className="h-8 w-16" /> : (
+              <div className="text-2xl font-bold">{stats?.recentSignups || 0}</div>
+            )}
+            <p className="text-xs text-muted-foreground">New users in the last 7 days</p>
           </CardContent>
         </Card>
       </div>
 
+      {/* Technician run cards */}
+      <div className="space-y-3">
+        <div>
+          <h2 className="text-xl font-semibold">Technician Run Overview</h2>
+          <p className="text-sm text-muted-foreground">Completed vs pending runs per technician</p>
+        </div>
+
+        {isLoading ? (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {[1, 2, 3].map((i) => (
+              <Card key={i}>
+                <CardHeader className="pb-3">
+                  <Skeleton className="h-5 w-32" />
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <Skeleton className="h-3 w-full" />
+                  <Skeleton className="h-4 w-24" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : technicianStats.length === 0 ? (
+          <Card>
+            <CardContent className="flex items-center justify-center py-10 text-muted-foreground">
+              No technicians found.
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {technicianStats.map((tech) => (
+              <Card key={tech.name} className="hover:shadow-md transition-shadow">
+                <CardHeader className="flex flex-row items-center gap-3 pb-3">
+                  <div className="p-2 rounded-full bg-primary/10">
+                    <User className="h-4 w-4 text-primary" />
+                  </div>
+                  <div className="min-w-0">
+                    <CardTitle className="text-base truncate">{tech.name || '—'}</CardTitle>
+                    <CardDescription>{tech.total} total run{tech.total !== 1 ? 's' : ''}</CardDescription>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <Progress value={tech.pct} className="h-2" />
+                  <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-center gap-1.5">
+                      <CheckCircle className="h-4 w-4 text-primary" />
+                      <span className="font-medium text-primary">{tech.completed}</span>
+                      <span className="text-muted-foreground">completed</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <Clock className="h-4 w-4 text-destructive/70" />
+                      <span className="font-medium text-destructive/80">{tech.pending}</span>
+                      <span className="text-muted-foreground">pending</span>
+                    </div>
+                  </div>
+                  <div className="flex justify-end">
+                    <Badge variant={tech.pct === 100 ? "default" : tech.pct >= 50 ? "secondary" : "outline"}>
+                      {tech.pct}% done
+                    </Badge>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Quick Actions */}
       <Card>
         <CardHeader>
           <CardTitle>Quick Actions</CardTitle>
