@@ -83,7 +83,7 @@ export default function Invoices() {
   const formatDate = (val: string | null) => {
     if (!val) return "—";
     try {
-      return format(new Date(val), "dd/MM/yyyy");
+      return format(new Date(val), "dd-MM-yyyy");
     } catch {
       return val;
     }
