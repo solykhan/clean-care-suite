@@ -256,14 +256,14 @@ export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementF
     },
   });
 
-  // Auto-calculate total: (unit_price * CPI) + unit_price
+  // Auto-calculate total: unit_price * cpi + unit_price
   useEffect(() => {
     const subscription = form.watch((values, { name }) => {
       if (name !== "unit_price" && name !== "cpi") return;
       const up = parseFloat(values.unit_price || "");
       const cpi = parseFloat(values.cpi || "");
       if (!isNaN(up) && !isNaN(cpi)) {
-        form.setValue("total", ((up * cpi) + up).toFixed(2));
+        form.setValue("total", (up * cpi + up).toFixed(2));
       } else {
         form.setValue("total", "");
       }
