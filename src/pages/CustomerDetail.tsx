@@ -133,7 +133,12 @@ const CustomerDetail = () => {
                   )}
                 </div>
               </div>
-              <AlertDialog>
+              <div className="flex items-center gap-2">
+                <AddInvoiceDialog
+                  defaultInvId={customer.service_id}
+                  triggerLabel="Add Invoice"
+                />
+                <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button variant="destructive" size="sm" className="gap-2">
                     <Trash2 className="h-4 w-4" />
