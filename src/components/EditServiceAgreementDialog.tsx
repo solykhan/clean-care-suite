@@ -1003,7 +1003,8 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
                 </AlertDialogContent>
               </AlertDialog>
               
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-wrap">
+                <EditInvoiceDialog serviceId={agreement.service_id} />
                 <Button
                   type="button"
                   variant="secondary"
