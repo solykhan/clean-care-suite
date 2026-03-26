@@ -10,6 +10,8 @@ import { RunsImportDialog } from "@/components/RunsImportDialog";
 import { AddRunDialog } from "@/components/AddRunDialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState, useMemo } from "react";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -34,6 +36,7 @@ const Runs = () => {
   const [technicianFilter, setTechnicianFilter] = useState<string>("all");
   const [weeksFilter, setWeeksFilter] = useState<string>("all");
   const [weekDayFilter, setWeekDayFilter] = useState<string>("all");
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   // Fetch logged-in user's profile (to get their technician name)
   const { data: profile } = useQuery({
@@ -80,10 +83,14 @@ const Runs = () => {
       const matchesWeeks = weeksFilter === "all" || run.weeks === weeksFilter;
       const matchesWeekDay = weekDayFilter === "all" || run.week_day === weekDayFilter;
       const isNotCompleted = run.completed !== "completed";
+      const matchesSearch =
+        searchTerm === "" ||
+        run.suburb?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        run.clients?.toLowerCase().includes(searchTerm.toLowerCase());
 
-      return matchesTechnician && matchesWeeks && matchesWeekDay && isNotCompleted;
+      return matchesTechnician && matchesWeeks && matchesWeekDay && isNotCompleted && matchesSearch;
     });
-  }, [runs, technicianFilter, weeksFilter, weekDayFilter, isTechnician]);
+  }, [runs, technicianFilter, weeksFilter, weekDayFilter, isTechnician, searchTerm]);
 
   const uniqueTechnicians = useMemo(() => {
     if (!runs) return [];
@@ -147,7 +154,16 @@ const Runs = () => {
           </div>
 
           <div className="flex flex-col gap-2 items-start">
-            {/* Technician filter only for admins */}
+            {/* Search by suburb or client */}
+            <div className="relative w-64">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search suburb or client..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
             {!isTechnician && (
               <div>
                 <Select value={technicianFilter} onValueChange={setTechnicianFilter}>
