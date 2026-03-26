@@ -46,7 +46,7 @@ const RunsCalendar = () => {
     return runs.filter((run) => {
       const matchesTechnician = technicianFilter === "all" || run.technicians === technicianFilter;
       const matchesWeeks = weeksFilter === "all" || run.weeks === weeksFilter;
-      return matchesTechnician && matchesWeeks && !run.completed;
+      return matchesTechnician && matchesWeeks && run.completed !== "completed";
     });
   }, [runs, technicianFilter, weeksFilter]);
 
