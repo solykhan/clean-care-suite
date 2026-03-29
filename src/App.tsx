@@ -58,6 +58,7 @@ const App = () => (
               <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
               <Route path="/admin/users" element={<AdminRoute><AdminUserManagement /></AdminRoute>} />
               <Route path="/invoices" element={<AdminRoute><Invoices /></AdminRoute>} />
+              <Route path="/customer-invoice-report" element={<AdminRoute><CustomerInvoiceReport /></AdminRoute>} />
 
               {/* Technician + Admin routes */}
               <Route path="/technician-dashboard" element={<TechnicianRoute><TechnicianDashboard /></TechnicianRoute>} />
