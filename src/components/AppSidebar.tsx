@@ -160,6 +160,14 @@ export function AppSidebar() {
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={currentPath === "/customer-invoice-report"}>
+                    <NavLink to="/customer-invoice-report">
+                      <FileBarChart className="h-4 w-4" />
+                      <span>Invoice Report</span>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
