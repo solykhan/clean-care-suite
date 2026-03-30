@@ -216,6 +216,7 @@ const Runs = () => {
               <Table>
                 <TableHeader>
                   <TableRow className="bg-muted/50">
+                    <TableHead className="font-bold text-center">Actions</TableHead>
                     <TableHead className="font-bold">Service ID</TableHead>
                     <TableHead className="font-bold">Clients</TableHead>
                     <TableHead className="font-bold">Suburb</TableHead>
@@ -226,7 +227,6 @@ const Runs = () => {
                     <TableHead className="font-bold">Technicians</TableHead>
                     <TableHead className="font-bold text-center">Completed</TableHead>
                     <TableHead className="font-bold">Completion Date</TableHead>
-                    <TableHead className="font-bold text-center">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -251,22 +251,6 @@ const Runs = () => {
                   ) : (
                     filteredRuns.map((run) => (
                       <TableRow key={run.id} className="hover:bg-muted/30">
-                        <TableCell className="font-medium">{run.service_id}</TableCell>
-                        <TableCell className="font-bold text-primary">{run.clients || "-"}</TableCell>
-                        <TableCell>{run.suburb || "-"}</TableCell>
-                        <TableCell>{run.weeks || "-"}</TableCell>
-                        <TableCell>{run.week_day || "-"}</TableCell>
-                        <TableCell>{run.products || "-"}</TableCell>
-                        <TableCell>{run.frequency || "-"}</TableCell>
-                        <TableCell>{run.technicians || "-"}</TableCell>
-                        <TableCell className="text-center">
-                          <Badge variant={run.completed === "completed" ? "default" : "secondary"}>
-                            {run.completed || "pending"}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          {run.completion_date ? new Date(run.completion_date).toLocaleDateString() : "-"}
-                        </TableCell>
                         <TableCell className="text-center">
                           <div className="flex items-center justify-center gap-1">
                             <Button
@@ -276,7 +260,6 @@ const Runs = () => {
                             >
                               <Edit className="h-4 w-4" />
                             </Button>
-                            {/* Only admins can delete runs */}
                             {!isTechnician && (
                               <AlertDialog>
                                 <AlertDialogTrigger asChild>
@@ -305,6 +288,22 @@ const Runs = () => {
                               </AlertDialog>
                             )}
                           </div>
+                        </TableCell>
+                        <TableCell className="font-medium">{run.service_id}</TableCell>
+                        <TableCell className="font-bold text-primary">{run.clients || "-"}</TableCell>
+                        <TableCell>{run.suburb || "-"}</TableCell>
+                        <TableCell>{run.weeks || "-"}</TableCell>
+                        <TableCell>{run.week_day || "-"}</TableCell>
+                        <TableCell>{run.products || "-"}</TableCell>
+                        <TableCell>{run.frequency || "-"}</TableCell>
+                        <TableCell>{run.technicians || "-"}</TableCell>
+                        <TableCell className="text-center">
+                          <Badge variant={run.completed === "completed" ? "default" : "secondary"}>
+                            {run.completed || "pending"}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          {run.completion_date ? new Date(run.completion_date).toLocaleDateString() : "-"}
                         </TableCell>
                       </TableRow>
                     ))
