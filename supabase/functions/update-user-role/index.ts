@@ -48,7 +48,7 @@ serve(async (req) => {
     if (checkError) {
       console.error('Error checking existing role:', checkError);
       return new Response(
-        JSON.stringify({ error: checkError.message }),
+        JSON.stringify({ error: 'Failed to update user role' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -63,7 +63,7 @@ serve(async (req) => {
       if (updateError) {
         console.error('Error updating role:', updateError);
         return new Response(
-          JSON.stringify({ error: updateError.message }),
+          JSON.stringify({ error: 'Failed to update user role' }),
           { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
@@ -76,7 +76,7 @@ serve(async (req) => {
       if (insertError) {
         console.error('Error inserting role:', insertError);
         return new Response(
-          JSON.stringify({ error: insertError.message }),
+          JSON.stringify({ error: 'Failed to update user role' }),
           { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
