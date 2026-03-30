@@ -48,7 +48,7 @@ serve(async (req) => {
     if (checkError) {
       console.error('Error checking existing role:', checkError);
       return new Response(
-        JSON.stringify({ error: checkError.message }),
+        JSON.stringify({ error: 'Failed to update user role' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
