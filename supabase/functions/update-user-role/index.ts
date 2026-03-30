@@ -76,7 +76,7 @@ serve(async (req) => {
       if (insertError) {
         console.error('Error inserting role:', insertError);
         return new Response(
-          JSON.stringify({ error: insertError.message }),
+          JSON.stringify({ error: 'Failed to update user role' }),
           { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
