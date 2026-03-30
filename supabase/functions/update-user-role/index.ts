@@ -63,7 +63,7 @@ serve(async (req) => {
       if (updateError) {
         console.error('Error updating role:', updateError);
         return new Response(
-          JSON.stringify({ error: updateError.message }),
+          JSON.stringify({ error: 'Failed to update user role' }),
           { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
