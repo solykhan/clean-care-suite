@@ -130,7 +130,7 @@ const EditServiceReport = () => {
 
   const updateReport = useMutation({
     mutationFn: async (data: FormData) => {
-      const { run_id, report_date, ...reportData } = data;
+      const { run_id, report_date, complete, ...reportData } = data;
       
       const officerSignatureData = officerSignaturePadRef.current?.toDataURL() || null;
       const techSignatureData = techSignaturePadRef.current?.toDataURL() || null;
@@ -140,6 +140,7 @@ const EditServiceReport = () => {
         .update({
           run_id,
           report_date: report_date.toISOString(),
+          complete: complete || "pending",
           ...reportData,
           s_officer_sig: officerSignatureData,
           tech_sig: techSignatureData,
