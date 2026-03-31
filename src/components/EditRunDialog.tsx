@@ -32,6 +32,7 @@ const runSchema = z.object({
   products: z.string().optional(),
   frequency: z.string().optional(),
   technicians: z.string().optional(),
+  work: z.string().optional(),
 });
 
 type RunFormValues = z.infer<typeof runSchema>;
