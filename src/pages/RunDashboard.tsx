@@ -63,6 +63,34 @@ const RunDashboard = () => {
     },
   });
 
+  const revertMutation = useMutation({
+    mutationFn: async (runIds: string[]) => {
+      const updates = runIds.map((id) => {
+        const run = runs?.find((r) => r.id === id);
+        if (!run || !run.transferred) return null;
+        return supabase
+          .from("runs")
+          .update({
+            technicians: run.original_technicians,
+            original_technicians: null,
+            transferred: false,
+          })
+          .eq("id", id);
+      });
+      const results = await Promise.all(updates.filter(Boolean));
+      const errors = results.filter((r) => r && r.error);
+      if (errors.length > 0) throw new Error("Some reverts failed");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["run-dashboard-runs"] });
+      setSelectedRuns(new Set());
+      toast.success("Runs reverted successfully");
+    },
+    onError: () => {
+      toast.error("Failed to revert runs");
+    },
+  });
+
   // Extract unique technician names
   const technicianNames = useMemo(() => {
     if (!runs) return [];
