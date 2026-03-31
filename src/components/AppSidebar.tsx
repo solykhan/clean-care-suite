@@ -1,4 +1,4 @@
-import { Home, Building2, FileText, PlayCircle, ClipboardList, Gauge, Shield, Users, User, Receipt, LayoutDashboard } from "lucide-react";
+import { Home, Building2, FileText, PlayCircle, ClipboardList, Gauge, Shield, Users, User, Receipt, FileBarChart, LayoutDashboard } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { LogoutButton } from "@/components/LogoutButton";
 import { useState, useEffect } from "react";
@@ -165,6 +165,14 @@ export function AppSidebar() {
                     <NavLink to="/invoices">
                       <Receipt className="h-4 w-4" />
                       <span>Invoices</span>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={currentPath === "/hytrack"}>
+                    <NavLink to="/hytrack">
+                      <FileBarChart className="h-4 w-4" />
+                      <span>HyTrack Form</span>
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
