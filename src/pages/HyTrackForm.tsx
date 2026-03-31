@@ -467,23 +467,23 @@ const HyTrackForm = () => {
             <Save className="h-3 w-3 mr-1" /> Save Agreements
           </Button>
         </div>
-        <div className="border rounded-lg overflow-x-auto">
-          <Table>
+        <div className="border rounded-lg overflow-hidden">
+          <Table className="table-fixed w-full">
             <TableHeader>
               <TableRow className="bg-muted/50 text-xs">
-                <TableHead className="text-xs py-2">ServiceID</TableHead>
-                <TableHead className="text-xs py-2">Products</TableHead>
-                <TableHead className="text-xs py-2">Service Frequency</TableHead>
-                <TableHead className="text-xs py-2">Status</TableHead>
-                <TableHead className="text-xs py-2">Site Locations</TableHead>
-                <TableHead className="text-xs py-2 text-center">Client Device</TableHead>
-                <TableHead className="text-xs py-2 text-center">CPM Device</TableHead>
-                <TableHead className="text-xs py-2 text-right">Unit Price</TableHead>
-                <TableHead className="text-xs py-2 text-right">CPM Price</TableHead>
-                <TableHead className="text-xs py-2 text-center">CPI</TableHead>
-                <TableHead className="text-xs py-2">Invoice Type</TableHead>
-                <TableHead className="text-xs py-2">Comments</TableHead>
-                <TableHead className="text-xs py-2 text-right">Total</TableHead>
+                <TableHead className="text-xs py-2 w-[5%]">ServiceID</TableHead>
+                <TableHead className="text-xs py-2 w-[15%]">Products</TableHead>
+                <TableHead className="text-xs py-2 w-[8%]">Frequency</TableHead>
+                <TableHead className="text-xs py-2 w-[5%]">Status</TableHead>
+                <TableHead className="text-xs py-2 w-[10%]">Site Locations</TableHead>
+                <TableHead className="text-xs py-2 w-[5%] text-center">Client Device</TableHead>
+                <TableHead className="text-xs py-2 w-[5%] text-center">CPM Device</TableHead>
+                <TableHead className="text-xs py-2 w-[7%] text-right">Unit Price</TableHead>
+                <TableHead className="text-xs py-2 w-[7%] text-right">CPM Price</TableHead>
+                <TableHead className="text-xs py-2 w-[5%] text-center">CPI</TableHead>
+                <TableHead className="text-xs py-2 w-[10%]">Invoice Type</TableHead>
+                <TableHead className="text-xs py-2 w-[13%]">Comments</TableHead>
+                <TableHead className="text-xs py-2 w-[5%] text-right">Total</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -502,9 +502,9 @@ const HyTrackForm = () => {
                   return (
                     <TableRow key={a.id} className={i % 2 === 0 ? "" : "bg-muted/20"}>
                       <TableCell className="font-mono font-semibold text-xs py-1">{a.service_id}</TableCell>
-                      <TableCell className="py-1 min-w-[200px]">
+                      <TableCell className="py-1">
                         <Select value={getAgreementValue(a, "products") || ""} onValueChange={(v) => setAgreementValue(a.id, "products", v)}>
-                          <SelectTrigger className="h-auto min-h-7 text-xs w-52 whitespace-normal text-left [&>span]:line-clamp-none [&>span]:whitespace-normal"><SelectValue placeholder="Select product" /></SelectTrigger>
+                          <SelectTrigger className="h-auto min-h-7 text-xs whitespace-normal text-left [&>span]:line-clamp-none [&>span]:whitespace-normal"><SelectValue placeholder="Select product" /></SelectTrigger>
                           <SelectContent className="max-h-60 w-72">
                             {PRODUCT_OPTIONS.map((p) => (
                               <SelectItem key={p} value={p} className="whitespace-normal">{p}</SelectItem>
@@ -514,7 +514,7 @@ const HyTrackForm = () => {
                       </TableCell>
                       <TableCell className="py-1">
                         <Select value={getAgreementValue(a, "service_frequency") || ""} onValueChange={(v) => setAgreementValue(a.id, "service_frequency", v)}>
-                          <SelectTrigger className="h-7 text-xs w-28"><SelectValue /></SelectTrigger>
+                          <SelectTrigger className="h-7 text-xs"><SelectValue /></SelectTrigger>
                           <SelectContent>
                             {["MONTHLY", "BI-MONTHLY", "WEEKLY", "FORTNIGHTLY", "QUARTERLY", "ANNUALLY"].map((f) => (
                               <SelectItem key={f} value={f}>{f}</SelectItem>
@@ -524,7 +524,7 @@ const HyTrackForm = () => {
                       </TableCell>
                       <TableCell className="py-1">
                         <Select value={getAgreementValue(a, "service_active_inactive") || ""} onValueChange={(v) => setAgreementValue(a.id, "service_active_inactive", v)}>
-                          <SelectTrigger className="h-7 text-xs w-20"><SelectValue /></SelectTrigger>
+                          <SelectTrigger className="h-7 text-xs"><SelectValue /></SelectTrigger>
                           <SelectContent>
                             <SelectItem value="ACT">ACT</SelectItem>
                             <SelectItem value="INA">INA</SelectItem>
@@ -532,26 +532,26 @@ const HyTrackForm = () => {
                         </Select>
                       </TableCell>
                       <TableCell className="py-1">
-                        <Input className="h-7 text-xs border-border w-40" value={getAgreementValue(a, "areas_covered")} onChange={(e) => setAgreementValue(a.id, "areas_covered", e.target.value)} />
+                        <Input className="h-7 text-xs border-border w-full" value={getAgreementValue(a, "areas_covered")} onChange={(e) => setAgreementValue(a.id, "areas_covered", e.target.value)} />
                       </TableCell>
                       <TableCell className="py-1 text-center">
                         <span className="text-xs text-muted-foreground">0</span>
                       </TableCell>
                       <TableCell className="py-1 text-center">
-                        <Input className="h-7 text-xs border-border text-center w-14 mx-auto" value={getAgreementValue(a, "cpm_device_onsite") || "0"} onChange={(e) => setAgreementValue(a.id, "cpm_device_onsite", e.target.value)} />
+                        <Input className="h-7 text-xs border-border text-center w-full" value={getAgreementValue(a, "cpm_device_onsite") || "0"} onChange={(e) => setAgreementValue(a.id, "cpm_device_onsite", e.target.value)} />
                       </TableCell>
                       <TableCell className="py-1">
-                        <Input className="h-7 text-xs border-border text-right w-20 ml-auto bg-yellow-100" value={getAgreementValue(a, "unit_price")} onChange={(e) => setAgreementValue(a.id, "unit_price", e.target.value)} />
+                        <Input className="h-7 text-xs border-border text-right w-full bg-yellow-100" value={getAgreementValue(a, "unit_price")} onChange={(e) => setAgreementValue(a.id, "unit_price", e.target.value)} />
                       </TableCell>
                       <TableCell className="py-1 text-right">
                         <span className="text-xs font-medium">${cpmPrice.toFixed(2)}</span>
                       </TableCell>
                       <TableCell className="py-1 text-center">
-                        <Input className="h-7 text-xs border-border text-center w-16 mx-auto" value={getAgreementValue(a, "cpi")} onChange={(e) => setAgreementValue(a.id, "cpi", e.target.value)} />
+                        <Input className="h-7 text-xs border-border text-center w-full" value={getAgreementValue(a, "cpi")} onChange={(e) => setAgreementValue(a.id, "cpi", e.target.value)} />
                       </TableCell>
                       <TableCell className="py-1">
                         <Select value={getAgreementValue(a, "invoice_type") || ""} onValueChange={(v) => setAgreementValue(a.id, "invoice_type", v)}>
-                          <SelectTrigger className="h-7 text-xs w-28"><SelectValue /></SelectTrigger>
+                          <SelectTrigger className="h-7 text-xs"><SelectValue /></SelectTrigger>
                           <SelectContent>
                             {["BI MONTHLY", "MONTHLY", "QUARTERLY", "6 WEEKLY", "WEEKLY", "FORTNIGHTLY", "6 MONTHLY", "ANNUALLY", "TWICE A WEEK", "PURCHASE ONLY", "RENTAL"].map((t) => (
                               <SelectItem key={t} value={t}>{t}</SelectItem>
@@ -560,7 +560,7 @@ const HyTrackForm = () => {
                         </Select>
                       </TableCell>
                       <TableCell className="py-1">
-                        <Input className="h-7 text-xs border-border w-32" value={getAgreementValue(a, "comments")} onChange={(e) => setAgreementValue(a.id, "comments", e.target.value)} />
+                        <Input className="h-7 text-xs border-border w-full" value={getAgreementValue(a, "comments")} onChange={(e) => setAgreementValue(a.id, "comments", e.target.value)} />
                       </TableCell>
                       <TableCell className="py-1 text-right">
                         <span className="text-xs font-medium">{total.toFixed(2)}</span>
