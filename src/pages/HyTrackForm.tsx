@@ -507,7 +507,6 @@ const HyTrackForm = () => {
               <Save className="h-3 w-3 mr-1" /> Save Agreements
             </Button>
           </div>
-          </Button>
         </div>
         <div className="border rounded-lg overflow-hidden">
           <Table className="table-fixed w-full">
