@@ -32,6 +32,7 @@ const runSchema = z.object({
   products: z.string().optional(),
   frequency: z.string().optional(),
   technicians: z.string().optional(),
+  work: z.string().optional(),
 });
 
 type RunFormValues = z.infer<typeof runSchema>;
@@ -57,6 +58,7 @@ export function EditRunDialog({ run, open, onOpenChange }: EditRunDialogProps) {
       products: "",
       frequency: "",
       technicians: "",
+      work: "",
     },
   });
 
@@ -71,6 +73,7 @@ export function EditRunDialog({ run, open, onOpenChange }: EditRunDialogProps) {
         products: run.products || "",
         frequency: run.frequency || "",
         technicians: run.technicians || "",
+        work: (run as any).work || "",
       });
     }
   }, [run, open, form]);
@@ -90,7 +93,8 @@ export function EditRunDialog({ run, open, onOpenChange }: EditRunDialogProps) {
           products: values.products || null,
           frequency: values.frequency || null,
           technicians: values.technicians || null,
-        })
+          work: values.work || null,
+        } as any)
         .eq("id", run.id);
 
       if (error) throw error;
@@ -214,6 +218,19 @@ export function EditRunDialog({ run, open, onOpenChange }: EditRunDialogProps) {
                   <FormLabel>Products</FormLabel>
                   <FormControl>
                     <Input placeholder="Products" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="work"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Work</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Work details" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

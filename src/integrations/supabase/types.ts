@@ -264,6 +264,7 @@ export type Database = {
           updated_at: string | null
           week_day: string | null
           weeks: string | null
+          work: string | null
         }
         Insert: {
           clients?: string | null
@@ -281,6 +282,7 @@ export type Database = {
           updated_at?: string | null
           week_day?: string | null
           weeks?: string | null
+          work?: string | null
         }
         Update: {
           clients?: string | null
@@ -298,6 +300,7 @@ export type Database = {
           updated_at?: string | null
           week_day?: string | null
           weeks?: string | null
+          work?: string | null
         }
         Relationships: []
       }
