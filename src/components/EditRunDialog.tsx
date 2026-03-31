@@ -223,6 +223,19 @@ export function EditRunDialog({ run, open, onOpenChange }: EditRunDialogProps) {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="work"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Work</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Work details" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <div className="flex justify-end gap-2 pt-2">
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                 Cancel
