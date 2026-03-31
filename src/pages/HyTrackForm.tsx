@@ -514,7 +514,7 @@ const HyTrackForm = () => {
                       </TableCell>
                       <TableCell className="py-1">
                         <Select value={getAgreementValue(a, "service_frequency") || ""} onValueChange={(v) => setAgreementValue(a.id, "service_frequency", v)}>
-                          <SelectTrigger className="h-7 text-xs"><SelectValue /></SelectTrigger>
+                          <SelectTrigger className="h-auto min-h-7 text-xs whitespace-normal text-left [&>span]:line-clamp-none [&>span]:whitespace-normal"><SelectValue /></SelectTrigger>
                           <SelectContent>
                             {["MONTHLY", "BI-MONTHLY", "WEEKLY", "FORTNIGHTLY", "QUARTERLY", "ANNUALLY"].map((f) => (
                               <SelectItem key={f} value={f}>{f}</SelectItem>
@@ -524,7 +524,7 @@ const HyTrackForm = () => {
                       </TableCell>
                       <TableCell className="py-1">
                         <Select value={getAgreementValue(a, "service_active_inactive") || ""} onValueChange={(v) => setAgreementValue(a.id, "service_active_inactive", v)}>
-                          <SelectTrigger className="h-7 text-xs"><SelectValue /></SelectTrigger>
+                          <SelectTrigger className="h-auto min-h-7 text-xs whitespace-normal text-left [&>span]:line-clamp-none [&>span]:whitespace-normal"><SelectValue /></SelectTrigger>
                           <SelectContent>
                             <SelectItem value="ACT">ACT</SelectItem>
                             <SelectItem value="INA">INA</SelectItem>
@@ -532,7 +532,7 @@ const HyTrackForm = () => {
                         </Select>
                       </TableCell>
                       <TableCell className="py-1">
-                        <Input className="h-7 text-xs border-border w-full" value={getAgreementValue(a, "areas_covered")} onChange={(e) => setAgreementValue(a.id, "areas_covered", e.target.value)} />
+                        <Textarea className="text-xs border-border w-full min-h-7 resize-none overflow-hidden" rows={1} value={getAgreementValue(a, "areas_covered")} onChange={(e) => { setAgreementValue(a.id, "areas_covered", e.target.value); e.target.style.height = 'auto'; e.target.style.height = e.target.scrollHeight + 'px'; }} onFocus={(e) => { e.target.style.height = 'auto'; e.target.style.height = e.target.scrollHeight + 'px'; }} />
                       </TableCell>
                       <TableCell className="py-1 text-center">
                         <span className="text-xs text-muted-foreground">0</span>
@@ -544,14 +544,14 @@ const HyTrackForm = () => {
                         <Input className="h-7 text-xs border-border text-right w-full bg-yellow-100" value={getAgreementValue(a, "unit_price")} onChange={(e) => setAgreementValue(a.id, "unit_price", e.target.value)} />
                       </TableCell>
                       <TableCell className="py-1 text-right">
-                        <span className="text-xs font-medium">${cpmPrice.toFixed(2)}</span>
+                        <span className="text-xs font-medium whitespace-normal">${cpmPrice.toFixed(2)}</span>
                       </TableCell>
                       <TableCell className="py-1 text-center">
                         <Input className="h-7 text-xs border-border text-center w-full" value={getAgreementValue(a, "cpi")} onChange={(e) => setAgreementValue(a.id, "cpi", e.target.value)} />
                       </TableCell>
                       <TableCell className="py-1">
                         <Select value={getAgreementValue(a, "invoice_type") || ""} onValueChange={(v) => setAgreementValue(a.id, "invoice_type", v)}>
-                          <SelectTrigger className="h-7 text-xs"><SelectValue /></SelectTrigger>
+                          <SelectTrigger className="h-auto min-h-7 text-xs whitespace-normal text-left [&>span]:line-clamp-none [&>span]:whitespace-normal"><SelectValue /></SelectTrigger>
                           <SelectContent>
                             {["BI MONTHLY", "MONTHLY", "QUARTERLY", "6 WEEKLY", "WEEKLY", "FORTNIGHTLY", "6 MONTHLY", "ANNUALLY", "TWICE A WEEK", "PURCHASE ONLY", "RENTAL"].map((t) => (
                               <SelectItem key={t} value={t}>{t}</SelectItem>
@@ -560,7 +560,7 @@ const HyTrackForm = () => {
                         </Select>
                       </TableCell>
                       <TableCell className="py-1">
-                        <Input className="h-7 text-xs border-border w-full" value={getAgreementValue(a, "comments")} onChange={(e) => setAgreementValue(a.id, "comments", e.target.value)} />
+                        <Textarea className="text-xs border-border w-full min-h-7 resize-none overflow-hidden" rows={1} value={getAgreementValue(a, "comments")} onChange={(e) => { setAgreementValue(a.id, "comments", e.target.value); e.target.style.height = 'auto'; e.target.style.height = e.target.scrollHeight + 'px'; }} onFocus={(e) => { e.target.style.height = 'auto'; e.target.style.height = e.target.scrollHeight + 'px'; }} />
                       </TableCell>
                       <TableCell className="py-1 text-right">
                         <span className="text-xs font-medium">{total.toFixed(2)}</span>
