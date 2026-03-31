@@ -699,7 +699,7 @@ const HyTrackForm = () => {
       <div>
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">Invoice Details</h3>
-          <div className="flex gap-2">
+          <div className="flex gap-2 print:hidden">
             <Button size="sm" variant="outline" onClick={addNewInvoice}>
               <Plus className="h-3 w-3 mr-1" /> Add Entry
             </Button>
