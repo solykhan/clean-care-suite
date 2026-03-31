@@ -331,9 +331,9 @@ const RunDashboard = () => {
                             {run.technicians || "—"}
                           </span>
                           {isTransferred && run.original_technicians && (
-                            <span className="block text-xs text-muted-foreground">
-                              Originally: {run.original_technicians}
-                            </span>
+                            <Badge className="ml-2 bg-amber-100 text-amber-800 border-amber-300 hover:bg-amber-200">
+                              ↩ {run.original_technicians}
+                            </Badge>
                           )}
                         </TableCell>
                         <TableCell>{run.week_day || "—"}</TableCell>
