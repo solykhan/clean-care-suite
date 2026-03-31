@@ -419,13 +419,9 @@ const CustomerInvoiceReport = () => {
                         </td>
                         <td className="px-1 py-1 text-center">
                           <Input
-                            className="h-7 text-xs border-gray-300 text-center w-16 mx-auto bg-muted"
-                            value={(() => {
-                              const device = parseFloat(getAgreementValue(a, "cpm_device_onsite")) || 0;
-                              const unitPrice = parseFloat(getAgreementValue(a, "unit_price")) || 0;
-                              return (device * unitPrice).toFixed(2);
-                            })()}
-                            readOnly
+                            className="h-7 text-xs border-gray-300 text-center w-16 mx-auto"
+                            value={getAgreementValue(a, "cpm_pricing")}
+                            onChange={(e) => setAgreementValue(a.id, "cpm_pricing", e.target.value)}
                           />
                         </td>
                         <td className="px-1 py-1">
