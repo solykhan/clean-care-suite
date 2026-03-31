@@ -358,6 +358,17 @@ const HyTrackForm = () => {
     }
   };
 
+  const handleDeleteAgreement = async (id: string) => {
+    try {
+      const { error } = await supabase.from("service_agreements").delete().eq("id", id);
+      if (error) throw error;
+      toast.success("Service agreement deleted");
+      queryClient.invalidateQueries({ queryKey: ["hytrack-agreements"] });
+    } catch (e: any) {
+      toast.error("Delete failed", { description: e.message });
+    }
+  };
+
   const handleDeleteInvoice = async (id: string) => {
     try {
       const { error } = await supabase.from("invoices").delete().eq("id", id);
