@@ -328,6 +328,11 @@ const Runs = () => {
             </div>
           </CardContent>
         </Card>
+        <EditRunDialog
+          run={editRun}
+          open={!!editRun}
+          onOpenChange={(open) => { if (!open) setEditRun(null); }}
+        />
       </div>
     </div>
   );
