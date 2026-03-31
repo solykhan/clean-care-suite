@@ -21,7 +21,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Search, Plus, Trash2, FileText } from "lucide-react";
+import { Search, Trash2, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { AddInvoiceDialog } from "@/components/AddInvoiceDialog";
