@@ -223,6 +223,7 @@ const HyTrackForm = () => {
     setEditedAgreements({});
     setEditedInvoices({});
     setNewInvoices([]);
+    setNewAgreements([]);
   };
 
   // Agreement helpers
