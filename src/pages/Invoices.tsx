@@ -154,6 +154,8 @@ export default function Invoices() {
             <TableHeader>
               <TableRow>
                 <TableHead>Invoice ID</TableHead>
+                <TableHead>Customer</TableHead>
+                <TableHead>Suburb</TableHead>
                 <TableHead>Entry Date</TableHead>
                 <TableHead>Particulars</TableHead>
                 <TableHead>User Date</TableHead>
@@ -164,6 +166,8 @@ export default function Invoices() {
               {filtered.map((inv) => (
                 <TableRow key={inv.id}>
                   <TableCell className="font-medium">{inv.inv_id}</TableCell>
+                  <TableCell>{inv.customer_name || "—"}</TableCell>
+                  <TableCell>{inv.customer_suburb || "—"}</TableCell>
                   <TableCell>{formatDate(inv.entry_date)}</TableCell>
                   <TableCell className="max-w-xs truncate">{inv.particulars || "—"}</TableCell>
                   <TableCell>{formatDate(inv.user_date)}</TableCell>
