@@ -358,6 +358,17 @@ const HyTrackForm = () => {
     }
   };
 
+  const handleDeleteAgreement = async (id: string) => {
+    try {
+      const { error } = await supabase.from("service_agreements").delete().eq("id", id);
+      if (error) throw error;
+      toast.success("Service agreement deleted");
+      queryClient.invalidateQueries({ queryKey: ["hytrack-agreements"] });
+    } catch (e: any) {
+      toast.error("Delete failed", { description: e.message });
+    }
+  };
+
   const handleDeleteInvoice = async (id: string) => {
     try {
       const { error } = await supabase.from("invoices").delete().eq("id", id);
@@ -624,12 +635,13 @@ const HyTrackForm = () => {
                 <TableHead className="text-xs py-2 w-[10%]">Invoice Type</TableHead>
                 <TableHead className="text-xs py-2 w-[13%]">Comments</TableHead>
                 <TableHead className="text-xs py-2 w-[5%] text-right">Total</TableHead>
+                <TableHead className="text-xs py-2 w-[3%] text-center print:hidden"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoadingAgreements ? (
                 <TableRow>
-                  <TableCell colSpan={13}><Skeleton className="h-8 w-full" /></TableCell>
+                  <TableCell colSpan={14}><Skeleton className="h-8 w-full" /></TableCell>
                 </TableRow>
               ) : serviceAgreements && serviceAgreements.length > 0 ? (
                 serviceAgreements.map((a, i) => {
@@ -705,12 +717,17 @@ const HyTrackForm = () => {
                       <TableCell className="py-1 text-right">
                         <span className="text-xs font-medium">{total.toFixed(2)}</span>
                       </TableCell>
+                      <TableCell className="py-1 text-center print:hidden">
+                        <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive hover:text-destructive" onClick={() => handleDeleteAgreement(a.id)}>
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   );
                 })
               ) : (
                 <TableRow>
-                  <TableCell colSpan={13} className="text-center text-muted-foreground py-6 text-sm">
+                  <TableCell colSpan={14} className="text-center text-muted-foreground py-6 text-sm">
                     No service agreements found for this customer.
                   </TableCell>
                 </TableRow>
