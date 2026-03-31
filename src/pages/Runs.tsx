@@ -39,6 +39,7 @@ const Runs = () => {
   const [weeksFilter, setWeeksFilter] = useState<string>("all");
   const [weekDayFilter, setWeekDayFilter] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [editRun, setEditRun] = useState<Tables<"runs"> | null>(null);
 
   // Fetch logged-in user's profile (to get their technician name)
   const { data: profile } = useQuery({
