@@ -107,6 +107,14 @@ export function AppSidebar() {
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={currentPath === "/run-dashboard"}>
+                  <NavLink to="/run-dashboard">
+                    <LayoutDashboard className="h-4 w-4" />
+                    <span>Run Dashboard</span>
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
               {!isTechnician && !isTechnicianDashboard && (
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild isActive={currentPath === "/customer-service-report"}>
