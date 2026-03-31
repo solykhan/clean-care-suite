@@ -41,9 +41,12 @@ type FormValues = z.infer<typeof schema>;
 
 interface EditInvoiceDialogProps {
   serviceId: string;
+  externalOpen?: boolean;
+  onExternalOpenChange?: (open: boolean) => void;
 }
 
-export function EditInvoiceDialog({ serviceId }: EditInvoiceDialogProps) {
+export function EditInvoiceDialog({ serviceId, externalOpen, onExternalOpenChange }: EditInvoiceDialogProps) {
+  const isControlled = externalOpen !== undefined;
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [invoiceId, setInvoiceId] = useState<string | null>(null);
