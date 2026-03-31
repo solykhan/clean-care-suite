@@ -390,7 +390,14 @@ const HyTrackForm = () => {
                     <TableRow key={a.id} className={i % 2 === 0 ? "" : "bg-muted/20"}>
                       <TableCell className="font-mono font-semibold text-xs py-1">{a.service_id}</TableCell>
                       <TableCell className="py-1">
-                        <Input className="h-7 text-xs border-border w-44" value={getAgreementValue(a, "products")} onChange={(e) => setAgreementValue(a.id, "products", e.target.value)} />
+                        <Select value={getAgreementValue(a, "products") || ""} onValueChange={(v) => setAgreementValue(a.id, "products", v)}>
+                          <SelectTrigger className="h-7 text-xs w-44"><SelectValue placeholder="Select product" /></SelectTrigger>
+                          <SelectContent className="max-h-60">
+                            {PRODUCT_OPTIONS.map((p) => (
+                              <SelectItem key={p} value={p}>{p}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </TableCell>
                       <TableCell className="py-1">
                         <Select value={getAgreementValue(a, "service_frequency") || ""} onValueChange={(v) => setAgreementValue(a.id, "service_frequency", v)}>
