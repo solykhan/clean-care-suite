@@ -467,8 +467,8 @@ const HyTrackForm = () => {
             <Save className="h-3 w-3 mr-1" /> Save Agreements
           </Button>
         </div>
-        <div className="border rounded-lg overflow-x-auto">
-          <Table>
+        <div className="border rounded-lg overflow-hidden">
+          <Table className="table-fixed w-full">
             <TableHeader>
               <TableRow className="bg-muted/50 text-xs">
                 <TableHead className="text-xs py-2">ServiceID</TableHead>
