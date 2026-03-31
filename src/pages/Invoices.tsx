@@ -45,29 +45,12 @@ export default function Invoices() {
   const { data: invoices = [], isLoading } = useQuery({
     queryKey: ["invoices"],
     queryFn: async () => {
-      const { data: invoiceData, error: invError } = await supabase
+      const { data, error } = await supabase
         .from("invoices")
         .select("*")
         .order("created_at", { ascending: false });
-      if (invError) throw invError;
-
-      // Fetch customers to match service_id with inv_id
-      const { data: customers } = await supabase
-        .from("customers")
-        .select("service_id, site_name, site_suburb");
-
-      const customerMap = new Map(
-        (customers || []).map((c) => [c.service_id, c])
-      );
-
-      return (invoiceData as Invoice[]).map((inv) => {
-        const cust = customerMap.get(inv.inv_id);
-        return {
-          ...inv,
-          customer_name: cust?.site_name || "",
-          customer_suburb: cust?.site_suburb || "",
-        };
-      });
+      if (error) throw error;
+      return data as Invoice[];
     },
   });
 
