@@ -471,19 +471,19 @@ const HyTrackForm = () => {
           <Table className="table-fixed w-full">
             <TableHeader>
               <TableRow className="bg-muted/50 text-xs">
-                <TableHead className="text-xs py-2">ServiceID</TableHead>
-                <TableHead className="text-xs py-2">Products</TableHead>
-                <TableHead className="text-xs py-2">Service Frequency</TableHead>
-                <TableHead className="text-xs py-2">Status</TableHead>
-                <TableHead className="text-xs py-2">Site Locations</TableHead>
-                <TableHead className="text-xs py-2 text-center">Client Device</TableHead>
-                <TableHead className="text-xs py-2 text-center">CPM Device</TableHead>
-                <TableHead className="text-xs py-2 text-right">Unit Price</TableHead>
-                <TableHead className="text-xs py-2 text-right">CPM Price</TableHead>
-                <TableHead className="text-xs py-2 text-center">CPI</TableHead>
-                <TableHead className="text-xs py-2">Invoice Type</TableHead>
-                <TableHead className="text-xs py-2">Comments</TableHead>
-                <TableHead className="text-xs py-2 text-right">Total</TableHead>
+                <TableHead className="text-xs py-2 w-[5%]">ServiceID</TableHead>
+                <TableHead className="text-xs py-2 w-[15%]">Products</TableHead>
+                <TableHead className="text-xs py-2 w-[8%]">Frequency</TableHead>
+                <TableHead className="text-xs py-2 w-[5%]">Status</TableHead>
+                <TableHead className="text-xs py-2 w-[10%]">Site Locations</TableHead>
+                <TableHead className="text-xs py-2 w-[5%] text-center">Client Device</TableHead>
+                <TableHead className="text-xs py-2 w-[5%] text-center">CPM Device</TableHead>
+                <TableHead className="text-xs py-2 w-[7%] text-right">Unit Price</TableHead>
+                <TableHead className="text-xs py-2 w-[7%] text-right">CPM Price</TableHead>
+                <TableHead className="text-xs py-2 w-[5%] text-center">CPI</TableHead>
+                <TableHead className="text-xs py-2 w-[10%]">Invoice Type</TableHead>
+                <TableHead className="text-xs py-2 w-[13%]">Comments</TableHead>
+                <TableHead className="text-xs py-2 w-[5%] text-right">Total</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
