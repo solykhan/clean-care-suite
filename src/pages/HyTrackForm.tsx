@@ -641,7 +641,7 @@ const HyTrackForm = () => {
             <TableBody>
               {isLoadingAgreements ? (
                 <TableRow>
-                  <TableCell colSpan={13}><Skeleton className="h-8 w-full" /></TableCell>
+                  <TableCell colSpan={14}><Skeleton className="h-8 w-full" /></TableCell>
                 </TableRow>
               ) : serviceAgreements && serviceAgreements.length > 0 ? (
                 serviceAgreements.map((a, i) => {
