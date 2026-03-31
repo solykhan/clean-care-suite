@@ -795,7 +795,7 @@ const HyTrackForm = () => {
 
       {/* Invoice Details */}
       <div className="-mx-[10%]">
-        <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center justify-between mb-2 px-[10%]">
           <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">Invoice Details</h3>
           <div className="flex gap-2 print:hidden">
             <Button size="sm" variant="outline" onClick={addNewInvoice}>
