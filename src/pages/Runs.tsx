@@ -255,7 +255,7 @@ const Runs = () => {
                     filteredRuns.map((run) => {
                       const isTransferred = run.transferred === true;
                       return (
-                      <TableRow key={run.id} className={`hover:bg-muted/30 cursor-pointer ${isTransferred ? "bg-red-50 dark:bg-red-950/30" : ""}`} onClick={() => setEditRun(run)}>
+                      <TableRow key={run.id} className={`hover:bg-muted/30 cursor-pointer ${isTransferred ? "bg-red-50 dark:bg-red-950/30 text-destructive" : ""}`} onClick={() => setEditRun(run)}>
                         <TableCell className="text-center" onClick={(e) => e.stopPropagation()}>
                           <div className="flex items-center justify-center gap-1">
                             <Button
