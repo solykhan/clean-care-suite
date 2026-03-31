@@ -249,8 +249,10 @@ const Runs = () => {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    filteredRuns.map((run) => (
-                      <TableRow key={run.id} className="hover:bg-muted/30">
+                    filteredRuns.map((run) => {
+                      const isTransferred = run.transferred === true;
+                      return (
+                      <TableRow key={run.id} className={`hover:bg-muted/30 ${isTransferred ? "bg-red-50 dark:bg-red-950/30" : ""}`}>
                         <TableCell className="text-center">
                           <div className="flex items-center justify-center gap-1">
                             <Button
@@ -296,7 +298,16 @@ const Runs = () => {
                         <TableCell>{run.week_day || "-"}</TableCell>
                         <TableCell>{run.products || "-"}</TableCell>
                         <TableCell>{run.frequency || "-"}</TableCell>
-                        <TableCell>{run.technicians || "-"}</TableCell>
+                        <TableCell>
+                          <span className={isTransferred ? "text-destructive font-semibold" : ""}>
+                            {run.technicians || "-"}
+                          </span>
+                          {isTransferred && run.original_technicians && (
+                            <Badge className="ml-2 bg-amber-100 text-amber-800 border-amber-300 hover:bg-amber-200">
+                              ↩ {run.original_technicians}
+                            </Badge>
+                          )}
+                        </TableCell>
                         <TableCell className="text-center">
                           <Badge variant={run.completed === "completed" ? "default" : "secondary"}>
                             {run.completed || "pending"}
@@ -306,7 +317,8 @@ const Runs = () => {
                           {run.completion_date ? new Date(run.completion_date).toLocaleDateString() : "-"}
                         </TableCell>
                       </TableRow>
-                    ))
+                      );
+                    })
                   )}
                 </TableBody>
               </Table>
