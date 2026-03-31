@@ -25,6 +25,7 @@ const formSchema = z.object({
   client_email: z.string().email("Invalid email address").max(255).optional().or(z.literal("")),
   site_officer_name: z.string().max(255).optional(),
   comments: z.string().max(1000).optional(),
+  complete: z.string().optional(),
   s_officer_sig: z.string().max(255).optional(),
   tech_sig: z.string().max(255).optional(),
 });
