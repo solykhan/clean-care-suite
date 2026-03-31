@@ -98,18 +98,10 @@ const CustomerInvoiceReport = () => {
   };
 
   const setAgreementValue = (id: string, field: string, value: any) => {
-    setEditedAgreements((prev) => {
-      const updated = { ...prev, [id]: { ...prev[id], [field]: value } };
-      // Auto-calculate cpm_pricing when cpm_device_onsite or unit_price changes
-      if (field === "cpm_device_onsite" || field === "unit_price") {
-        const agreement = serviceAgreements?.find((a: any) => a.id === id);
-        const getVal = (f: string) => updated[id]?.[f] !== undefined ? updated[id][f] : (agreement?.[f] ?? "");
-        const device = parseFloat(getVal("cpm_device_onsite")) || 0;
-        const unitPrice = parseFloat(getVal("unit_price")) || 0;
-        updated[id] = { ...updated[id], cpm_pricing: (device * unitPrice).toString() };
-      }
-      return updated;
-    });
+    setEditedAgreements((prev) => ({
+      ...prev,
+      [id]: { ...prev[id], [field]: value },
+    }));
   };
 
   // Invoice editing helpers
