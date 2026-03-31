@@ -8,6 +8,8 @@ import { PlayCircle, Edit, Calendar, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { RunsImportDialog } from "@/components/RunsImportDialog";
 import { AddRunDialog } from "@/components/AddRunDialog";
+import { EditRunDialog } from "@/components/EditRunDialog";
+import type { Tables } from "@/integrations/supabase/types";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState, useMemo } from "react";
 import { Input } from "@/components/ui/input";
