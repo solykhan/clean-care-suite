@@ -8,6 +8,8 @@ import { PlayCircle, Edit, Calendar, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { RunsImportDialog } from "@/components/RunsImportDialog";
 import { AddRunDialog } from "@/components/AddRunDialog";
+import { EditRunDialog } from "@/components/EditRunDialog";
+import type { Tables } from "@/integrations/supabase/types";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState, useMemo } from "react";
 import { Input } from "@/components/ui/input";
@@ -37,6 +39,7 @@ const Runs = () => {
   const [weeksFilter, setWeeksFilter] = useState<string>("all");
   const [weekDayFilter, setWeekDayFilter] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [editRun, setEditRun] = useState<Tables<"runs"> | null>(null);
 
   // Fetch logged-in user's profile (to get their technician name)
   const { data: profile } = useQuery({
@@ -252,8 +255,8 @@ const Runs = () => {
                     filteredRuns.map((run) => {
                       const isTransferred = run.transferred === true;
                       return (
-                      <TableRow key={run.id} className={`hover:bg-muted/30 ${isTransferred ? "bg-red-50 dark:bg-red-950/30" : ""}`}>
-                        <TableCell className="text-center">
+                      <TableRow key={run.id} className={`hover:bg-muted/30 cursor-pointer ${isTransferred ? "bg-red-50 dark:bg-red-950/30" : ""}`} onClick={() => setEditRun(run)}>
+                        <TableCell className="text-center" onClick={(e) => e.stopPropagation()}>
                           <div className="flex items-center justify-center gap-1">
                             <Button
                               size="sm"
@@ -325,6 +328,11 @@ const Runs = () => {
             </div>
           </CardContent>
         </Card>
+        <EditRunDialog
+          run={editRun}
+          open={!!editRun}
+          onOpenChange={(open) => { if (!open) setEditRun(null); }}
+        />
       </div>
     </div>
   );
