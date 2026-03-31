@@ -502,12 +502,12 @@ const HyTrackForm = () => {
                   return (
                     <TableRow key={a.id} className={i % 2 === 0 ? "" : "bg-muted/20"}>
                       <TableCell className="font-mono font-semibold text-xs py-1">{a.service_id}</TableCell>
-                      <TableCell className="py-1">
+                      <TableCell className="py-1 min-w-[200px]">
                         <Select value={getAgreementValue(a, "products") || ""} onValueChange={(v) => setAgreementValue(a.id, "products", v)}>
-                          <SelectTrigger className="h-7 text-xs w-44"><SelectValue placeholder="Select product" /></SelectTrigger>
-                          <SelectContent className="max-h-60">
+                          <SelectTrigger className="h-auto min-h-7 text-xs w-52 whitespace-normal text-left [&>span]:line-clamp-none [&>span]:whitespace-normal"><SelectValue placeholder="Select product" /></SelectTrigger>
+                          <SelectContent className="max-h-60 w-72">
                             {PRODUCT_OPTIONS.map((p) => (
-                              <SelectItem key={p} value={p}>{p}</SelectItem>
+                              <SelectItem key={p} value={p} className="whitespace-normal">{p}</SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
