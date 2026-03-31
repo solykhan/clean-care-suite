@@ -34,6 +34,8 @@ type Invoice = {
   particulars: string | null;
   user_date: string | null;
   created_at: string;
+  customer_name?: string;
+  customer_suburb?: string;
 };
 
 export default function Invoices() {
@@ -45,12 +47,29 @@ export default function Invoices() {
   const { data: invoices = [], isLoading } = useQuery({
     queryKey: ["invoices"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data: invoiceData, error: invError } = await supabase
         .from("invoices")
         .select("*")
         .order("created_at", { ascending: false });
-      if (error) throw error;
-      return data as Invoice[];
+      if (invError) throw invError;
+
+      // Fetch customers to match service_id with inv_id
+      const { data: customers } = await supabase
+        .from("customers")
+        .select("service_id, site_name, site_suburb");
+
+      const customerMap = new Map(
+        (customers || []).map((c) => [c.service_id, c])
+      );
+
+      return (invoiceData as Invoice[]).map((inv) => {
+        const cust = customerMap.get(inv.inv_id);
+        return {
+          ...inv,
+          customer_name: cust?.site_name || "",
+          customer_suburb: cust?.site_suburb || "",
+        };
+      });
     },
   });
 
@@ -60,7 +79,9 @@ export default function Invoices() {
     return invoices.filter(
       (inv) =>
         inv.inv_id?.toLowerCase().includes(q) ||
-        inv.particulars?.toLowerCase().includes(q)
+        inv.particulars?.toLowerCase().includes(q) ||
+        inv.customer_name?.toLowerCase().includes(q) ||
+        inv.customer_suburb?.toLowerCase().includes(q)
     );
   }, [invoices, searchTerm]);
 
@@ -135,6 +156,8 @@ export default function Invoices() {
             <TableHeader>
               <TableRow>
                 <TableHead>Invoice ID</TableHead>
+                <TableHead>Customer Name</TableHead>
+                <TableHead>Suburb</TableHead>
                 <TableHead>Entry Date</TableHead>
                 <TableHead>Particulars</TableHead>
                 <TableHead>User Date</TableHead>
@@ -145,6 +168,8 @@ export default function Invoices() {
               {filtered.map((inv) => (
                 <TableRow key={inv.id}>
                   <TableCell className="font-medium">{inv.inv_id}</TableCell>
+                  <TableCell>{inv.customer_name || "—"}</TableCell>
+                  <TableCell>{inv.customer_suburb || "—"}</TableCell>
                   <TableCell>{formatDate(inv.entry_date)}</TableCell>
                   <TableCell className="max-w-xs truncate">{inv.particulars || "—"}</TableCell>
                   <TableCell>{formatDate(inv.user_date)}</TableCell>
