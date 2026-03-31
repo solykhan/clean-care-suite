@@ -148,6 +148,7 @@ const HyTrackForm = () => {
   const [editedAgreements, setEditedAgreements] = useState<Record<string, any>>({});
   const [editedInvoices, setEditedInvoices] = useState<Record<string, any>>({});
   const [newInvoices, setNewInvoices] = useState<any[]>([]);
+  const [newAgreements, setNewAgreements] = useState<any[]>([]);
   const [savingAgreements, setSavingAgreements] = useState(false);
   const [savingInvoices, setSavingInvoices] = useState(false);
 
@@ -222,6 +223,7 @@ const HyTrackForm = () => {
     setEditedAgreements({});
     setEditedInvoices({});
     setNewInvoices([]);
+    setNewAgreements([]);
   };
 
   // Agreement helpers
@@ -254,15 +256,33 @@ const HyTrackForm = () => {
     }));
   };
 
+  const addNewAgreement = () => {
+    if (!selectedCustomer) return;
+    setNewAgreements((prev) => [...prev, {
+      id: crypto.randomUUID(),
+      service_id: selectedCustomer.service_id,
+      products: "",
+      service_frequency: "",
+      service_active_inactive: "ACT",
+      areas_covered: "",
+      cpm_device_onsite: "0",
+      unit_price: "0",
+      cpi: "0",
+      invoice_type: "",
+      comments: "",
+    }]);
+  };
+
   // Save agreements
   const handleSaveAgreements = async () => {
     const ids = Object.keys(editedAgreements);
-    if (ids.length === 0) { toast.info("No changes to save"); return; }
+    const hasEdits = ids.length > 0;
+    const hasNew = newAgreements.length > 0;
+    if (!hasEdits && !hasNew) { toast.info("No changes to save"); return; }
     setSavingAgreements(true);
     try {
       for (const id of ids) {
         const changes = { ...editedAgreements[id] };
-        // Auto-compute cpm_pricing
         const agreement = serviceAgreements?.find((a: any) => a.id === id);
         const getVal = (f: string) => changes[f] !== undefined ? changes[f] : (agreement?.[f] ?? "");
         const device = parseFloat(getVal("cpm_device_onsite")) || 0;
@@ -279,8 +299,25 @@ const HyTrackForm = () => {
         const { error } = await supabase.from("service_agreements").update(payload).eq("id", id);
         if (error) throw error;
       }
+      // Insert new agreements
+      for (const newAg of newAgreements) {
+        const device = parseFloat(newAg.cpm_device_onsite) || 0;
+        const unitPrice = parseFloat(newAg.unit_price) || 0;
+        const cpi = parseFloat(newAg.cpi) || 0;
+        const { id, ...rest } = newAg;
+        const { error } = await supabase.from("service_agreements").insert({
+          ...rest,
+          unit_price: unitPrice || null,
+          cpm_pricing: device * unitPrice || null,
+          cpi: cpi || null,
+          total: (unitPrice * cpi) + unitPrice || null,
+          cpm_device_onsite: newAg.cpm_device_onsite || null,
+        });
+        if (error) throw error;
+      }
       toast.success("Service agreements saved");
       setEditedAgreements({});
+      setNewAgreements([]);
       queryClient.invalidateQueries({ queryKey: ["hytrack-agreements"] });
     } catch (e: any) {
       toast.error("Save failed", { description: e.message });
@@ -463,9 +500,14 @@ const HyTrackForm = () => {
       <div className="mb-6 -mx-[10%]">
         <div className="flex items-center justify-between mb-2 px-[10%]">
           <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">Service Agreements</h3>
-          <Button size="sm" variant="default" onClick={handleSaveAgreements} disabled={savingAgreements}>
-            <Save className="h-3 w-3 mr-1" /> Save Agreements
-          </Button>
+          <div className="flex gap-2">
+            <Button size="sm" variant="outline" onClick={addNewAgreement}>
+              <Plus className="h-3 w-3 mr-1" /> Add Entry
+            </Button>
+            <Button size="sm" variant="default" onClick={handleSaveAgreements} disabled={savingAgreements}>
+              <Save className="h-3 w-3 mr-1" /> Save Agreements
+            </Button>
+          </div>
         </div>
         <div className="border rounded-lg overflow-hidden">
           <Table className="table-fixed w-full">
@@ -575,6 +617,79 @@ const HyTrackForm = () => {
                   </TableCell>
                 </TableRow>
               )}
+              {/* New agreements */}
+              {newAgreements.map((na, i) => {
+                const cpmDevice = parseFloat(na.cpm_device_onsite) || 0;
+                const unitPrice = parseFloat(na.unit_price) || 0;
+                const cpmPrice = cpmDevice * unitPrice;
+                const cpi = parseFloat(na.cpi) || 0;
+                const total = (unitPrice * cpi) + unitPrice;
+                const updateNew = (field: string, val: string) => {
+                  setNewAgreements((prev) => prev.map((a) => a.id === na.id ? { ...a, [field]: val } : a));
+                };
+                return (
+                  <TableRow key={na.id} className="bg-green-50/50">
+                    <TableCell className="font-mono font-semibold text-xs py-1">{na.service_id}</TableCell>
+                    <TableCell className="py-1">
+                      <Select value={na.products || ""} onValueChange={(v) => updateNew("products", v)}>
+                        <SelectTrigger className="h-auto min-h-7 text-xs whitespace-normal text-left [&>span]:line-clamp-none [&>span]:whitespace-normal"><SelectValue placeholder="Select product" /></SelectTrigger>
+                        <SelectContent className="max-h-60 w-72">
+                          {PRODUCT_OPTIONS.map((p) => (
+                            <SelectItem key={p} value={p} className="whitespace-normal">{p}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                    <TableCell className="py-1">
+                      <Select value={na.service_frequency || ""} onValueChange={(v) => updateNew("service_frequency", v)}>
+                        <SelectTrigger className="h-auto min-h-7 text-xs whitespace-normal text-left [&>span]:line-clamp-none [&>span]:whitespace-normal"><SelectValue placeholder="Select" /></SelectTrigger>
+                        <SelectContent>
+                          {["MONTHLY", "BI-MONTHLY", "WEEKLY", "FORTNIGHTLY", "QUARTERLY", "ANNUALLY"].map((f) => (
+                            <SelectItem key={f} value={f}>{f}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                    <TableCell className="py-1">
+                      <Select value={na.service_active_inactive || ""} onValueChange={(v) => updateNew("service_active_inactive", v)}>
+                        <SelectTrigger className="h-auto min-h-7 text-xs whitespace-normal text-left [&>span]:line-clamp-none [&>span]:whitespace-normal"><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="ACT">ACT</SelectItem>
+                          <SelectItem value="INA">INA</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                    <TableCell className="py-1">
+                      <Input className="h-7 text-xs border-border w-full" value={na.areas_covered} onChange={(e) => updateNew("areas_covered", e.target.value)} />
+                    </TableCell>
+                    <TableCell className="py-1 text-center"><span className="text-xs text-muted-foreground">0</span></TableCell>
+                    <TableCell className="py-1 text-center">
+                      <Input className="h-7 text-xs border-border text-center w-full" value={na.cpm_device_onsite} onChange={(e) => updateNew("cpm_device_onsite", e.target.value)} />
+                    </TableCell>
+                    <TableCell className="py-1">
+                      <Input className="h-7 text-xs border-border text-right w-full" value={na.unit_price} onChange={(e) => updateNew("unit_price", e.target.value)} />
+                    </TableCell>
+                    <TableCell className="py-1 text-right"><span className="text-xs font-medium">${cpmPrice.toFixed(2)}</span></TableCell>
+                    <TableCell className="py-1 text-center">
+                      <Input className="h-7 text-xs border-border text-center w-full" value={na.cpi} onChange={(e) => updateNew("cpi", e.target.value)} />
+                    </TableCell>
+                    <TableCell className="py-1">
+                      <Select value={na.invoice_type || ""} onValueChange={(v) => updateNew("invoice_type", v)}>
+                        <SelectTrigger className="h-auto min-h-7 text-xs whitespace-normal text-left [&>span]:line-clamp-none [&>span]:whitespace-normal"><SelectValue placeholder="Select" /></SelectTrigger>
+                        <SelectContent>
+                          {["BI MONTHLY", "MONTHLY", "QUARTERLY", "6 WEEKLY", "WEEKLY", "FORTNIGHTLY", "6 MONTHLY", "ANNUALLY", "TWICE A WEEK", "PURCHASE ONLY", "RENTAL"].map((t) => (
+                            <SelectItem key={t} value={t}>{t}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                    <TableCell className="py-1">
+                      <Input className="h-7 text-xs border-border w-full" value={na.comments} onChange={(e) => updateNew("comments", e.target.value)} />
+                    </TableCell>
+                    <TableCell className="py-1 text-right"><span className="text-xs font-medium">{total.toFixed(2)}</span></TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </div>
