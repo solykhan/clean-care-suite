@@ -442,7 +442,7 @@ const HyTrackForm = () => {
   return (
     <div className="p-4 max-w-[1400px] mx-auto">
       {/* Top navigation buttons */}
-      <div className="flex items-center gap-2 mb-4 flex-wrap">
+      <div className="flex items-center gap-2 mb-4 flex-wrap print:hidden">
         <Button variant="outline" size="sm" onClick={() => { resetState(); setSelectedCustomerId(null); }}>
           <ArrowLeft className="h-4 w-4 mr-1" /> Home
         </Button>
