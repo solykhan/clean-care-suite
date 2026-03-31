@@ -91,10 +91,20 @@ export function EditInvoiceDialog({ serviceId, externalOpen, onExternalOpenChang
     }
   };
 
+  const isOpen = isControlled ? externalOpen : open;
+
   const handleOpenChange = (val: boolean) => {
-    setOpen(val);
+    if (isControlled) {
+      onExternalOpenChange?.(val);
+    } else {
+      setOpen(val);
+    }
     if (val) loadInvoice();
   };
+
+  useEffect(() => {
+    if (isControlled && externalOpen) loadInvoice();
+  }, [isControlled, externalOpen]);
 
   const onSubmit = async (values: FormValues) => {
     setSaving(true);
