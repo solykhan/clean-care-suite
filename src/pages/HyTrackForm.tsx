@@ -717,6 +717,11 @@ const HyTrackForm = () => {
                       <TableCell className="py-1 text-right">
                         <span className="text-xs font-medium">{total.toFixed(2)}</span>
                       </TableCell>
+                      <TableCell className="py-1 text-center print:hidden">
+                        <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive hover:text-destructive" onClick={() => handleDeleteAgreement(a.id)}>
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   );
                 })
