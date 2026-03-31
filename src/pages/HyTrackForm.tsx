@@ -616,6 +616,79 @@ const HyTrackForm = () => {
                   </TableCell>
                 </TableRow>
               )}
+              {/* New agreements */}
+              {newAgreements.map((na, i) => {
+                const cpmDevice = parseFloat(na.cpm_device_onsite) || 0;
+                const unitPrice = parseFloat(na.unit_price) || 0;
+                const cpmPrice = cpmDevice * unitPrice;
+                const cpi = parseFloat(na.cpi) || 0;
+                const total = (unitPrice * cpi) + unitPrice;
+                const updateNew = (field: string, val: string) => {
+                  setNewAgreements((prev) => prev.map((a) => a.id === na.id ? { ...a, [field]: val } : a));
+                };
+                return (
+                  <TableRow key={na.id} className="bg-green-50/50">
+                    <TableCell className="font-mono font-semibold text-xs py-1">{na.service_id}</TableCell>
+                    <TableCell className="py-1">
+                      <Select value={na.products || ""} onValueChange={(v) => updateNew("products", v)}>
+                        <SelectTrigger className="h-auto min-h-7 text-xs whitespace-normal text-left [&>span]:line-clamp-none [&>span]:whitespace-normal"><SelectValue placeholder="Select product" /></SelectTrigger>
+                        <SelectContent className="max-h-60 w-72">
+                          {PRODUCT_OPTIONS.map((p) => (
+                            <SelectItem key={p} value={p} className="whitespace-normal">{p}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                    <TableCell className="py-1">
+                      <Select value={na.service_frequency || ""} onValueChange={(v) => updateNew("service_frequency", v)}>
+                        <SelectTrigger className="h-auto min-h-7 text-xs whitespace-normal text-left [&>span]:line-clamp-none [&>span]:whitespace-normal"><SelectValue placeholder="Select" /></SelectTrigger>
+                        <SelectContent>
+                          {["MONTHLY", "BI-MONTHLY", "WEEKLY", "FORTNIGHTLY", "QUARTERLY", "ANNUALLY"].map((f) => (
+                            <SelectItem key={f} value={f}>{f}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                    <TableCell className="py-1">
+                      <Select value={na.service_active_inactive || ""} onValueChange={(v) => updateNew("service_active_inactive", v)}>
+                        <SelectTrigger className="h-auto min-h-7 text-xs whitespace-normal text-left [&>span]:line-clamp-none [&>span]:whitespace-normal"><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="ACT">ACT</SelectItem>
+                          <SelectItem value="INA">INA</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                    <TableCell className="py-1">
+                      <Input className="h-7 text-xs border-border w-full" value={na.areas_covered} onChange={(e) => updateNew("areas_covered", e.target.value)} />
+                    </TableCell>
+                    <TableCell className="py-1 text-center"><span className="text-xs text-muted-foreground">0</span></TableCell>
+                    <TableCell className="py-1 text-center">
+                      <Input className="h-7 text-xs border-border text-center w-full" value={na.cpm_device_onsite} onChange={(e) => updateNew("cpm_device_onsite", e.target.value)} />
+                    </TableCell>
+                    <TableCell className="py-1">
+                      <Input className="h-7 text-xs border-border text-right w-full" value={na.unit_price} onChange={(e) => updateNew("unit_price", e.target.value)} />
+                    </TableCell>
+                    <TableCell className="py-1 text-right"><span className="text-xs font-medium">${cpmPrice.toFixed(2)}</span></TableCell>
+                    <TableCell className="py-1 text-center">
+                      <Input className="h-7 text-xs border-border text-center w-full" value={na.cpi} onChange={(e) => updateNew("cpi", e.target.value)} />
+                    </TableCell>
+                    <TableCell className="py-1">
+                      <Select value={na.invoice_type || ""} onValueChange={(v) => updateNew("invoice_type", v)}>
+                        <SelectTrigger className="h-auto min-h-7 text-xs whitespace-normal text-left [&>span]:line-clamp-none [&>span]:whitespace-normal"><SelectValue placeholder="Select" /></SelectTrigger>
+                        <SelectContent>
+                          {["BI MONTHLY", "MONTHLY", "QUARTERLY", "6 WEEKLY", "WEEKLY", "FORTNIGHTLY", "6 MONTHLY", "ANNUALLY", "TWICE A WEEK", "PURCHASE ONLY", "RENTAL"].map((t) => (
+                            <SelectItem key={t} value={t}>{t}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                    <TableCell className="py-1">
+                      <Input className="h-7 text-xs border-border w-full" value={na.comments} onChange={(e) => updateNew("comments", e.target.value)} />
+                    </TableCell>
+                    <TableCell className="py-1 text-right"><span className="text-xs font-medium">{total.toFixed(2)}</span></TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </div>
