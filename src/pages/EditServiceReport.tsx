@@ -25,6 +25,7 @@ const formSchema = z.object({
   client_email: z.string().email("Invalid email address").max(255).optional().or(z.literal("")),
   site_officer_name: z.string().max(255).optional(),
   comments: z.string().max(1000).optional(),
+  complete: z.string().optional(),
   s_officer_sig: z.string().max(255).optional(),
   tech_sig: z.string().max(255).optional(),
 });
@@ -75,6 +76,7 @@ const EditServiceReport = () => {
       client_email: "",
       site_officer_name: "",
       comments: "",
+      complete: "pending",
       s_officer_sig: "",
       tech_sig: "",
     },
@@ -91,17 +93,21 @@ const EditServiceReport = () => {
         client_email: report.client_email || "",
         site_officer_name: report.site_officer_name || "",
         comments: report.comments || "",
+        complete: report.complete || "pending",
         s_officer_sig: report.s_officer_sig || "",
         tech_sig: report.tech_sig || "",
       });
 
-      // Load existing signatures
-      if (report.s_officer_sig && officerSignaturePadRef.current) {
-        officerSignaturePadRef.current.fromDataURL(report.s_officer_sig);
-      }
-      if (report.tech_sig && techSignaturePadRef.current) {
-        techSignaturePadRef.current.fromDataURL(report.tech_sig);
-      }
+      // Load existing signatures with a delay to ensure canvas is mounted
+      const timer = setTimeout(() => {
+        if (report.s_officer_sig && officerSignaturePadRef.current) {
+          officerSignaturePadRef.current.fromDataURL(report.s_officer_sig);
+        }
+        if (report.tech_sig && techSignaturePadRef.current) {
+          techSignaturePadRef.current.fromDataURL(report.tech_sig);
+        }
+      }, 300);
+      return () => clearTimeout(timer);
     }
   }, [report, form]);
 
@@ -124,7 +130,7 @@ const EditServiceReport = () => {
 
   const updateReport = useMutation({
     mutationFn: async (data: FormData) => {
-      const { run_id, report_date, ...reportData } = data;
+      const { run_id, report_date, complete, ...reportData } = data;
       
       const officerSignatureData = officerSignaturePadRef.current?.toDataURL() || null;
       const techSignatureData = techSignaturePadRef.current?.toDataURL() || null;
@@ -134,6 +140,7 @@ const EditServiceReport = () => {
         .update({
           run_id,
           report_date: report_date.toISOString(),
+          complete: complete || "pending",
           ...reportData,
           s_officer_sig: officerSignatureData,
           tech_sig: techSignatureData,
@@ -338,6 +345,28 @@ const EditServiceReport = () => {
                     )}
                   />
                 </div>
+
+                <FormField
+                  control={form.control}
+                  name="complete"
+                  render={({ field }) => (
+                    <FormItem className="w-fit min-w-[200px] md:w-auto group rounded-lg p-3 transition-all duration-200 hover:bg-accent/40 hover:shadow-sm hover:ring-1 hover:ring-border">
+                      <FormLabel>Work</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value || "pending"}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select status" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="pending">Pending</SelectItem>
+                          <SelectItem value="completed">Completed</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
                 <FormField
                   control={form.control}
