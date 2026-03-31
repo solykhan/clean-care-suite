@@ -26,6 +26,7 @@ import { toast } from "sonner";
 import { format } from "date-fns";
 import { AddInvoiceDialog } from "@/components/AddInvoiceDialog";
 import { InvoiceImportDialog } from "@/components/InvoiceImportDialog";
+import { EditInvoiceDialog } from "@/components/EditInvoiceDialog";
 
 type Invoice = {
   id: string;
