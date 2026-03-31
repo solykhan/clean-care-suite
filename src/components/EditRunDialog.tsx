@@ -58,6 +58,7 @@ export function EditRunDialog({ run, open, onOpenChange }: EditRunDialogProps) {
       products: "",
       frequency: "",
       technicians: "",
+      work: "",
     },
   });
 
