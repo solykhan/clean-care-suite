@@ -138,6 +138,14 @@ const RunDashboard = () => {
     });
   };
 
+  const selectedTransferredCount = useMemo(() => {
+    if (!runs) return 0;
+    return Array.from(selectedRuns).filter((id) => {
+      const run = runs.find((r) => r.id === id);
+      return run?.transferred === true;
+    }).length;
+  }, [selectedRuns, runs]);
+
   const handleTransfer = () => {
     if (technician1 === "all") {
       toast.error("Please select Technician A to transfer from");
@@ -160,6 +168,18 @@ const RunDashboard = () => {
       fromTech: technician1,
       toTech: technician2,
     });
+  };
+
+  const handleRevert = () => {
+    const transferredIds = Array.from(selectedRuns).filter((id) => {
+      const run = runs?.find((r) => r.id === id);
+      return run?.transferred === true;
+    });
+    if (transferredIds.length === 0) {
+      toast.error("No transferred runs selected to revert");
+      return;
+    }
+    revertMutation.mutate(transferredIds);
   };
 
   return (
