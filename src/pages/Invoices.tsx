@@ -34,6 +34,8 @@ type Invoice = {
   particulars: string | null;
   user_date: string | null;
   created_at: string;
+  customer_name?: string;
+  customer_suburb?: string;
 };
 
 export default function Invoices() {
@@ -50,7 +52,24 @@ export default function Invoices() {
         .select("*")
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return data as Invoice[];
+
+      // Fetch customers to get name & suburb by service_id
+      const { data: customers } = await supabase
+        .from("customers")
+        .select("service_id, site_name, site_suburb");
+
+      const customerMap = new Map(
+        (customers || []).map((c) => [c.service_id, c])
+      );
+
+      return (data as Invoice[]).map((inv) => {
+        const cust = customerMap.get(inv.inv_id);
+        return {
+          ...inv,
+          customer_name: cust?.site_name || "",
+          customer_suburb: cust?.site_suburb || "",
+        };
+      });
     },
   });
 
