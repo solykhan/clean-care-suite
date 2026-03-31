@@ -26,6 +26,7 @@ import AdminUserManagement from "./pages/AdminUserManagement";
 import AdminDashboard from "./pages/AdminDashboard";
 import Invoices from "./pages/Invoices";
 import CustomerInvoiceReport from "./pages/CustomerInvoiceReport";
+import RunDashboard from "./pages/RunDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
