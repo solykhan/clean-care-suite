@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Users, ArrowRightLeft } from "lucide-react";
+import { Users, ArrowRightLeft, Undo2 } from "lucide-react";
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
 
@@ -63,6 +63,34 @@ const RunDashboard = () => {
     },
   });
 
+  const revertMutation = useMutation({
+    mutationFn: async (runIds: string[]) => {
+      const updates = runIds.map((id) => {
+        const run = runs?.find((r) => r.id === id);
+        if (!run || !run.transferred) return null;
+        return supabase
+          .from("runs")
+          .update({
+            technicians: run.original_technicians,
+            original_technicians: null,
+            transferred: false,
+          })
+          .eq("id", id);
+      });
+      const results = await Promise.all(updates.filter(Boolean));
+      const errors = results.filter((r) => r && r.error);
+      if (errors.length > 0) throw new Error("Some reverts failed");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["run-dashboard-runs"] });
+      setSelectedRuns(new Set());
+      toast.success("Runs reverted successfully");
+    },
+    onError: () => {
+      toast.error("Failed to revert runs");
+    },
+  });
+
   // Extract unique technician names
   const technicianNames = useMemo(() => {
     if (!runs) return [];
@@ -110,6 +138,14 @@ const RunDashboard = () => {
     });
   };
 
+  const selectedTransferredCount = useMemo(() => {
+    if (!runs) return 0;
+    return Array.from(selectedRuns).filter((id) => {
+      const run = runs.find((r) => r.id === id);
+      return run?.transferred === true;
+    }).length;
+  }, [selectedRuns, runs]);
+
   const handleTransfer = () => {
     if (technician1 === "all") {
       toast.error("Please select Technician A to transfer from");
@@ -132,6 +168,18 @@ const RunDashboard = () => {
       fromTech: technician1,
       toTech: technician2,
     });
+  };
+
+  const handleRevert = () => {
+    const transferredIds = Array.from(selectedRuns).filter((id) => {
+      const run = runs?.find((r) => r.id === id);
+      return run?.transferred === true;
+    });
+    if (transferredIds.length === 0) {
+      toast.error("No transferred runs selected to revert");
+      return;
+    }
+    revertMutation.mutate(transferredIds);
   };
 
   return (
@@ -186,6 +234,15 @@ const RunDashboard = () => {
             >
               <ArrowRightLeft className="h-4 w-4" />
               Transfer {selectedRuns.size > 0 ? `(${selectedRuns.size})` : ""}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={handleRevert}
+              disabled={revertMutation.isPending || selectedTransferredCount === 0}
+              className="gap-2"
+            >
+              <Undo2 className="h-4 w-4" />
+              Revert {selectedTransferredCount > 0 ? `(${selectedTransferredCount})` : ""}
             </Button>
           </div>
         </CardContent>
@@ -274,9 +331,9 @@ const RunDashboard = () => {
                             {run.technicians || "—"}
                           </span>
                           {isTransferred && run.original_technicians && (
-                            <span className="block text-xs text-muted-foreground">
-                              Originally: {run.original_technicians}
-                            </span>
+                            <Badge className="ml-2 bg-amber-100 text-amber-800 border-amber-300 hover:bg-amber-200">
+                              ↩ {run.original_technicians}
+                            </Badge>
                           )}
                         </TableCell>
                         <TableCell>{run.week_day || "—"}</TableCell>
