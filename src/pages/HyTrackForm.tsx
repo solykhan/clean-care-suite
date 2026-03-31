@@ -499,8 +499,14 @@ const HyTrackForm = () => {
       <div className="mb-6 -mx-[10%]">
         <div className="flex items-center justify-between mb-2 px-[10%]">
           <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">Service Agreements</h3>
-          <Button size="sm" variant="default" onClick={handleSaveAgreements} disabled={savingAgreements}>
-            <Save className="h-3 w-3 mr-1" /> Save Agreements
+          <div className="flex gap-2">
+            <Button size="sm" variant="outline" onClick={addNewAgreement}>
+              <Plus className="h-3 w-3 mr-1" /> Add Entry
+            </Button>
+            <Button size="sm" variant="default" onClick={handleSaveAgreements} disabled={savingAgreements}>
+              <Save className="h-3 w-3 mr-1" /> Save Agreements
+            </Button>
+          </div>
           </Button>
         </div>
         <div className="border rounded-lg overflow-hidden">
