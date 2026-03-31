@@ -794,7 +794,7 @@ const HyTrackForm = () => {
       </div>
 
       {/* Invoice Details */}
-      <div>
+      <div className="-mx-[10%]">
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">Invoice Details</h3>
           <div className="flex gap-2 print:hidden">
