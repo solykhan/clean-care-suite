@@ -67,7 +67,7 @@ const RunDashboard = () => {
         <CardContent>
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="space-y-1.5">
-              <label className="text-sm font-medium text-foreground">Technician 1</label>
+              <label className="text-sm font-medium text-foreground">Technician A</label>
               <Select value={technician1} onValueChange={setTechnician1}>
                 <SelectTrigger className="min-w-[200px]">
                   <SelectValue placeholder="All Technicians" />
