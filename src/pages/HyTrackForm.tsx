@@ -635,6 +635,7 @@ const HyTrackForm = () => {
                 <TableHead className="text-xs py-2 w-[10%]">Invoice Type</TableHead>
                 <TableHead className="text-xs py-2 w-[13%]">Comments</TableHead>
                 <TableHead className="text-xs py-2 w-[5%] text-right">Total</TableHead>
+                <TableHead className="text-xs py-2 w-[3%] text-center print:hidden"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
