@@ -145,7 +145,7 @@ const CustomerServiceReportForm = () => {
       toast.error("Please provide a technician signature");
       return;
     }
-    createReport.mutate(data);
+    createReport.mutate({ ...data, complete: "completed" });
   };
 
   const handleRunChange = (runId: string) => {
