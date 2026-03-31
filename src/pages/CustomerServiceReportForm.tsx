@@ -23,6 +23,7 @@ const formSchema = z.object({
   technician_name: z.string().max(255).optional(),
   client_email: z.string().email("Invalid email address").max(255).optional().or(z.literal("")),
   site_officer_name: z.string().max(255).optional(),
+  complete: z.string().default("pending"),
   comments: z.string().max(1000).optional(),
   s_officer_sig: z.string().max(255).optional(),
   tech_sig: z.string().max(255).optional(),
@@ -47,6 +48,7 @@ const CustomerServiceReportForm = () => {
       technician_name: "",
       client_email: "",
       site_officer_name: "",
+      complete: "pending",
       comments: "",
       s_officer_sig: "",
       tech_sig: "",
@@ -287,6 +289,28 @@ const CustomerServiceReportForm = () => {
                     )}
                   />
                 </div>
+
+                <FormField
+                  control={form.control}
+                  name="complete"
+                  render={({ field }) => (
+                    <FormItem className="w-fit min-w-[200px] md:w-auto group rounded-lg p-3 transition-all duration-200 hover:bg-accent/40 hover:shadow-sm hover:ring-1 hover:ring-border">
+                      <FormLabel>Complete</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select status" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="pending">Pending</SelectItem>
+                          <SelectItem value="completed">Completed</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
                 <FormField
                   control={form.control}

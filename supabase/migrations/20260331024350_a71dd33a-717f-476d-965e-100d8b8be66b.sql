@@ -1,0 +1,1 @@
+ALTER TABLE public.customer_service_reports ADD COLUMN complete text NOT NULL DEFAULT 'pending';
