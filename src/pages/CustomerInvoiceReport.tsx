@@ -125,7 +125,14 @@ const CustomerInvoiceReport = () => {
     setSavingAgreements(true);
     try {
       for (const id of ids) {
-        const changes = editedAgreements[id];
+        const changes = { ...editedAgreements[id] };
+        // Auto-compute cpm_pricing = cpm_device_onsite * unit_price
+        const agreement = serviceAgreements?.find((a: any) => a.id === id);
+        const getVal = (f: string) => changes[f] !== undefined ? changes[f] : (agreement?.[f] ?? "");
+        const device = parseFloat(getVal("cpm_device_onsite")) || 0;
+        const unitPrice = parseFloat(getVal("unit_price")) || 0;
+        changes.cpm_pricing = (device * unitPrice).toString();
+
         const numericFields = ["unit_price", "cpm_pricing", "cpi", "total"];
         const payload: any = {};
         for (const [key, val] of Object.entries(changes)) {
