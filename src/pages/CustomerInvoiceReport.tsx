@@ -98,18 +98,10 @@ const CustomerInvoiceReport = () => {
   };
 
   const setAgreementValue = (id: string, field: string, value: any) => {
-    setEditedAgreements((prev) => {
-      const updated = { ...prev, [id]: { ...prev[id], [field]: value } };
-      // Auto-calculate cpm_pricing when cpm_device_onsite or unit_price changes
-      if (field === "cpm_device_onsite" || field === "unit_price") {
-        const agreement = serviceAgreements?.find((a: any) => a.id === id);
-        const getVal = (f: string) => updated[id]?.[f] !== undefined ? updated[id][f] : (agreement?.[f] ?? "");
-        const device = parseFloat(getVal("cpm_device_onsite")) || 0;
-        const unitPrice = parseFloat(getVal("unit_price")) || 0;
-        updated[id] = { ...updated[id], cpm_pricing: (device * unitPrice).toString() };
-      }
-      return updated;
-    });
+    setEditedAgreements((prev) => ({
+      ...prev,
+      [id]: { ...prev[id], [field]: value },
+    }));
   };
 
   // Invoice editing helpers
@@ -427,13 +419,9 @@ const CustomerInvoiceReport = () => {
                         </td>
                         <td className="px-1 py-1 text-center">
                           <Input
-                            className="h-7 text-xs border-gray-300 text-center w-16 mx-auto bg-muted"
-                            value={(() => {
-                              const device = parseFloat(getAgreementValue(a, "cpm_device_onsite")) || 0;
-                              const unitPrice = parseFloat(getAgreementValue(a, "unit_price")) || 0;
-                              return (device * unitPrice).toFixed(2);
-                            })()}
-                            readOnly
+                            className="h-7 text-xs border-gray-300 text-center w-16 mx-auto"
+                            value={getAgreementValue(a, "cpm_pricing")}
+                            onChange={(e) => setAgreementValue(a.id, "cpm_pricing", e.target.value)}
                           />
                         </td>
                         <td className="px-1 py-1">
