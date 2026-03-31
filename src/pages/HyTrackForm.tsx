@@ -907,6 +907,7 @@ const HyTrackForm = () => {
           )}
         </div>
       </div>
+      </div>{/* end print:hidden */}
     </div>
   );
 };
