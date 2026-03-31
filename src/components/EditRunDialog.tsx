@@ -93,7 +93,8 @@ export function EditRunDialog({ run, open, onOpenChange }: EditRunDialogProps) {
           products: values.products || null,
           frequency: values.frequency || null,
           technicians: values.technicians || null,
-        })
+          work: values.work || null,
+        } as any)
         .eq("id", run.id);
 
       if (error) throw error;
