@@ -1,0 +1,1 @@
+DELETE FROM public.customer_service_reports WHERE id IN ('5473ef38-c6dc-4246-94d6-9a1560f6ccd1', 'e69177a1-ef27-4e4d-971d-262bf25c0290', '8f09c041-143b-4852-8ed3-85a037076bfd');
