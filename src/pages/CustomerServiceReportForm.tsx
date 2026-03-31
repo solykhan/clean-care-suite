@@ -48,6 +48,7 @@ const CustomerServiceReportForm = () => {
       technician_name: "",
       client_email: "",
       site_officer_name: "",
+      complete: "pending",
       comments: "",
       s_officer_sig: "",
       tech_sig: "",
