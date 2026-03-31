@@ -42,8 +42,7 @@ const RunDashboard = () => {
     return runs.filter((run) => {
       const techs = run.technicians?.toLowerCase() || "";
       const match1 = technician1 === "all" || techs.includes(technician1.toLowerCase());
-      const match2 = technician2 === "all" || techs.includes(technician2.toLowerCase());
-      return match1 && match2;
+      return match1;
     });
   }, [runs, technician1, technician2]);
 
