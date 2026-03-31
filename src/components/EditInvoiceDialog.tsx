@@ -258,7 +258,7 @@ export function EditInvoiceDialog({ serviceId, externalOpen, onExternalOpenChang
               />
 
               <div className="flex justify-end gap-2 pt-2">
-                <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
                   Cancel
                 </Button>
                 <Button type="submit" disabled={saving}>

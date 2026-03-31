@@ -211,6 +211,14 @@ export default function Invoices() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {editInvId && (
+        <EditInvoiceDialog
+          serviceId={editInvId}
+          externalOpen={true}
+          onExternalOpenChange={(open) => { if (!open) setEditInvId(null); }}
+        />
+      )}
     </div>
   );
 }
