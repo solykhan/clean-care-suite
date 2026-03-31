@@ -727,7 +727,7 @@ const HyTrackForm = () => {
                 })
               ) : (
                 <TableRow>
-                  <TableCell colSpan={13} className="text-center text-muted-foreground py-6 text-sm">
+                  <TableCell colSpan={14} className="text-center text-muted-foreground py-6 text-sm">
                     No service agreements found for this customer.
                   </TableCell>
                 </TableRow>
