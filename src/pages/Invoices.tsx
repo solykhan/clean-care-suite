@@ -34,6 +34,8 @@ type Invoice = {
   particulars: string | null;
   user_date: string | null;
   created_at: string;
+  customer_name?: string;
+  customer_suburb?: string;
 };
 
 export default function Invoices() {
