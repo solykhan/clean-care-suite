@@ -433,7 +433,7 @@ const HyTrackForm = () => {
                         <Select value={getAgreementValue(a, "invoice_type") || ""} onValueChange={(v) => setAgreementValue(a.id, "invoice_type", v)}>
                           <SelectTrigger className="h-7 text-xs w-28"><SelectValue /></SelectTrigger>
                           <SelectContent>
-                            {["ANNUALLY", "MONTHLY", "QUARTERLY"].map((t) => (
+                            {["BI MONTHLY", "MONTHLY", "QUARTERLY", "6 WEEKLY", "WEEKLY", "FORTNIGHTLY", "6 MONTHLY", "ANNUALLY", "TWICE A WEEK", "PURCHASE ONLY", "RENTAL"].map((t) => (
                               <SelectItem key={t} value={t}>{t}</SelectItem>
                             ))}
                           </SelectContent>
