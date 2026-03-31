@@ -348,6 +348,28 @@ const EditServiceReport = () => {
 
                 <FormField
                   control={form.control}
+                  name="complete"
+                  render={({ field }) => (
+                    <FormItem className="w-fit min-w-[200px] md:w-auto group rounded-lg p-3 transition-all duration-200 hover:bg-accent/40 hover:shadow-sm hover:ring-1 hover:ring-border">
+                      <FormLabel>Work</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value || "pending"}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select status" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="pending">Pending</SelectItem>
+                          <SelectItem value="completed">Completed</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
                   name="comments"
                   render={({ field }) => (
                     <FormItem className="w-fit min-w-[250px] md:w-auto group rounded-lg p-3 transition-all duration-200 hover:bg-accent/40 hover:shadow-sm hover:ring-1 hover:ring-border">
