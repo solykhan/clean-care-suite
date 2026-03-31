@@ -415,7 +415,7 @@ const HyTrackForm = () => {
                         <Input className="h-7 text-xs border-border w-40" value={getAgreementValue(a, "areas_covered")} onChange={(e) => setAgreementValue(a.id, "areas_covered", e.target.value)} />
                       </TableCell>
                       <TableCell className="py-1 text-center">
-                        <Input className="h-7 text-xs border-border text-center w-14 mx-auto" value={getAgreementValue(a, "cpm_device_onsite") || "0"} onChange={(e) => setAgreementValue(a.id, "cpm_device_onsite", e.target.value)} />
+                        <span className="text-xs text-muted-foreground">0</span>
                       </TableCell>
                       <TableCell className="py-1 text-center">
                         <Input className="h-7 text-xs border-border text-center w-14 mx-auto" value={getAgreementValue(a, "cpm_device_onsite") || "0"} onChange={(e) => setAgreementValue(a.id, "cpm_device_onsite", e.target.value)} />
