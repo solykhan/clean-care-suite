@@ -255,15 +255,33 @@ const HyTrackForm = () => {
     }));
   };
 
+  const addNewAgreement = () => {
+    if (!selectedCustomer) return;
+    setNewAgreements((prev) => [...prev, {
+      id: crypto.randomUUID(),
+      service_id: selectedCustomer.service_id,
+      products: "",
+      service_frequency: "",
+      service_active_inactive: "ACT",
+      areas_covered: "",
+      cpm_device_onsite: "0",
+      unit_price: "0",
+      cpi: "0",
+      invoice_type: "",
+      comments: "",
+    }]);
+  };
+
   // Save agreements
   const handleSaveAgreements = async () => {
     const ids = Object.keys(editedAgreements);
-    if (ids.length === 0) { toast.info("No changes to save"); return; }
+    const hasEdits = ids.length > 0;
+    const hasNew = newAgreements.length > 0;
+    if (!hasEdits && !hasNew) { toast.info("No changes to save"); return; }
     setSavingAgreements(true);
     try {
       for (const id of ids) {
         const changes = { ...editedAgreements[id] };
-        // Auto-compute cpm_pricing
         const agreement = serviceAgreements?.find((a: any) => a.id === id);
         const getVal = (f: string) => changes[f] !== undefined ? changes[f] : (agreement?.[f] ?? "");
         const device = parseFloat(getVal("cpm_device_onsite")) || 0;
@@ -280,8 +298,25 @@ const HyTrackForm = () => {
         const { error } = await supabase.from("service_agreements").update(payload).eq("id", id);
         if (error) throw error;
       }
+      // Insert new agreements
+      for (const newAg of newAgreements) {
+        const device = parseFloat(newAg.cpm_device_onsite) || 0;
+        const unitPrice = parseFloat(newAg.unit_price) || 0;
+        const cpi = parseFloat(newAg.cpi) || 0;
+        const { id, ...rest } = newAg;
+        const { error } = await supabase.from("service_agreements").insert({
+          ...rest,
+          unit_price: unitPrice || null,
+          cpm_pricing: device * unitPrice || null,
+          cpi: cpi || null,
+          total: (unitPrice * cpi) + unitPrice || null,
+          cpm_device_onsite: newAg.cpm_device_onsite || null,
+        });
+        if (error) throw error;
+      }
       toast.success("Service agreements saved");
       setEditedAgreements({});
+      setNewAgreements([]);
       queryClient.invalidateQueries({ queryKey: ["hytrack-agreements"] });
     } catch (e: any) {
       toast.error("Save failed", { description: e.message });
