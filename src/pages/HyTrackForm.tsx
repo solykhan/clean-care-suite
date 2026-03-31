@@ -460,8 +460,8 @@ const HyTrackForm = () => {
       </div>
 
       {/* Service Agreements Table */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-2">
+      <div className="mb-6 -mx-[10%]">
+        <div className="flex items-center justify-between mb-2 px-[10%]">
           <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">Service Agreements</h3>
           <Button size="sm" variant="default" onClick={handleSaveAgreements} disabled={savingAgreements}>
             <Save className="h-3 w-3 mr-1" /> Save Agreements
