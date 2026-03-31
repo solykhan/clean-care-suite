@@ -73,6 +73,7 @@ export function EditRunDialog({ run, open, onOpenChange }: EditRunDialogProps) {
         products: run.products || "",
         frequency: run.frequency || "",
         technicians: run.technicians || "",
+        work: (run as any).work || "",
       });
     }
   }, [run, open, form]);
