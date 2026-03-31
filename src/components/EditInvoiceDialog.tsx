@@ -41,9 +41,12 @@ type FormValues = z.infer<typeof schema>;
 
 interface EditInvoiceDialogProps {
   serviceId: string;
+  externalOpen?: boolean;
+  onExternalOpenChange?: (open: boolean) => void;
 }
 
-export function EditInvoiceDialog({ serviceId }: EditInvoiceDialogProps) {
+export function EditInvoiceDialog({ serviceId, externalOpen, onExternalOpenChange }: EditInvoiceDialogProps) {
+  const isControlled = externalOpen !== undefined;
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [invoiceId, setInvoiceId] = useState<string | null>(null);
@@ -88,10 +91,20 @@ export function EditInvoiceDialog({ serviceId }: EditInvoiceDialogProps) {
     }
   };
 
+  const isOpen = isControlled ? externalOpen : open;
+
   const handleOpenChange = (val: boolean) => {
-    setOpen(val);
+    if (isControlled) {
+      onExternalOpenChange?.(val);
+    } else {
+      setOpen(val);
+    }
     if (val) loadInvoice();
   };
+
+  useEffect(() => {
+    if (isControlled && externalOpen) loadInvoice();
+  }, [isControlled, externalOpen]);
 
   const onSubmit = async (values: FormValues) => {
     setSaving(true);
@@ -114,7 +127,7 @@ export function EditInvoiceDialog({ serviceId }: EditInvoiceDialogProps) {
       }
 
       queryClient.invalidateQueries({ queryKey: ["invoices"] });
-      setOpen(false);
+      handleOpenChange(false);
     } catch (e: any) {
       toast.error("Failed to save invoice", { description: e.message });
     } finally {
@@ -123,13 +136,15 @@ export function EditInvoiceDialog({ serviceId }: EditInvoiceDialogProps) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-2">
-          <Pencil className="h-4 w-4" />
-          Edit Invoice
-        </Button>
-      </DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      {!isControlled && (
+        <DialogTrigger asChild>
+          <Button variant="outline" size="sm" className="gap-2">
+            <Pencil className="h-4 w-4" />
+            Edit Invoice
+          </Button>
+        </DialogTrigger>
+      )}
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>{invoiceId ? "Edit Invoice" : "Create Invoice"}</DialogTitle>
@@ -243,7 +258,7 @@ export function EditInvoiceDialog({ serviceId }: EditInvoiceDialogProps) {
               />
 
               <div className="flex justify-end gap-2 pt-2">
-                <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
                   Cancel
                 </Button>
                 <Button type="submit" disabled={saving}>

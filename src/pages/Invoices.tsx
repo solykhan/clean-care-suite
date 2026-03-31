@@ -26,6 +26,7 @@ import { toast } from "sonner";
 import { format } from "date-fns";
 import { AddInvoiceDialog } from "@/components/AddInvoiceDialog";
 import { InvoiceImportDialog } from "@/components/InvoiceImportDialog";
+import { EditInvoiceDialog } from "@/components/EditInvoiceDialog";
 
 type Invoice = {
   id: string;
@@ -43,6 +44,7 @@ export default function Invoices() {
   const [searchTerm, setSearchTerm] = useState("");
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [editInvId, setEditInvId] = useState<string | null>(null);
 
   const { data: invoices = [], isLoading } = useQuery({
     queryKey: ["invoices"],
@@ -164,7 +166,7 @@ export default function Invoices() {
             </TableHeader>
             <TableBody>
               {filtered.map((inv) => (
-                <TableRow key={inv.id}>
+                <TableRow key={inv.id} className="cursor-pointer hover:bg-muted/50" onClick={() => setEditInvId(inv.inv_id)}>
                   <TableCell className="font-medium">{inv.inv_id}</TableCell>
                   <TableCell>{inv.customer_name || "—"}</TableCell>
                   <TableCell>{inv.customer_suburb || "—"}</TableCell>
@@ -176,7 +178,7 @@ export default function Invoices() {
                       variant="ghost"
                       size="icon"
                       className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
-                      onClick={() => setDeleteId(inv.id)}
+                      onClick={(e) => { e.stopPropagation(); setDeleteId(inv.id); }}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -209,6 +211,14 @@ export default function Invoices() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {editInvId && (
+        <EditInvoiceDialog
+          serviceId={editInvId}
+          externalOpen={true}
+          onExternalOpenChange={(open) => { if (!open) setEditInvId(null); }}
+        />
+      )}
     </div>
   );
 }
