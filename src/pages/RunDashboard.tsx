@@ -44,7 +44,7 @@ const RunDashboard = () => {
       const match1 = technician1 === "all" || techs.includes(technician1.toLowerCase());
       return match1;
     });
-  }, [runs, technician1, technician2]);
+  }, [runs, technician1]);
 
   const completedCount = filteredRuns.filter((r) => r.completed === "completed").length;
   const pendingCount = filteredRuns.filter((r) => r.completed !== "completed").length;
