@@ -60,9 +60,7 @@ export default function Invoices() {
     return invoices.filter(
       (inv) =>
         inv.inv_id?.toLowerCase().includes(q) ||
-        inv.particulars?.toLowerCase().includes(q) ||
-        inv.customer_name?.toLowerCase().includes(q) ||
-        inv.customer_suburb?.toLowerCase().includes(q)
+        inv.particulars?.toLowerCase().includes(q)
     );
   }, [invoices, searchTerm]);
 
