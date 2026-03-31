@@ -127,6 +127,7 @@ const PRODUCT_OPTIONS = [
   "white soap 4 Ltr",
 ];
 
+interface Customer {
   id: string;
   service_id: string;
   site_name: string;
