@@ -102,7 +102,7 @@ const CustomerInvoiceReport = () => {
       const updated = { ...prev, [id]: { ...prev[id], [field]: value } };
       // Auto-calculate cpm_pricing when cpm_device_onsite or unit_price changes
       if (field === "cpm_device_onsite" || field === "unit_price") {
-        const agreement = agreements?.find((a: any) => a.id === id);
+        const agreement = serviceAgreements?.find((a: any) => a.id === id);
         const getVal = (f: string) => updated[id]?.[f] !== undefined ? updated[id][f] : (agreement?.[f] ?? "");
         const device = parseFloat(getVal("cpm_device_onsite")) || 0;
         const unitPrice = parseFloat(getVal("unit_price")) || 0;
