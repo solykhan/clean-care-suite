@@ -127,59 +127,106 @@ const RunsCalendar = () => {
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {weekDays.map((day) => (
-              <Card key={day} className="flex flex-col h-full">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-lg flex items-center justify-between">
-                    <span>{day}</span>
-                    <Badge variant="secondary">{runsByDay[day].length}</Badge>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="flex-1 space-y-2">
-                  {runsByDay[day].length === 0 ? (
-                    <p className="text-sm text-muted-foreground text-center py-8">No runs scheduled</p>
-                  ) : (
-                    runsByDay[day].map((run) => (
-                      <Card 
-                        key={run.id} 
-                        className="p-3 hover:shadow-md transition-shadow cursor-pointer border-l-4 border-l-primary"
-                        onClick={() => navigate(`/customer-service-report?service_id=${run.service_id}`)}
-                      >
-                        <div className="space-y-2">
-                          <div className="flex items-center justify-between">
-                            <span className="font-semibold text-sm">{run.service_id}</span>
-                            <Badge variant="outline" className="text-xs">{run.weeks}</Badge>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-4">
+              {weekDays.slice(0, 5).map((day) => (
+                <Card key={day} className="flex flex-col h-full min-w-0">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg flex items-center justify-between">
+                      <span>{day}</span>
+                      <Badge variant="secondary">{runsByDay[day].length}</Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex-1 space-y-2">
+                    {runsByDay[day].length === 0 ? (
+                      <p className="text-sm text-muted-foreground text-center py-8">No runs scheduled</p>
+                    ) : (
+                      runsByDay[day].map((run) => (
+                        <Card 
+                          key={run.id} 
+                          className="p-3 hover:shadow-md transition-shadow cursor-pointer border-l-4 border-l-primary"
+                          onClick={() => navigate(`/customer-service-report?service_id=${run.service_id}`)}
+                        >
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="font-semibold text-sm">{run.service_id}</span>
+                              <Badge variant="outline" className="text-xs">{run.weeks}</Badge>
+                            </div>
+                            <div className="text-xs space-y-1">
+                              <p className="font-medium text-foreground break-words">{run.clients}</p>
+                              {run.suburb && <p className="text-muted-foreground break-words">{run.suburb}</p>}
+                              {run.technicians && (
+                                <div className="flex items-center gap-1 text-primary">
+                                  <PlayCircle className="h-3 w-3 shrink-0" />
+                                  <span className="break-words">{run.technicians}</span>
+                                </div>
+                              )}
+                              {run.products && (
+                                <p className="text-muted-foreground break-words">{run.products}</p>
+                              )}
+                              {run.frequency && (
+                                <Badge variant="secondary" className="text-xs">{run.frequency}</Badge>
+                              )}
+                            </div>
                           </div>
-                          
-                          <div className="text-xs space-y-1">
-                            <p className="font-medium text-foreground">{run.clients}</p>
-                            {run.suburb && (
-                              <p className="text-muted-foreground">{run.suburb}</p>
-                            )}
-                            {run.technicians && (
-                              <div className="flex items-center gap-1 text-primary">
-                                <PlayCircle className="h-3 w-3" />
-                                <span>{run.technicians}</span>
+                        </Card>
+                      ))
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+            {weekDays.slice(5).some((day) => runsByDay[day].length > 0) && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {weekDays.slice(5).map((day) => (
+                  <Card key={day} className="flex flex-col h-full min-w-0">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-lg flex items-center justify-between">
+                        <span>{day}</span>
+                        <Badge variant="secondary">{runsByDay[day].length}</Badge>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex-1 space-y-2">
+                      {runsByDay[day].length === 0 ? (
+                        <p className="text-sm text-muted-foreground text-center py-8">No runs scheduled</p>
+                      ) : (
+                        runsByDay[day].map((run) => (
+                          <Card 
+                            key={run.id} 
+                            className="p-3 hover:shadow-md transition-shadow cursor-pointer border-l-4 border-l-primary"
+                            onClick={() => navigate(`/customer-service-report?service_id=${run.service_id}`)}
+                          >
+                            <div className="space-y-2">
+                              <div className="flex items-center justify-between">
+                                <span className="font-semibold text-sm">{run.service_id}</span>
+                                <Badge variant="outline" className="text-xs">{run.weeks}</Badge>
                               </div>
-                            )}
-                            {run.products && (
-                              <p className="text-muted-foreground truncate" title={run.products}>
-                                {run.products}
-                              </p>
-                            )}
-                            {run.frequency && (
-                              <Badge variant="secondary" className="text-xs">{run.frequency}</Badge>
-                            )}
-                          </div>
-                        </div>
-                      </Card>
-                    ))
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                              <div className="text-xs space-y-1">
+                                <p className="font-medium text-foreground break-words">{run.clients}</p>
+                                {run.suburb && <p className="text-muted-foreground break-words">{run.suburb}</p>}
+                                {run.technicians && (
+                                  <div className="flex items-center gap-1 text-primary">
+                                    <PlayCircle className="h-3 w-3 shrink-0" />
+                                    <span className="break-words">{run.technicians}</span>
+                                  </div>
+                                )}
+                                {run.products && (
+                                  <p className="text-muted-foreground break-words">{run.products}</p>
+                                )}
+                                {run.frequency && (
+                                  <Badge variant="secondary" className="text-xs">{run.frequency}</Badge>
+                                )}
+                              </div>
+                            </div>
+                          </Card>
+                        ))
+                      )}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
