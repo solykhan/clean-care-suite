@@ -136,13 +136,15 @@ export function EditInvoiceDialog({ serviceId, externalOpen, onExternalOpenChang
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-2">
-          <Pencil className="h-4 w-4" />
-          Edit Invoice
-        </Button>
-      </DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      {!isControlled && (
+        <DialogTrigger asChild>
+          <Button variant="outline" size="sm" className="gap-2">
+            <Pencil className="h-4 w-4" />
+            Edit Invoice
+          </Button>
+        </DialogTrigger>
+      )}
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>{invoiceId ? "Edit Invoice" : "Create Invoice"}</DialogTitle>
