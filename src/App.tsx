@@ -65,6 +65,7 @@ const App = () => (
               <Route path="/technician-dashboard" element={<TechnicianRoute><TechnicianDashboard /></TechnicianRoute>} />
               <Route path="/runs" element={<TechnicianRoute><Runs /></TechnicianRoute>} />
               <Route path="/runs/calendar" element={<TechnicianRoute><RunsCalendar /></TechnicianRoute>} />
+              <Route path="/run-dashboard" element={<AdminRoute><RunDashboard /></AdminRoute>} />
 
               <Route path="*" element={<NotFound />} />
             </Route>
