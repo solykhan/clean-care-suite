@@ -148,6 +148,7 @@ const HyTrackForm = () => {
   const [editedAgreements, setEditedAgreements] = useState<Record<string, any>>({});
   const [editedInvoices, setEditedInvoices] = useState<Record<string, any>>({});
   const [newInvoices, setNewInvoices] = useState<any[]>([]);
+  const [newAgreements, setNewAgreements] = useState<any[]>([]);
   const [savingAgreements, setSavingAgreements] = useState(false);
   const [savingInvoices, setSavingInvoices] = useState(false);
 
