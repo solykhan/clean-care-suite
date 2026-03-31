@@ -442,7 +442,7 @@ const HyTrackForm = () => {
   return (
     <div className="p-4 max-w-[1400px] mx-auto">
       {/* Top navigation buttons */}
-      <div className="flex items-center gap-2 mb-4 flex-wrap">
+      <div className="flex items-center gap-2 mb-4 flex-wrap print:hidden">
         <Button variant="outline" size="sm" onClick={() => { resetState(); setSelectedCustomerId(null); }}>
           <ArrowLeft className="h-4 w-4 mr-1" /> Home
         </Button>
@@ -500,7 +500,7 @@ const HyTrackForm = () => {
       <div className="mb-6 -mx-[10%]">
         <div className="flex items-center justify-between mb-2 px-[10%]">
           <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">Service Agreements</h3>
-          <div className="flex gap-2">
+          <div className="flex gap-2 print:hidden">
             <Button size="sm" variant="outline" onClick={addNewAgreement}>
               <Plus className="h-3 w-3 mr-1" /> Add Entry
             </Button>
@@ -699,7 +699,7 @@ const HyTrackForm = () => {
       <div>
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">Invoice Details</h3>
-          <div className="flex gap-2">
+          <div className="flex gap-2 print:hidden">
             <Button size="sm" variant="outline" onClick={addNewInvoice}>
               <Plus className="h-3 w-3 mr-1" /> Add Entry
             </Button>
