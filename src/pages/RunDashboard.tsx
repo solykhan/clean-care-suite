@@ -81,7 +81,7 @@ const RunDashboard = () => {
               </Select>
             </div>
             <div className="space-y-1.5">
-              <label className="text-sm font-medium text-foreground">Technician 2</label>
+              <label className="text-sm font-medium text-foreground">Technician B</label>
               <Select value={technician2} onValueChange={setTechnician2}>
                 <SelectTrigger className="min-w-[200px]">
                   <SelectValue placeholder="All Technicians" />
