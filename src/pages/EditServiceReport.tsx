@@ -93,17 +93,21 @@ const EditServiceReport = () => {
         client_email: report.client_email || "",
         site_officer_name: report.site_officer_name || "",
         comments: report.comments || "",
+        complete: report.complete || "pending",
         s_officer_sig: report.s_officer_sig || "",
         tech_sig: report.tech_sig || "",
       });
 
-      // Load existing signatures
-      if (report.s_officer_sig && officerSignaturePadRef.current) {
-        officerSignaturePadRef.current.fromDataURL(report.s_officer_sig);
-      }
-      if (report.tech_sig && techSignaturePadRef.current) {
-        techSignaturePadRef.current.fromDataURL(report.tech_sig);
-      }
+      // Load existing signatures with a delay to ensure canvas is mounted
+      const timer = setTimeout(() => {
+        if (report.s_officer_sig && officerSignaturePadRef.current) {
+          officerSignaturePadRef.current.fromDataURL(report.s_officer_sig);
+        }
+        if (report.tech_sig && techSignaturePadRef.current) {
+          techSignaturePadRef.current.fromDataURL(report.tech_sig);
+        }
+      }, 300);
+      return () => clearTimeout(timer);
     }
   }, [report, form]);
 
