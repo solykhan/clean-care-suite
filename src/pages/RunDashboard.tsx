@@ -235,6 +235,15 @@ const RunDashboard = () => {
               <ArrowRightLeft className="h-4 w-4" />
               Transfer {selectedRuns.size > 0 ? `(${selectedRuns.size})` : ""}
             </Button>
+            <Button
+              variant="outline"
+              onClick={handleRevert}
+              disabled={revertMutation.isPending || selectedTransferredCount === 0}
+              className="gap-2"
+            >
+              <Undo2 className="h-4 w-4" />
+              Revert {selectedTransferredCount > 0 ? `(${selectedTransferredCount})` : ""}
+            </Button>
           </div>
         </CardContent>
       </Card>
