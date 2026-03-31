@@ -76,6 +76,7 @@ const EditServiceReport = () => {
       client_email: "",
       site_officer_name: "",
       comments: "",
+      complete: "pending",
       s_officer_sig: "",
       tech_sig: "",
     },
