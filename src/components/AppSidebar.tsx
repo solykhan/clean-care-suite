@@ -1,4 +1,4 @@
-import { Home, Building2, FileText, PlayCircle, ClipboardList, Gauge, Shield, Users, User, Receipt, FileBarChart, LayoutDashboard } from "lucide-react";
+import { Home, Building2, FileText, PlayCircle, ClipboardList, Gauge, Shield, Users, User, Receipt, LayoutDashboard } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { LogoutButton } from "@/components/LogoutButton";
 import { useState, useEffect } from "react";
