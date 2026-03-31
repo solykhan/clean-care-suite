@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Users, ArrowRightLeft } from "lucide-react";
+import { Users, ArrowRightLeft, Undo2 } from "lucide-react";
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
 
