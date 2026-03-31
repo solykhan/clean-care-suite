@@ -127,7 +127,7 @@ export function EditInvoiceDialog({ serviceId, externalOpen, onExternalOpenChang
       }
 
       queryClient.invalidateQueries({ queryKey: ["invoices"] });
-      setOpen(false);
+      handleOpenChange(false);
     } catch (e: any) {
       toast.error("Failed to save invoice", { description: e.message });
     } finally {
