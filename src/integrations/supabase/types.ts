@@ -19,6 +19,7 @@ export type Database = {
           air_fresheners: number | null
           client_email: string | null
           comments: string | null
+          complete: string
           created_at: string
           grit_soap: number | null
           hand_sanitisers: number | null
@@ -50,6 +51,7 @@ export type Database = {
           air_fresheners?: number | null
           client_email?: string | null
           comments?: string | null
+          complete?: string
           created_at?: string
           grit_soap?: number | null
           hand_sanitisers?: number | null
@@ -81,6 +83,7 @@ export type Database = {
           air_fresheners?: number | null
           client_email?: string | null
           comments?: string | null
+          complete?: string
           created_at?: string
           grit_soap?: number | null
           hand_sanitisers?: number | null
