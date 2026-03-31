@@ -252,10 +252,12 @@ export type Database = {
           created_at: string | null
           frequency: string | null
           id: string
+          original_technicians: string | null
           products: string | null
           service_id: string
           suburb: string | null
           technicians: string | null
+          transferred: boolean | null
           updated_at: string | null
           week_day: string | null
           weeks: string | null
@@ -267,10 +269,12 @@ export type Database = {
           created_at?: string | null
           frequency?: string | null
           id?: string
+          original_technicians?: string | null
           products?: string | null
           service_id: string
           suburb?: string | null
           technicians?: string | null
+          transferred?: boolean | null
           updated_at?: string | null
           week_day?: string | null
           weeks?: string | null
@@ -282,10 +286,12 @@ export type Database = {
           created_at?: string | null
           frequency?: string | null
           id?: string
+          original_technicians?: string | null
           products?: string | null
           service_id?: string
           suburb?: string | null
           technicians?: string | null
+          transferred?: boolean | null
           updated_at?: string | null
           week_day?: string | null
           weeks?: string | null
