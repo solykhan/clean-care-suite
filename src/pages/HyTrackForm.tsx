@@ -439,8 +439,106 @@ const HyTrackForm = () => {
   }
 
   // HyTrack form view
+  // Calculate totals for print view
+  const printTotalUnitRate = serviceAgreements?.reduce((sum, a) => sum + (parseFloat(a.unit_price?.toString() || "0") || 0), 0) || 0;
+  const printAnnualTotal = serviceAgreements?.reduce((sum, a) => {
+    const unitPrice = parseFloat(a.unit_price?.toString() || "0") || 0;
+    const cpi = parseFloat(a.cpi?.toString() || "0") || 0;
+    return sum + (unitPrice * cpi) + unitPrice;
+  }, 0) || 0;
+  const printInvoiceType = serviceAgreements?.[0]?.invoice_type || "—";
+
   return (
     <div className="p-4 max-w-[1400px] mx-auto">
+      {/* ===== PRINT-ONLY VIEW ===== */}
+      <div className="hidden print:block" style={{ fontFamily: "Arial, sans-serif", color: "#000" }}>
+        {/* Header */}
+        <div style={{ borderBottom: "2px solid #333", paddingBottom: 8, marginBottom: 12 }}>
+          <h1 style={{ fontSize: 28, fontStyle: "italic", fontWeight: "bold", margin: 0 }}>HyTrack</h1>
+          <p style={{ fontSize: 9, margin: "2px 0 6px 0" }}>CPM Hygiene Services Foundry Road Seven Hills NSW</p>
+          <h2 style={{ fontSize: 13, fontWeight: "bold", letterSpacing: 1, margin: 0 }}>CUSTOMER ONSITE HYGIENE LISTING AND INVOICING DETAILS</h2>
+        </div>
+
+        {/* Customer Info */}
+        <table style={{ width: "100%", fontSize: 10, borderCollapse: "collapse", marginBottom: 8 }}>
+          <tbody>
+            <tr>
+              <td style={{ padding: "2px 0" }}><b>ID:</b> &nbsp; {selectedCustomer?.service_id}</td>
+              <td style={{ padding: "2px 0" }}><b>Invoiced Under:</b> &nbsp; {selectedCustomer?.site_accounts_contact || "—"}</td>
+            </tr>
+            <tr>
+              <td style={{ padding: "2px 0" }} colSpan={2}><b>Client:</b> &nbsp; {selectedCustomer?.site_name}</td>
+            </tr>
+            <tr>
+              <td style={{ padding: "2px 0", verticalAlign: "top" }}>
+                <b>Site Address:</b> &nbsp; {[selectedCustomer?.site_street_name, selectedCustomer?.site_suburb, selectedCustomer?.site_post_code].filter(Boolean).join(", ") || "—"}
+              </td>
+              <td style={{ padding: "2px 0", verticalAlign: "top" }}>
+                <div><b>Contact 1:</b></div>
+                <div>{[selectedCustomer?.site_contact_first_name, selectedCustomer?.site_contact_lastname].filter(Boolean).join(" ") || "—"}</div>
+                <div>{selectedCustomer?.site_telephone_no1 || ""}</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        {/* Products Table */}
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 10, marginTop: 16 }}>
+          <thead>
+            <tr style={{ borderBottom: "2px solid #333" }}>
+              <th style={{ textAlign: "left", padding: "4px 6px", fontWeight: "bold" }}>PRODUCT</th>
+              <th style={{ textAlign: "center", padding: "4px 6px", fontWeight: "bold" }}>QTY</th>
+              <th style={{ textAlign: "left", padding: "4px 6px", fontWeight: "bold" }}>SERVICE FREQUENCY</th>
+              <th style={{ textAlign: "right", padding: "4px 6px", fontWeight: "bold" }}>UNIT RATE</th>
+              <th style={{ textAlign: "right", padding: "4px 6px", fontWeight: "bold" }}>TOTAL PER ANNUM</th>
+            </tr>
+          </thead>
+          <tbody>
+            {serviceAgreements?.map((a, i) => {
+              const unitPrice = parseFloat(a.unit_price?.toString() || "0") || 0;
+              const cpi = parseFloat(a.cpi?.toString() || "0") || 0;
+              const total = (unitPrice * cpi) + unitPrice;
+              const qty = a.cpm_device_onsite || "0";
+              return (
+                <tr key={a.id} style={{ borderBottom: "1px solid #ccc" }}>
+                  <td style={{ padding: "3px 6px" }}>{a.products || "—"}</td>
+                  <td style={{ padding: "3px 6px", textAlign: "center" }}>{qty}</td>
+                  <td style={{ padding: "3px 6px" }}>{a.service_frequency || "—"}</td>
+                  <td style={{ padding: "3px 6px", textAlign: "right" }}>${unitPrice.toFixed(2)}</td>
+                  <td style={{ padding: "3px 6px", textAlign: "right" }}>${total.toFixed(2)}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+          <tfoot>
+            <tr style={{ borderTop: "2px solid #333" }}>
+              <td colSpan={2} style={{ padding: "4px 6px", textAlign: "center", fontWeight: "bold" }}>
+                Invoiced &nbsp; <span style={{ fontWeight: "bold" }}>{printInvoiceType}</span>
+              </td>
+              <td style={{ padding: "4px 6px", textAlign: "center" }}>@</td>
+              <td style={{ padding: "4px 6px", textAlign: "right", fontWeight: "bold" }}>${printTotalUnitRate.toFixed(2)} &nbsp; +GST</td>
+              <td style={{ padding: "4px 6px", textAlign: "right", fontWeight: "bold" }}>
+                Annual Total: &nbsp; ${printAnnualTotal.toFixed(2)}
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+
+        {/* Invoice Details */}
+        {invoices && invoices.length > 0 && (
+          <div style={{ marginTop: 24, fontSize: 10 }}>
+            {invoices.map((inv) => (
+              <div key={inv.id} style={{ display: "flex", gap: 16, padding: "3px 0", borderBottom: "1px solid #eee" }}>
+                <span style={{ fontWeight: "bold", minWidth: 70 }}>{inv.entry_date || ""}</span>
+                <span>{inv.particulars || ""}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* ===== SCREEN-ONLY VIEW ===== */}
+      <div className="print:hidden">
       {/* Top navigation buttons */}
       <div className="flex items-center gap-2 mb-4 flex-wrap print:hidden">
         <Button variant="outline" size="sm" onClick={() => { resetState(); setSelectedCustomerId(null); }}>
@@ -809,6 +907,7 @@ const HyTrackForm = () => {
           )}
         </div>
       </div>
+      </div>{/* end print:hidden */}
     </div>
   );
 };
