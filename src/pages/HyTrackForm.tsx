@@ -166,6 +166,15 @@ const HyTrackForm = () => {
     },
   });
 
+  // Auto-select customer from URL params
+  useEffect(() => {
+    const customerId = searchParams.get("customerId");
+    if (customerId && customers && !selectedCustomerId) {
+      const found = customers.find((c) => c.id === customerId);
+      if (found) setSelectedCustomerId(found.id);
+    }
+  }, [customers, searchParams, selectedCustomerId]);
+
   const selectedCustomer = customers?.find((c) => c.id === selectedCustomerId);
 
   const { data: serviceAgreements, isLoading: isLoadingAgreements } = useQuery({
