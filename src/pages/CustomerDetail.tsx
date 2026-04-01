@@ -271,6 +271,7 @@ const CustomerDetail = () => {
                 onSuccess={() => {
                   queryClient.invalidateQueries({ queryKey: ["service-agreements", customer.service_id] });
                 }}
+                disabled
               />
             </div>
           </CardHeader>

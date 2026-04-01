@@ -56,6 +56,7 @@ type FormValues = z.infer<typeof formSchema>;
 interface ServiceAgreementFormProps {
   serviceId?: string;
   onSuccess?: () => void;
+  disabled?: boolean;
 }
 
 const DEFAULT_FREQUENCIES = [
@@ -205,7 +206,7 @@ const DEFAULT_TECHNICIANS = [
   "Jayden",
 ];
 
-export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementFormProps) {
+export function ServiceAgreementForm({ serviceId, onSuccess, disabled }: ServiceAgreementFormProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [addingToRuns, setAddingToRuns] = useState(false);
@@ -360,7 +361,7 @@ export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementF
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
+        <Button disabled={disabled}>
           <Plus className="mr-2 h-4 w-4" />
           New Service Agreement
         </Button>

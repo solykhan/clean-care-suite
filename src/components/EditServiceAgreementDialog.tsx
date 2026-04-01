@@ -433,7 +433,7 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
       <DialogTrigger asChild>
         <Button size="sm">
           <Pencil className="h-4 w-4 mr-2" />
-          Edit
+          Schedule Runs
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
