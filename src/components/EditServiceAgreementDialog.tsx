@@ -584,178 +584,11 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
               )}
             />
 
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="invoice_type"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Invoice Type</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select invoice type" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {invoiceTypes.map((t) => (
-                          <SelectItem key={t} value={t}>{t}</SelectItem>
-                        ))}
-                        <div className="p-1 border-t mt-1">
-                          {addingInvoiceType ? (
-                            <div className="flex gap-1 p-1">
-                              <Input
-                                autoFocus
-                                value={newInvoiceType}
-                                onChange={(e) => setNewInvoiceType(e.target.value)}
-                                placeholder="New invoice type..."
-                                className="h-7 text-xs"
-                                onKeyDown={(e) => {
-                                  if (e.key === "Enter") {
-                                    e.preventDefault();
-                                    const trimmed = newInvoiceType.trim().toUpperCase();
-                                    if (trimmed && !invoiceTypes.includes(trimmed)) {
-                                      setInvoiceTypes((prev) => [...prev, trimmed]);
-                                      field.onChange(trimmed);
-                                    }
-                                    setNewInvoiceType("");
-                                    setAddingInvoiceType(false);
-                                  }
-                                  if (e.key === "Escape") {
-                                    setAddingInvoiceType(false);
-                                    setNewInvoiceType("");
-                                  }
-                                }}
-                              />
-                              <Button
-                                type="button"
-                                size="sm"
-                                className="h-7 px-2 text-xs"
-                                onClick={() => {
-                                  const trimmed = newInvoiceType.trim().toUpperCase();
-                                  if (trimmed && !invoiceTypes.includes(trimmed)) {
-                                    setInvoiceTypes((prev) => [...prev, trimmed]);
-                                    field.onChange(trimmed);
-                                  }
-                                  setNewInvoiceType("");
-                                  setAddingInvoiceType(false);
-                                }}
-                              >
-                                Add
-                              </Button>
-                            </div>
-                          ) : (
-                            <button
-                              type="button"
-                              className="flex items-center gap-1 w-full px-2 py-1.5 text-xs text-primary hover:bg-accent rounded-sm"
-                              onClick={() => setAddingInvoiceType(true)}
-                            >
-                              <Plus className="h-3 w-3" /> Add invoice type
-                            </button>
-                          )}
-                        </div>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
 
-              <FormField
-                control={form.control}
-                name="cpm_device_onsite"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>CPM Device Onsite</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter device info" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+
+
 
             <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="unit_price"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Unit Price</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="number" 
-                        step="0.01"
-                        placeholder="0.00" 
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="cpm_pricing"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>CPM Pricing</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="number" 
-                        step="0.01"
-                        placeholder="0.00" 
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="cpi"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>CPI</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="number" 
-                        step="0.01"
-                        placeholder="0.00" 
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="total"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Total <span className="text-xs text-muted-foreground">(auto-calculated)</span></FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="number" 
-                        step="0.01"
-                        placeholder="0.00"
-                        readOnly
-                        className="bg-muted cursor-not-allowed"
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
 
               <FormField
                 control={form.control}
@@ -971,60 +804,23 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
               />
             </div>
 
-            <div className="flex justify-between gap-2 pt-4">
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    disabled={loading || deleteLoading}
-                  >
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Delete
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Delete Service Agreement</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Are you sure you want to delete this service agreement? This action cannot be undone.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel disabled={deleteLoading}>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={handleDelete}
-                      disabled={deleteLoading}
-                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                    >
-                      {deleteLoading ? "Deleting..." : "Delete"}
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-              
-              <div className="flex gap-2 flex-wrap">
-                <EditInvoiceDialog serviceId={agreement.service_id} />
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={handleAddToRuns}
-                  disabled={loading || deleteLoading || addingToRuns}
-                >
-                  {addingToRuns ? "Adding..." : "Add to Runs"}
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setOpen(false)}
-                  disabled={loading}
-                >
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={loading}>
-                  {loading ? "Updating..." : "Update Service Agreement"}
-                </Button>
-              </div>
+            <div className="flex justify-end gap-2 pt-4">
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={handleAddToRuns}
+                disabled={loading || deleteLoading || addingToRuns}
+              >
+                {addingToRuns ? "Adding..." : "Add to Runs"}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setOpen(false)}
+                disabled={loading}
+              >
+                Cancel
+              </Button>
             </div>
           </form>
         </Form>
