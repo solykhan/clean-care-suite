@@ -84,7 +84,7 @@ export function AddInvoiceDialog({ defaultInvId, triggerLabel, disabled }: AddIn
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button>
+        <Button disabled={disabled}>
           <Plus className="h-4 w-4 mr-2" />
           {triggerLabel ?? "Add Invoice"}
         </Button>
