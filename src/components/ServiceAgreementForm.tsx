@@ -56,6 +56,7 @@ type FormValues = z.infer<typeof formSchema>;
 interface ServiceAgreementFormProps {
   serviceId?: string;
   onSuccess?: () => void;
+  disabled?: boolean;
 }
 
 const DEFAULT_FREQUENCIES = [
