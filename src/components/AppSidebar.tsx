@@ -93,7 +93,7 @@ export function AppSidebar() {
                     <SidebarMenuButton asChild isActive={currentPath === "/customer-service-form"}>
                       <NavLink to="/customer-service-form">
                         <FileText className="h-4 w-4" />
-                        <span>Customer Service Form</span>
+                        <span>Schedule Runs</span>
                       </NavLink>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
