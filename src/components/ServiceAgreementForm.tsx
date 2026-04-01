@@ -206,7 +206,7 @@ const DEFAULT_TECHNICIANS = [
   "Jayden",
 ];
 
-export function ServiceAgreementForm({ serviceId, onSuccess }: ServiceAgreementFormProps) {
+export function ServiceAgreementForm({ serviceId, onSuccess, disabled }: ServiceAgreementFormProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [addingToRuns, setAddingToRuns] = useState(false);
