@@ -882,60 +882,23 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
               />
             </div>
 
-            <div className="flex justify-between gap-2 pt-4">
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    disabled={loading || deleteLoading}
-                  >
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Delete
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Delete Service Agreement</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Are you sure you want to delete this service agreement? This action cannot be undone.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel disabled={deleteLoading}>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={handleDelete}
-                      disabled={deleteLoading}
-                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                    >
-                      {deleteLoading ? "Deleting..." : "Delete"}
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-              
-              <div className="flex gap-2 flex-wrap">
-                <EditInvoiceDialog serviceId={agreement.service_id} />
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={handleAddToRuns}
-                  disabled={loading || deleteLoading || addingToRuns}
-                >
-                  {addingToRuns ? "Adding..." : "Add to Runs"}
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setOpen(false)}
-                  disabled={loading}
-                >
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={loading}>
-                  {loading ? "Updating..." : "Update Service Agreement"}
-                </Button>
-              </div>
+            <div className="flex justify-end gap-2 pt-4">
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={handleAddToRuns}
+                disabled={loading || deleteLoading || addingToRuns}
+              >
+                {addingToRuns ? "Adding..." : "Add to Runs"}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setOpen(false)}
+                disabled={loading}
+              >
+                Cancel
+              </Button>
             </div>
           </form>
         </Form>
