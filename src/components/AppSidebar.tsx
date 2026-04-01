@@ -21,7 +21,7 @@ import {
 const navigationItems = [
   { title: "Dashboard", url: "/", icon: Home },
   { title: "Technician Dashboard", url: "/technician-dashboard", icon: Gauge },
-  { title: "Customers", url: "/customers", icon: Building2 },
+  { title: "Schedule Runs", url: "/customers", icon: Building2 },
 ];
 
 export function AppSidebar() {
