@@ -42,9 +42,10 @@ type FormValues = z.infer<typeof schema>;
 interface AddInvoiceDialogProps {
   defaultInvId?: string;
   triggerLabel?: string;
+  disabled?: boolean;
 }
 
-export function AddInvoiceDialog({ defaultInvId, triggerLabel }: AddInvoiceDialogProps = {}) {
+export function AddInvoiceDialog({ defaultInvId, triggerLabel, disabled }: AddInvoiceDialogProps = {}) {
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const queryClient = useQueryClient();
@@ -83,7 +84,7 @@ export function AddInvoiceDialog({ defaultInvId, triggerLabel }: AddInvoiceDialo
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button>
+        <Button disabled={disabled}>
           <Plus className="h-4 w-4 mr-2" />
           {triggerLabel ?? "Add Invoice"}
         </Button>

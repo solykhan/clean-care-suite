@@ -43,9 +43,10 @@ interface EditInvoiceDialogProps {
   serviceId: string;
   externalOpen?: boolean;
   onExternalOpenChange?: (open: boolean) => void;
+  disabled?: boolean;
 }
 
-export function EditInvoiceDialog({ serviceId, externalOpen, onExternalOpenChange }: EditInvoiceDialogProps) {
+export function EditInvoiceDialog({ serviceId, externalOpen, onExternalOpenChange, disabled }: EditInvoiceDialogProps) {
   const isControlled = externalOpen !== undefined;
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -139,7 +140,7 @@ export function EditInvoiceDialog({ serviceId, externalOpen, onExternalOpenChang
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       {!isControlled && (
         <DialogTrigger asChild>
-          <Button variant="outline" size="sm" className="gap-2">
+          <Button variant="outline" size="sm" className="gap-2" disabled={disabled}>
             <Pencil className="h-4 w-4" />
             Edit Invoice
           </Button>

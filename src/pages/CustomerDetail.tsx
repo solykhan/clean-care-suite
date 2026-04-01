@@ -11,33 +11,12 @@ import { EditInvoiceDialog } from "@/components/EditInvoiceDialog";
 import { toast } from "sonner";
 import { ServiceAgreementForm } from "@/components/ServiceAgreementForm";
 import { EditServiceAgreementDialog } from "@/components/EditServiceAgreementDialog";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 
 const CustomerDetail = () => {
   const { id } = useParams<{ id: string }>();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const handleDelete = async () => {
-    const { error } = await supabase.from("customers").delete().eq("id", id!);
-    if (error) {
-      toast.error("Failed to delete customer");
-    } else {
-      toast.success("Customer deleted");
-      queryClient.invalidateQueries({ queryKey: ["customers"] });
-      navigate("/customers");
-    }
-  };
 
   const { data: customer, isLoading: customerLoading } = useQuery({
     queryKey: ["customer", id],
@@ -138,30 +117,13 @@ const CustomerDetail = () => {
                 <AddInvoiceDialog
                   defaultInvId={customer.service_id}
                   triggerLabel="Add Invoice"
+                  disabled
                 />
-                <EditInvoiceDialog serviceId={customer.service_id} />
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button variant="destructive" size="sm" className="gap-2">
-                      <Trash2 className="h-4 w-4" />
-                      Delete Customer
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Delete Customer</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Are you sure you want to delete <strong>{customer.site_name}</strong>? This action cannot be undone.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                        Delete
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
+                <EditInvoiceDialog serviceId={customer.service_id} disabled />
+                <Button variant="destructive" size="sm" className="gap-2" disabled>
+                  <Trash2 className="h-4 w-4" />
+                  Delete Customer
+                </Button>
               </div>
             </div>
           </CardHeader>
