@@ -312,8 +312,8 @@ const Runs = () => {
                           )}
                         </TableCell>
                         <TableCell className="text-center">
-                          <Badge variant={run.completed === "completed" ? "default" : "secondary"}>
-                            {run.completed || "pending"}
+                          <Badge variant={(run as any).work === "Completed" ? "default" : "secondary"}>
+                            {(run as any).work || "Pending"}
                           </Badge>
                         </TableCell>
                         <TableCell>
