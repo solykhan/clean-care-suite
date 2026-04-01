@@ -61,6 +61,7 @@ const App = () => (
               <Route path="/admin/users" element={<AdminRoute><AdminUserManagement /></AdminRoute>} />
               <Route path="/invoices" element={<AdminRoute><Invoices /></AdminRoute>} />
               <Route path="/hytrack" element={<AdminRoute><HyTrackForm /></AdminRoute>} />
+              <Route path="/hytrack-dashboard" element={<AdminRoute><HyTrackDashboard /></AdminRoute>} />
 
               {/* Technician + Admin routes */}
               <Route path="/technician-dashboard" element={<TechnicianRoute><TechnicianDashboard /></TechnicianRoute>} />
