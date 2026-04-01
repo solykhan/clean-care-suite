@@ -133,6 +133,7 @@ const CustomerServiceReportForm = () => {
     onSuccess: () => {
       toast.success("Customer service report created successfully");
       queryClient.invalidateQueries({ queryKey: ["customer_service_reports"] });
+      queryClient.invalidateQueries({ queryKey: ["runs"] });
       form.reset();
       officerSignaturePadRef.current?.clear();
       techSignaturePadRef.current?.clear();
