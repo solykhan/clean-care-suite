@@ -121,10 +121,19 @@ const CustomerServiceReportForm = () => {
         });
       
       if (error) throw error;
+
+      // Update the work field on the run to "Completed"
+      const { error: runError } = await supabase
+        .from("runs")
+        .update({ work: "Completed" } as any)
+        .eq("id", run_id);
+      
+      if (runError) throw runError;
     },
     onSuccess: () => {
       toast.success("Customer service report created successfully");
       queryClient.invalidateQueries({ queryKey: ["customer_service_reports"] });
+      queryClient.invalidateQueries({ queryKey: ["runs"] });
       form.reset();
       officerSignaturePadRef.current?.clear();
       techSignaturePadRef.current?.clear();
