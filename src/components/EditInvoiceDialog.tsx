@@ -43,9 +43,10 @@ interface EditInvoiceDialogProps {
   serviceId: string;
   externalOpen?: boolean;
   onExternalOpenChange?: (open: boolean) => void;
+  disabled?: boolean;
 }
 
-export function EditInvoiceDialog({ serviceId, externalOpen, onExternalOpenChange }: EditInvoiceDialogProps) {
+export function EditInvoiceDialog({ serviceId, externalOpen, onExternalOpenChange, disabled }: EditInvoiceDialogProps) {
   const isControlled = externalOpen !== undefined;
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);

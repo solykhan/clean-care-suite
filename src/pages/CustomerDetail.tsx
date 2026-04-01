@@ -11,17 +11,6 @@ import { EditInvoiceDialog } from "@/components/EditInvoiceDialog";
 import { toast } from "sonner";
 import { ServiceAgreementForm } from "@/components/ServiceAgreementForm";
 import { EditServiceAgreementDialog } from "@/components/EditServiceAgreementDialog";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 
 const CustomerDetail = () => {
   const { id } = useParams<{ id: string }>();
