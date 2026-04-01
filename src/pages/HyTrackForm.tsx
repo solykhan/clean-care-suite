@@ -1,5 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -145,6 +146,7 @@ const HyTrackForm = () => {
   const queryClient = useQueryClient();
   const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchParams] = useSearchParams();
   const [editedAgreements, setEditedAgreements] = useState<Record<string, any>>({});
   const [editedInvoices, setEditedInvoices] = useState<Record<string, any>>({});
   const [newInvoices, setNewInvoices] = useState<any[]>([]);
@@ -163,6 +165,15 @@ const HyTrackForm = () => {
       return data as Customer[];
     },
   });
+
+  // Auto-select customer from URL params
+  useEffect(() => {
+    const customerId = searchParams.get("customerId");
+    if (customerId && customers && !selectedCustomerId) {
+      const found = customers.find((c) => c.id === customerId);
+      if (found) setSelectedCustomerId(found.id);
+    }
+  }, [customers, searchParams, selectedCustomerId]);
 
   const selectedCustomer = customers?.find((c) => c.id === selectedCustomerId);
 

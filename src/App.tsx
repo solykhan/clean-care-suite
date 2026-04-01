@@ -26,6 +26,7 @@ import AdminUserManagement from "./pages/AdminUserManagement";
 import AdminDashboard from "./pages/AdminDashboard";
 import Invoices from "./pages/Invoices";
 import HyTrackForm from "./pages/HyTrackForm";
+import HyTrackDashboard from "./pages/HyTrackDashboard";
 import RunDashboard from "./pages/RunDashboard";
 import NotFound from "./pages/NotFound";
 
@@ -60,6 +61,7 @@ const App = () => (
               <Route path="/admin/users" element={<AdminRoute><AdminUserManagement /></AdminRoute>} />
               <Route path="/invoices" element={<AdminRoute><Invoices /></AdminRoute>} />
               <Route path="/hytrack" element={<AdminRoute><HyTrackForm /></AdminRoute>} />
+              <Route path="/hytrack-dashboard" element={<AdminRoute><HyTrackDashboard /></AdminRoute>} />
 
               {/* Technician + Admin routes */}
               <Route path="/technician-dashboard" element={<TechnicianRoute><TechnicianDashboard /></TechnicianRoute>} />
