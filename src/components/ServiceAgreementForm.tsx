@@ -361,7 +361,7 @@ export function ServiceAgreementForm({ serviceId, onSuccess, disabled }: Service
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
+        <Button disabled={disabled}>
           <Plus className="mr-2 h-4 w-4" />
           New Service Agreement
         </Button>
