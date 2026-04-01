@@ -228,7 +228,7 @@ const Runs = () => {
                     <TableHead className="font-bold">Products</TableHead>
                     <TableHead className="font-bold">Frequency</TableHead>
                     <TableHead className="font-bold">Technicians</TableHead>
-                    <TableHead className="font-bold text-center">Completed</TableHead>
+                    <TableHead className="font-bold text-center">Work</TableHead>
                     <TableHead className="font-bold">Completion Date</TableHead>
                   </TableRow>
                 </TableHeader>
