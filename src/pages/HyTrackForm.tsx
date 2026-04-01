@@ -146,6 +146,7 @@ const HyTrackForm = () => {
   const queryClient = useQueryClient();
   const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchParams] = useSearchParams();
   const [editedAgreements, setEditedAgreements] = useState<Record<string, any>>({});
   const [editedInvoices, setEditedInvoices] = useState<Record<string, any>>({});
   const [newInvoices, setNewInvoices] = useState<any[]>([]);
