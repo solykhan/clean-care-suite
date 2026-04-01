@@ -130,7 +130,7 @@ export function AppSidebar() {
                   <SidebarMenuButton asChild isActive={currentPath === "/service-reports"}>
                     <NavLink to="/service-reports">
                       <FileText className="h-4 w-4" />
-                      <span>View All Reports</span>
+                      <span>View Complete Reports</span>
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
