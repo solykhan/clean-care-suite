@@ -177,11 +177,9 @@ export function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
-                  <SidebarMenuButton asChild isActive={currentPath === "/hytrack"}>
-                    <NavLink to="/hytrack">
-                      <FileBarChart className="h-4 w-4" />
-                      <span>HyTrack Form</span>
-                    </NavLink>
+                  <SidebarMenuButton isActive={currentPath === "/hytrack"} disabled className="opacity-50 cursor-not-allowed">
+                    <FileBarChart className="h-4 w-4" />
+                    <span>HyTrack Form</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               </SidebarMenu>
