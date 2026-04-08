@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { PlusCircle } from "lucide-react";
+import { DEFAULT_PRODUCTS } from "@/lib/productOptions";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -23,6 +24,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const runSchema = z.object({
   service_id: z.string().min(1, "Service ID is required"),
@@ -197,9 +205,18 @@ export function AddRunDialog() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Products</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Products" {...field} />
-                  </FormControl>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select product" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent className="max-h-60">
+                      {DEFAULT_PRODUCTS.map((p) => (
+                        <SelectItem key={p} value={p}>{p}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}

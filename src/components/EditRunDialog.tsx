@@ -29,6 +29,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { Tables } from "@/integrations/supabase/types";
+import { DEFAULT_PRODUCTS } from "@/lib/productOptions";
 
 const runSchema = z.object({
   service_id: z.string().min(1, "Service ID is required"),
@@ -223,9 +224,18 @@ export function EditRunDialog({ run, open, onOpenChange }: EditRunDialogProps) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Products</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Products" {...field} />
-                  </FormControl>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select product" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent className="max-h-60">
+                      {DEFAULT_PRODUCTS.map((p) => (
+                        <SelectItem key={p} value={p}>{p}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
