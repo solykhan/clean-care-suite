@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { PlusCircle } from "lucide-react";
-import { DEFAULT_PRODUCTS } from "@/lib/productOptions";
+import { useProducts } from "@/hooks/useProducts";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

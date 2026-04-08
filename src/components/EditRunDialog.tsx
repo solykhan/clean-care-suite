@@ -29,7 +29,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { Tables } from "@/integrations/supabase/types";
-import { DEFAULT_PRODUCTS } from "@/lib/productOptions";
+import { useProducts } from "@/hooks/useProducts";
 
 const runSchema = z.object({
   service_id: z.string().min(1, "Service ID is required"),

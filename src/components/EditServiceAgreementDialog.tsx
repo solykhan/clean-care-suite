@@ -94,8 +94,7 @@ const DEFAULT_FREQUENCIES = [
   "ONLY RENTAL",
 ];
 
-// Products imported from shared constants
-import { DEFAULT_PRODUCTS } from "@/lib/productOptions";
+import { useProducts } from "@/hooks/useProducts";
 
 const DEFAULT_INVOICE_TYPES = [
   "BI MONTHLY",
