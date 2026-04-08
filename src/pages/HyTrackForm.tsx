@@ -33,6 +33,7 @@ interface Customer {
 
 const HyTrackForm = () => {
   const queryClient = useQueryClient();
+  const { products: PRODUCT_OPTIONS } = useProducts();
   const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchParams] = useSearchParams();

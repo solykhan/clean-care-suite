@@ -54,6 +54,7 @@ interface EditRunDialogProps {
 export function EditRunDialog({ run, open, onOpenChange }: EditRunDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const queryClient = useQueryClient();
+  const { products } = useProducts();
 
   const form = useForm<RunFormValues>({
     resolver: zodResolver(runSchema),
@@ -231,7 +232,7 @@ export function EditRunDialog({ run, open, onOpenChange }: EditRunDialogProps) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent className="max-h-60">
-                      {DEFAULT_PRODUCTS.map((p) => (
+                      {products.map((p) => (
                         <SelectItem key={p} value={p}>{p}</SelectItem>
                       ))}
                     </SelectContent>
