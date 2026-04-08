@@ -313,7 +313,7 @@ const CustomerServiceReportForm = () => {
                   render={({ field }) => (
                     <FormItem className="w-fit min-w-[200px] md:w-auto group rounded-lg p-3 transition-all duration-200 hover:bg-accent/40 hover:shadow-sm hover:ring-1 hover:ring-border">
                       <FormLabel>Work</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
+                      <Select onValueChange={field.onChange} value={field.value} disabled>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select status" />
