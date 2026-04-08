@@ -74,6 +74,22 @@ const CustomerServiceReportForm = () => {
     },
   });
 
+  // Fetch customer name based on service_id from URL
+  const { data: customer } = useQuery({
+    queryKey: ["customer", serviceIdFromUrl],
+    queryFn: async () => {
+      if (!serviceIdFromUrl) return null;
+      const { data, error } = await supabase
+        .from("customers")
+        .select("site_name")
+        .eq("service_id", serviceIdFromUrl)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!serviceIdFromUrl,
+  });
+
   // Fetch service agreement products based on service_id
   const serviceId = form.watch("service_id");
   const { data: serviceAgreements, isLoading: isLoadingAgreements } = useQuery({
@@ -176,6 +192,9 @@ const CustomerServiceReportForm = () => {
           <ClipboardList className="h-8 w-8 text-primary" />
           <h1 className="text-4xl font-bold text-foreground">Customer Service Report</h1>
         </div>
+        {customer?.site_name && (
+          <p className="text-lg font-medium text-foreground">{customer.site_name}</p>
+        )}
         <p className="text-muted-foreground">Create a new customer service report</p>
       </div>
 
