@@ -113,4 +113,4 @@ export const DEFAULT_PRODUCTS = [
   "WC Sanitizers - internal",
   "WC Treatment ( D/C )",
   "white soap 4 Ltr",
-] as const;
+];
