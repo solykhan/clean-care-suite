@@ -101,25 +101,14 @@ const ServiceReportDetail = () => {
       {/* Service Agreements Info */}
       {serviceAgreements && serviceAgreements.length > 0 && (
         <div className="mb-6">
-          <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex flex-col md:flex-row gap-2">
             {serviceAgreements.map((agreement) => (
               <Card key={agreement.id} className="w-full md:w-fit md:flex-shrink-0 bg-[hsl(207,69%,74%)] text-black">
-                <CardHeader>
-                  <CardDescription>Service ID: {agreement.service_id}</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <div>
-                    <p className="text-sm font-medium">Products</p>
-                    <p className="text-sm text-black/80">{agreement.products || "N/A"}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">Number of Products</p>
-                    <p className="text-sm text-black/80">{agreement.cpm_device_onsite || "N/A"}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">Areas Covered</p>
-                    <p className="text-sm text-black/80">{agreement.areas_covered || "N/A"}</p>
-                  </div>
+                <CardContent className="p-3 space-y-1">
+                  <p className="text-xs font-medium text-black/60">Service ID: {agreement.service_id}</p>
+                  <p className="text-xs"><span className="font-medium">Products:</span> {agreement.products || "N/A"}</p>
+                  <p className="text-xs"><span className="font-medium">Qty:</span> {agreement.cpm_device_onsite || "N/A"}</p>
+                  <p className="text-xs"><span className="font-medium">Areas:</span> {agreement.areas_covered || "N/A"}</p>
                 </CardContent>
               </Card>
             ))}
