@@ -103,12 +103,12 @@ const ServiceReportDetail = () => {
         <div className="mb-6">
           <div className="flex flex-col md:flex-row gap-2">
             {serviceAgreements.map((agreement) => (
-              <Card key={agreement.id} className="w-full md:w-fit md:flex-shrink-0 bg-[hsl(207,69%,74%)] text-black">
-                <CardContent className="px-3 py-2 space-y-0.5">
-                  <p className="text-xs text-black/60">Service ID: {agreement.service_id}</p>
-                  <p className="text-xs"><span className="font-medium">Products:</span> {agreement.products || "N/A"}</p>
-                  <p className="text-xs"><span className="font-medium">Qty:</span> {agreement.cpm_device_onsite || "N/A"}</p>
-                  <p className="text-xs"><span className="font-medium">Areas:</span> {agreement.areas_covered || "N/A"}</p>
+              <Card key={agreement.id} className="w-full md:w-fit md:flex-shrink-0 bg-[hsl(207,69%,74%)] text-black rounded-md">
+                <CardContent className="px-3 py-1.5 flex flex-col gap-0">
+                  <p className="text-[10px] text-black/50 leading-tight">Service ID: {agreement.service_id}</p>
+                  <p className="text-[11px] leading-tight"><span className="font-semibold">Products:</span> {agreement.products || "N/A"}</p>
+                  <p className="text-[11px] leading-tight"><span className="font-semibold">Qty:</span> {agreement.cpm_device_onsite || "N/A"}</p>
+                  <p className="text-[11px] leading-tight"><span className="font-semibold">Areas:</span> {agreement.areas_covered || "N/A"}</p>
                 </CardContent>
               </Card>
             ))}
