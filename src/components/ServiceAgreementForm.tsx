@@ -102,7 +102,7 @@ export function ServiceAgreementForm({ serviceId, onSuccess, disabled }: Service
   const [frequencies, setFrequencies] = useState<string[]>(DEFAULT_FREQUENCIES);
   const [addingFrequency, setAddingFrequency] = useState(false);
   const [newFrequency, setNewFrequency] = useState("");
-  const [products, setProducts] = useState<string[]>(DEFAULT_PRODUCTS);
+  const { products, addProduct: addProductToDB } = useProducts();
   const [addingProduct, setAddingProduct] = useState(false);
   const [newProduct, setNewProduct] = useState("");
   const [invoiceTypes, setInvoiceTypes] = useState<string[]>(DEFAULT_INVOICE_TYPES);
