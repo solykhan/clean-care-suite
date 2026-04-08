@@ -199,26 +199,15 @@ const CustomerServiceReportForm = () => {
       </div>
 
       {serviceAgreements && serviceAgreements.length > 0 && (
-        <div className="mb-6">
-          <div className="flex flex-col md:flex-row gap-4">
+        <div className="mb-4">
+          <div className="flex flex-wrap gap-2">
             {serviceAgreements.map((agreement) => (
-              <Card key={agreement.id} className="w-full md:w-fit md:flex-shrink-0 bg-[hsl(207,69%,74%)] text-black">
-                <CardHeader>
-                  <CardDescription>Service ID: {agreement.service_id}</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <div>
-                    <p className="text-sm font-medium">Products</p>
-                    <p className="text-sm text-black/80">{agreement.products || "N/A"}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">Number of Products</p>
-                    <p className="text-sm text-black/80">{agreement.cpm_device_onsite || "N/A"}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">Areas Covered</p>
-                    <p className="text-sm text-black/80">{agreement.areas_covered || "N/A"}</p>
-                  </div>
+              <Card key={agreement.id} className="w-auto shrink-0 bg-[hsl(207,69%,74%)] text-black rounded-md">
+                <CardContent className="px-2 py-1 md:px-3 md:py-1.5 flex flex-col gap-0">
+                  <p className="text-[8px] md:text-[10px] text-black/50 leading-tight">Service ID: {agreement.service_id}</p>
+                  <p className="text-[8px] md:text-[11px] leading-tight"><span className="font-semibold">Products:</span> {agreement.products || "N/A"}</p>
+                  <p className="text-[8px] md:text-[11px] leading-tight"><span className="font-semibold">Qty:</span> {agreement.cpm_device_onsite || "N/A"}</p>
+                  <p className="text-[8px] md:text-[11px] leading-tight"><span className="font-semibold">Areas:</span> {agreement.areas_covered || "N/A"}</p>
                 </CardContent>
               </Card>
             ))}
