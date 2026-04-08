@@ -412,9 +412,10 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
                                 if (e.key === "Enter") {
                                   e.preventDefault();
                                   const trimmed = newProduct.trim();
-                                  if (trimmed && !products.includes(trimmed)) {
-                                    setProducts((prev) => [...prev, trimmed]);
-                                    field.onChange(trimmed);
+                                  if (trimmed) {
+                                    addProductToDB(trimmed).then((ok) => {
+                                      if (ok) field.onChange(trimmed);
+                                    });
                                   }
                                   setNewProduct("");
                                   setAddingProduct(false);
@@ -429,11 +430,11 @@ export function EditServiceAgreementDialog({ agreement, onSuccess }: EditService
                               type="button"
                               size="sm"
                               className="h-7 px-2 text-xs"
-                              onClick={() => {
+                              onClick={async () => {
                                 const trimmed = newProduct.trim();
-                                if (trimmed && !products.includes(trimmed)) {
-                                  setProducts((prev) => [...prev, trimmed]);
-                                  field.onChange(trimmed);
+                                if (trimmed) {
+                                  const ok = await addProductToDB(trimmed);
+                                  if (ok) field.onChange(trimmed);
                                 }
                                 setNewProduct("");
                                 setAddingProduct(false);
