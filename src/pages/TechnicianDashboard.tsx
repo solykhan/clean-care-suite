@@ -45,8 +45,8 @@ const TechnicianDashboard = () => {
   });
 
   const totalRuns = runs?.length || 0;
-  const completedRuns = runs?.filter((run) => run.completed === "completed")?.length || 0;
-  const pendingRuns = runs?.filter((run) => run.completed !== "completed")?.length || 0;
+  const completedRuns = runs?.filter((run) => run.work === "Completed")?.length || 0;
+  const pendingRuns = runs?.filter((run) => run.work !== "Completed")?.length || 0;
 
   return (
     <div className="container mx-auto p-6 space-y-6">

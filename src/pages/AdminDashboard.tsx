@@ -44,7 +44,7 @@ const AdminDashboard = () => {
   const { data: allRuns, isLoading: runsLoading } = useQuery({
     queryKey: ['allRunsForDashboard'],
     queryFn: async () => {
-      const { data, error } = await supabase.from('runs').select('id, technicians, completed');
+      const { data, error } = await supabase.from('runs').select('id, technicians, work');
       if (error) throw error;
       return data ?? [];
     },
@@ -58,8 +58,8 @@ const AdminDashboard = () => {
     const myRuns = (allRuns ?? []).filter(
       (r) => r.technicians && r.technicians.toLowerCase().includes(name.toLowerCase())
     );
-    const completed = myRuns.filter((r) => r.completed === 'completed').length;
-    const pending = myRuns.filter((r) => r.completed !== 'completed').length;
+    const completed = myRuns.filter((r) => r.work === 'Completed').length;
+    const pending = myRuns.filter((r) => r.work !== 'Completed').length;
     const total = myRuns.length;
     const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
     return { name, completed, pending, total, pct };
