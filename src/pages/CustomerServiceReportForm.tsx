@@ -285,7 +285,7 @@ const CustomerServiceReportForm = () => {
                       <FormItem className="w-fit min-w-[200px] md:w-auto group rounded-lg p-3 transition-all duration-200 hover:bg-accent/40 hover:shadow-sm hover:ring-1 hover:ring-border">
                         <FormLabel>Technician Name</FormLabel>
                         <FormControl>
-                          <Input {...field} value={field.value || ""} placeholder="Enter technician name" />
+                          <Input {...field} value={field.value || ""} placeholder="Enter technician name" disabled className="disabled:opacity-70" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
