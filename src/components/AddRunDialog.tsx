@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { PlusCircle } from "lucide-react";
-import { DEFAULT_PRODUCTS } from "@/lib/productOptions";
+import { useProducts } from "@/hooks/useProducts";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -49,6 +49,7 @@ export function AddRunDialog() {
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const queryClient = useQueryClient();
+  const { products } = useProducts();
 
   const form = useForm<RunFormValues>({
     resolver: zodResolver(runSchema),
@@ -212,7 +213,7 @@ export function AddRunDialog() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent className="max-h-60">
-                      {DEFAULT_PRODUCTS.map((p) => (
+                      {products.map((p) => (
                         <SelectItem key={p} value={p}>{p}</SelectItem>
                       ))}
                     </SelectContent>

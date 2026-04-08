@@ -71,8 +71,7 @@ const DEFAULT_FREQUENCIES = [
   "ONLY RENTAL",
 ];
 
-// Products imported from shared constants
-import { DEFAULT_PRODUCTS } from "@/lib/productOptions";
+import { useProducts } from "@/hooks/useProducts";
 
 const DEFAULT_INVOICE_TYPES = [
   "BI MONTHLY",
@@ -103,7 +102,7 @@ export function ServiceAgreementForm({ serviceId, onSuccess, disabled }: Service
   const [frequencies, setFrequencies] = useState<string[]>(DEFAULT_FREQUENCIES);
   const [addingFrequency, setAddingFrequency] = useState(false);
   const [newFrequency, setNewFrequency] = useState("");
-  const [products, setProducts] = useState<string[]>(DEFAULT_PRODUCTS);
+  const { products, addProduct: addProductToDB } = useProducts();
   const [addingProduct, setAddingProduct] = useState(false);
   const [newProduct, setNewProduct] = useState("");
   const [invoiceTypes, setInvoiceTypes] = useState<string[]>(DEFAULT_INVOICE_TYPES);
@@ -343,9 +342,10 @@ export function ServiceAgreementForm({ serviceId, onSuccess, disabled }: Service
                                 if (e.key === "Enter") {
                                   e.preventDefault();
                                   const trimmed = newProduct.trim();
-                                  if (trimmed && !products.includes(trimmed)) {
-                                    setProducts((prev) => [...prev, trimmed]);
-                                    field.onChange(trimmed);
+                                  if (trimmed) {
+                                    addProductToDB(trimmed).then((ok) => {
+                                      if (ok) field.onChange(trimmed);
+                                    });
                                   }
                                   setNewProduct("");
                                   setAddingProduct(false);
@@ -360,11 +360,11 @@ export function ServiceAgreementForm({ serviceId, onSuccess, disabled }: Service
                               type="button"
                               size="sm"
                               className="h-7 px-2 text-xs"
-                              onClick={() => {
+                              onClick={async () => {
                                 const trimmed = newProduct.trim();
-                                if (trimmed && !products.includes(trimmed)) {
-                                  setProducts((prev) => [...prev, trimmed]);
-                                  field.onChange(trimmed);
+                                if (trimmed) {
+                                  const ok = await addProductToDB(trimmed);
+                                  if (ok) field.onChange(trimmed);
                                 }
                                 setNewProduct("");
                                 setAddingProduct(false);
